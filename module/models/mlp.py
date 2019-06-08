@@ -1,7 +1,19 @@
 from keras.models import Sequential
 from keras.regularizers import l1_l2
 from module.models.base_model import BaseModel
-from keras.layers import Dense, Dropout, BatchNormalization
+from keras.layers import Dense, Dropout, BatchNormalization, LeakyReLU, PReLU, ELU
+from module.models.optimizers import make_optimizer
+
+
+name_to_activation = {
+    'lrelu': LeakyReLU,
+    'prelu': PReLU,
+    'elu': ELU,
+}
+
+
+def make_activation(activation_name):
+    return name_to_activation[activation_name]()
 
 
 class MLP(BaseModel):
@@ -14,26 +26,29 @@ class MLP(BaseModel):
         dense_layer = Dense(
             self.layers[0],
             input_shape=(self.features_count,),
-            activation=self.activation,
             kernel_regularizer=self.regularizer,
             kernel_initializer=self.initializer
         )
         model.add(dense_layer)
+        model.add(make_activation(self.activation))
         model.add(BatchNormalization())
         model.add(Dropout(self.drop_rate))
 
         for layer in self.layers[1:-1]:
             dense_layer = Dense(
                 layer,
-                activation=self.activation,
                 kernel_regularizer=self.regularizer,
                 kernel_initializer=self.initializer
             )
             model.add(dense_layer)
+            model.add(make_activation(self.activation))
             model.add(BatchNormalization())
             model.add(Dropout(self.drop_rate))
 
         model.add(Dense(self.layers[-1], activation=self.output_activation))
+
+        opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
+        model.compile(loss=self.loss, optimizer=opt)
 
         return model
 

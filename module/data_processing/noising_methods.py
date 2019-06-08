@@ -18,6 +18,5 @@ def set_zero(x, v):
     return x_noise
 
 
-def add_gaussian_noise(data):
-    n = np.random.normal(0, 0.1, np.shape(data))
-    return data + n
+def gaussian_noise(data_shape, mean, std):
+    return np.random.normal(mean, std, data_shape)
