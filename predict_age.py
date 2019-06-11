@@ -1,12 +1,14 @@
 import logging
 
 from module.models.mlp import MLP
-from module.data_processing import data_processing
+from module.data_processing.data_processing import load_data, filter_data, get_train_test, get_X_y
+from sklearn.preprocessing import MinMaxScaler
 from module.models.grid_search import search_parameters
 from definitions import *
 import json
 from imp import reload
 reload(logging)
+
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
@@ -16,14 +18,30 @@ def main():
     logging.debug('Read data')
     data_params = dict(
         features_count=1000,
-        tissues=['Whole blood'],
+        rows_count=None,
+        filtered_column='Tissue',
+        using_values='Whole blood',
+        target_column='Age',
         normalize=True,
+        use_generator=False,
         noising_method=None,
-        batch_size=32,
-        rows_count=None
+        batch_size=128,
     )
 
-    train_data, test_data = data_processing.main(False, **data_params)
+    input_data, best_genes = load_data(data_params['features_count'])
+    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
+
+    train_data, test_data = get_train_test(input_data)
+    train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+    test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+
+    scaler = None
+    if data_params['normalize']:
+        scaler = MinMaxScaler()
+        scaler.fit(input_data[best_genes])
+
+        train_X = scaler.transform(train_X)
+        test_X = scaler.transform(test_X)
 
     logging.debug('Create model')
 
@@ -51,30 +69,39 @@ def main():
 
     logging.debug('Fit model')
     model.fit(
-        *train_data,
-        test_data=test_data,
+        *(train_X, train_y),
+        (test_X, test_y),
         **learning_params,
     )
 
 
 def search_model_parameters():
-    experiment_path = os.path.join(MODELS_DIR, 'predict_age/mlp')
-    if not os.path.exists(experiment_path):
-        os.makedirs(experiment_path)
+    experiment_dir = os.path.join(MODELS_DIR, 'predict_age/mlp')
+    make_dirs(experiment_dir)
 
-    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(experiment_path, 'log.log'))
+    tensorboard_dir = os.path.join(experiment_dir, 'tensorboard')
+    make_dirs(tensorboard_dir)
 
+    log_dir = os.path.join(experiment_dir, 'log')
+    make_dirs(log_dir)
+
+    log_name = 'log.log'
+    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(log_dir, log_name))
     logging.info('Read data')
+
     data_params = dict(
         features_count=1000,
-        tissues=['Whole blood'],
+        rows_count=None,
+        filtered_column='Tissue',
+        using_values='Whole blood',
+        target_column='Age',
         normalize=True,
+        use_generator=False,
         noising_method=None,
         batch_size=128,
-        rows_count=None,
     )
 
-    experiment_meta_params_file = os.path.join(experiment_path, 'experiment_meta_parameters.json')
+    experiment_meta_params_file = os.path.join(experiment_dir, 'experiment_meta_parameters.json')
     with open(experiment_meta_params_file, 'w') as file:
         write_message = dict(
             np_seed=np_seed,
@@ -84,7 +111,20 @@ def search_model_parameters():
         json.dump(write_message, file)
         logging.info('experiment meta parameters was saved at file {}'.format(experiment_meta_params_file))
 
-    train_data, test_data = data_processing.main(False, **data_params)
+    input_data, best_genes = load_data(data_params['features_count'])
+    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
+
+    train_data, test_data = get_train_test(input_data)
+    train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+    test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+
+    scaler = None
+    if data_params['normalize']:
+        scaler = MinMaxScaler()
+        scaler.fit(input_data[best_genes])
+
+        train_X = scaler.transform(train_X)
+        test_X = scaler.transform(test_X)
 
     logging.info('Start grid search')
 
@@ -118,18 +158,16 @@ def search_model_parameters():
     )
 
     search_parameters(
-        lambda **kwargs: MLP(features_count=1000, **kwargs),
+        lambda **kwargs: MLP(features_count=data_params['features_count'], **kwargs),
         (train_data, test_data),
         model_parameters_space,
         learning_parameters=learning_params,
         cross_validation_parameters=dict(n_splits=5, random_state=sklearn_seed, shuffle=True),
-        model_directory=experiment_path,
+        experiment_dir=experiment_dir,
         results_file='cv_results.json',
         search_method_name='random',
         random_n_iter=200,
     )
-
-    # save_search_results(*gs_results, 'MLP_GS')
 
 
 if __name__ == '__main__':

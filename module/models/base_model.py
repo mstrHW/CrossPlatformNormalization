@@ -9,12 +9,23 @@ from sklearn.linear_model.base import BaseEstimator
 from keras.wrappers.scikit_learn import KerasRegressor
 from module.models.utils import make_regularizer
 from module.models.optimizers import make_optimizer
+from keras.layers import LeakyReLU, PReLU, ELU
 
 from sklearn.metrics import mean_absolute_error, r2_score
 get_metric = {
     'r2': r2_score,
     'mae': mean_absolute_error,
 }
+
+name_to_activation = {
+    'lrelu': LeakyReLU,
+    'prelu': PReLU,
+    'elu': ELU,
+}
+
+
+def make_activation(activation_name):
+    return name_to_activation[activation_name]()
 
 
 class BaseModel(BaseEstimator):
@@ -57,6 +68,7 @@ class BaseModel(BaseEstimator):
 
     def fit(self,
             train_data,
+            val_data=None,
             test_data=None,
             use_early_stopping=False,
             loss_history_file_name=None,
@@ -69,12 +81,13 @@ class BaseModel(BaseEstimator):
         callbacks_list = self.add_reduce_on_plato(callbacks_list, use_early_stopping)
         callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
         callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
+        callbacks_list = self.add_test_score(callbacks_list, test_data)
 
         history = self.model.fit(
             *train_data,
             epochs=self.epochs_count,
             batch_size=self.batch_size,
-            validation_data=test_data,
+            validation_data=val_data,
             callbacks=callbacks_list,
             verbose=1,
         )
@@ -132,6 +145,13 @@ class BaseModel(BaseEstimator):
 
         return callbacks_list
 
+    def add_test_score(self, callbacks_list, test_data):
+        if test_data is not None:
+            score = self.model.evaluate(*test_data)
+            callbacks_list.append(score)
+
+        return callbacks_list
+
     def save_training_history(self, history, loss_history_file_name):
         if loss_history_file_name is not None:
             with open(loss_history_file_name, 'wb') as file:
@@ -157,7 +177,7 @@ class BaseModel(BaseEstimator):
             epochs=self.epochs_count,
             validation_data=test_data,
             callbacks=callbacks_list,
-            verbose=1,
+            verbose=2,
         )
 
         self.save_training_history(history, loss_history_file_name)

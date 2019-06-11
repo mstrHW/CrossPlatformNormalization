@@ -179,6 +179,7 @@ def search_model_parameters():
         epochs_count=epochs_count,
         loss=loss,
         optimizer_name=optimizer,
+        learning_rate=1e-7,
         # batch_size=data_params['batch_size'],
     )
 

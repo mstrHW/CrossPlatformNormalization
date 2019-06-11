@@ -1,19 +1,11 @@
 from keras.models import Sequential
 from keras.regularizers import l1_l2
-from module.models.base_model import BaseModel
-from keras.layers import Dense, Dropout, BatchNormalization, LeakyReLU, PReLU, ELU
+from module.models.base_model import BaseModel, make_activation
+from keras.layers import Dense, Dropout, BatchNormalization
 from module.models.optimizers import make_optimizer
 
 
-name_to_activation = {
-    'lrelu': LeakyReLU,
-    'prelu': PReLU,
-    'elu': ELU,
-}
 
-
-def make_activation(activation_name):
-    return name_to_activation[activation_name]()
 
 
 class MLP(BaseModel):

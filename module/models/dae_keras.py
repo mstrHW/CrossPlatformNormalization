@@ -1,7 +1,7 @@
 from keras.layers import Input, Dense, BatchNormalization
 from keras.models import Model
 from keras.callbacks import LearningRateScheduler
-from module.models.base_model import BaseModel
+from module.models.base_model import BaseModel, make_activation
 import math
 from module.models.optimizers import make_optimizer
 from sklearn.metrics import r2_score
@@ -47,7 +47,8 @@ class DenoisingAutoencoder(BaseModel):
         encoded = input_layer
         # encoded = BatchNormalization()(encoded)
         for layer in layers:
-            encoded = Dense(layer, activation=activation)(encoded)
+            encoded = Dense(layer)(encoded)
+            encoded = make_activation(self.activation)(encoded)
             # encoded = BatchNormalization()(encoded)
 
         return encoded
@@ -55,7 +56,8 @@ class DenoisingAutoencoder(BaseModel):
     def build_decoder(self, input_layer, layers, activation, output_activation):
         decoded = input_layer
         for layer in layers:
-            decoded = Dense(layer, activation=activation)(decoded)
+            decoded = Dense(layer)(decoded)
+            decoded = make_activation(self.activation)(decoded)
             # decoded = BatchNormalization()(decoded)
 
         decoded = Dense(self.features_count, activation=output_activation)(decoded)

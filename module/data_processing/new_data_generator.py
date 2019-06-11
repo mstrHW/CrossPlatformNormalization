@@ -45,6 +45,7 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
                  batch_size=32,
                  shuffle=True,
                  noising_method='shift',
+                 shift_probability = 1.0
                  ):
 
         np.random.seed(definitions.np_seed)
@@ -52,8 +53,10 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
         self.calculate_corrupt_batches_distribution(corrupt_data, gene_names)
         self.calculate_distance_distribution()
 
+        self.corrupt_batch_names = corrupt_data['GEO'].unique()
         self.mode = mode
         self.noising_method = noising_method
+        self.shift_probability = shift_probability
 
         if self.mode == 'train':
             self.__generate_noise = lambda x_shape, mean, std: gaussian_noise(x_shape, mean, std)
@@ -104,11 +107,9 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
         indexes = np.random.choice(self.data_count, self.batch_size)
 
         X = self.__data.iloc[indexes]
-        X = X.values
 
-        corrupt_X = self.data_generation(X)
-
-        return X, corrupt_X
+        corrupt_X = self.data_generation(X.values)
+        return corrupt_X, X
 
     def data_generation(self, X):
         corrupt_batch = random_batch(self.corrupt_batch_count)
@@ -116,7 +117,7 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
         for i in range(X.shape[1]):
             cutted_X = X[:, i]
 
-            flag = np.random.choice(2, 1, p=[0.75, 0.25])[0]
+            flag = np.random.choice(2, 1, p=[1 - self.shift_probability, self.shift_probability])[0]
 
             if self.noising_method == 'noise':
                 mean_ = 0.
@@ -129,6 +130,8 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
                     cutted_X = cutted_X + self.__generate_noise(cutted_X.shape, mean_, std_)
 
             X[:, i] = cutted_X
+
+        X['GEO'] = [self.corrupt_batch_names[corrupt_batch] for i in range(X.shape[0])]
 
         return X
 
@@ -151,3 +154,7 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
         corrupt_X = X.copy()
         corrupt_X[:self.batch_size] = self.data_generation(corrupt_X[:self.batch_size])
         return X, corrupt_X
+
+
+if __name__ == '__main__':
+    New
