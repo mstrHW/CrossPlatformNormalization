@@ -1,9 +1,8 @@
 import logging
 
-from module.models.dae_keras import DenoisingAutoencoder
-from module.data_processing.data_processing import load_data, fit_scaler, get_train_test, make_shifted_data_generator
-from module.models.grid_search import search_parameters, search_parameters_generator
-from module.models.utils import save_results, save_search_results
+from module.models.dae import DenoisingAutoencoder
+from module.data_processing.data_processing import load_data, get_train_test, filter_data
+from module.models.utils.grid_search import search_parameters_generator
 from sklearn.metrics import mean_absolute_error, r2_score
 from definitions import *
 import json
@@ -129,11 +128,14 @@ def search_model_parameters():
     logging.info('Read data')
     data_params = dict(
         features_count=1000,
-        tissues=['Whole blood'],
+        rows_count=None,
+        filtered_column='Tissue',
+        using_values='Whole blood',
+        target_column='Age',
         normalize=True,
+        use_generator=False,
         noising_method='shift',
         batch_size=128,
-        rows_count=None,
     )
 
     experiment_meta_params_file = os.path.join(experiment_path, 'experiment_meta_parameters.json')
@@ -146,7 +148,8 @@ def search_model_parameters():
         json.dump(write_message, file)
         logging.info('experiment meta parameters was saved at file {}'.format(experiment_meta_params_file))
 
-    data, best_genes = load_data(data_params['features_count'], data_params['tissues'], data_params['rows_count'])
+    input_data, best_genes = load_data(data_params['features_count'])
+    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
 
     logging.info('Start grid search')
 
@@ -170,6 +173,7 @@ def search_model_parameters():
     epochs_count = 2000,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
+    learning_rate = 1e-3,
 
     model_parameters_space = dict(
         layers=layers,
@@ -179,6 +183,7 @@ def search_model_parameters():
         epochs_count=epochs_count,
         loss=loss,
         optimizer_name=optimizer,
+        learning_rate=learning_rate,
         # batch_size=data_params['batch_size'],
     )
 
@@ -187,15 +192,16 @@ def search_model_parameters():
     )
 
     search_parameters_generator(
-        lambda **kwargs: DenoisingAutoencoder(features_count=1000, **kwargs),
+        lambda **kwargs: DenoisingAutoencoder(data_params['features_count'], **kwargs),
         'GSE33828',
-        data,
+        input_data,
         best_genes,
         data_params,
-        model_parameters_space,
+        using_metrics=['r2', 'mae'],
+        model_parameters_space=model_parameters_space,
         learning_parameters=learning_params,
         cross_validation_parameters=dict(n_splits=5, random_state=sklearn_seed, shuffle=True),
-        model_directory=experiment_path,
+        experiment_dir=experiment_path,
         results_file='cv_results.json',
         search_method_name='random',
         random_n_iter=200,

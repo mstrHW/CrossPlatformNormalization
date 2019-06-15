@@ -1,7 +1,7 @@
 import logging
-from module.models.dae_keras import DenoisingAutoencoder
+from module.models.dae import DenoisingAutoencoder
 from module.data_processing import data_processing
-from module.models.utils import save_results
+from module.models.utils.utils import save_results
 
 logging.basicConfig(level=logging.DEBUG)
 

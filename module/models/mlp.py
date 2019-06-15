@@ -1,18 +1,7 @@
 from keras.models import Sequential
-from keras.regularizers import l1_l2
-from module.models.base_model import BaseModel, make_activation
 from keras.layers import Dense, Dropout, BatchNormalization
-from module.models.optimizers import make_optimizer
 
-
-
-def coeff_determination(y_true, y_pred):
-    from keras import backend as K
-    SS_res = K.sum(K.square(y_true - y_pred), axis=0)
-    SS_tot = K.sum(K.square(y_true - K.mean(y_true, axis=0)), axis=0)
-    r2_vect = (1 - SS_res/(SS_tot + K.epsilon()))
-    result_mean = K.mean(r2_vect)
-    return result_mean
+from module.models.base_model import BaseModel, make_activation
 
 
 class MLP(BaseModel):
@@ -45,9 +34,6 @@ class MLP(BaseModel):
             model.add(Dropout(self.drop_rate))
 
         model.add(Dense(self.layers[-1], activation=self.output_activation))
-
-        opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
-        model.compile(loss=self.loss, optimizer=opt, metrics=[coeff_determination])
 
         return model
 

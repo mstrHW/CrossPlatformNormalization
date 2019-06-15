@@ -1,7 +1,8 @@
 from keras.optimizers import SGD, Adagrad, Adadelta, RMSprop, Adam, Adamax, Nadam
 from Eve.Eve import Eve
 
-name_to_optimizer = {
+
+__name_to_optimizer = {
     'rmsprop': RMSprop,
     'adam': Adam,
     'sgd': SGD,
@@ -15,7 +16,7 @@ name_to_optimizer = {
 
 def make_optimizer(optimizer_name='adam', **optimizer_params):
     try:
-        optimizer = name_to_optimizer[optimizer_name]
+        optimizer = __name_to_optimizer[optimizer_name]
     except KeyError as e:
         raise ValueError('Undefined optimizer: {}'.format(e.args[0]))
 

@@ -8,6 +8,7 @@ import definitions
 from module.data_processing.data_processing import make_shifted_data_generator, get_train_test
 from module.data_processing.new_data_generator import NewNoisedDataGenerator
 from sklearn.preprocessing import MinMaxScaler
+from module.models.utils import utils
 
 
 def create_model_directory(models_dir) -> str:
@@ -92,16 +93,6 @@ def restore_search_state(parameters_generator, search_results_file,):
     return parameters_generator, search_results
 
 
-def reset_weights(model):
-    from keras import backend as K
-    import tensorflow as tf
-    session = K.get_session()
-    tf.set_random_seed(definitions.sklearn_seed)
-    for layer in model.layers:
-        if hasattr(layer, 'kernel_initializer'):
-            layer.kernel.initializer.run(session=session)
-
-
 def cv_iteration(k_fold, model, model_dir, train_data, test_data, learning_parameters, using_metrics):
     # k_fold = k_fold_splits(train_data, cross_validation_parameters)
     for i, (cv_train_data, cv_val_data) in enumerate(k_fold):
@@ -116,7 +107,7 @@ def cv_iteration(k_fold, model, model_dir, train_data, test_data, learning_param
         tensorboard_log_dir = os.path.join(cv_model_path, 'tensorboard_log')
         model_file = os.path.join(cv_model_path, 'model')
 
-        reset_weights(model)
+        utils.reset_weights(model)
         model.fit(
             cv_train_data,
             val_data=cv_val_data,
@@ -235,7 +226,7 @@ def search_parameters(model_class,
             #         noising_method=data_params['noising_method'],
             #     )
 
-            reset_weights(model)
+            utils.reset_weights(model)
             model.fit(
                 cv_train_data,
                 val_data=cv_val_data,

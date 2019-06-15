@@ -1,6 +1,9 @@
-from definitions import *
 import csv
 import pandas as pd
+from keras import backend as K
+import tensorflow as tf
+
+from definitions import *
 
 
 def save_results(model_name, data_params, model_params, learning_params, train_score, test_score):
@@ -31,18 +34,9 @@ def save_search_results(cv_results, best_params, best_score, title):
         writer.writerow([best_params, best_score])
 
 
-from keras.regularizers import l1, l2, l1_l2
-
-
-def make_regularizer(regularizer_name, regularizer_param):
-    name_to_keras_regularizer = {
-        'l1': l1(regularizer_param),
-        'l2': l2(regularizer_param),
-        'l1_l2': l1_l2(l1=regularizer_param, l2=regularizer_param),
-    }
-    try:
-        regularizer = name_to_keras_regularizer[regularizer_name]
-    except KeyError as e:
-        raise ValueError('Undefined regularizer: {}'.format(e.args[0]))
-    return regularizer
-
+def reset_weights(model):
+    session = K.get_session()
+    tf.set_random_seed(sklearn_seed)
+    for layer in model.layers:
+        if hasattr(layer, 'kernel_initializer'):
+            layer.kernel.initializer.run(session=session)

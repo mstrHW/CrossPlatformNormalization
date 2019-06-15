@@ -1,67 +1,15 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import pickle
-import inspect
 import types
 import keras
 import numpy as np
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
 from keras.models import load_model, save_model
 from sklearn.linear_model.base import BaseEstimator
-from keras.wrappers.scikit_learn import KerasRegressor
-from module.models.utils import make_regularizer
-from module.models.optimizers import make_optimizer
-from keras.layers import LeakyReLU, PReLU, ELU
-import tensorflow as tf
 
-from sklearn.metrics import mean_absolute_error, r2_score
-get_metric = {
-    'r2': r2_score,
-    'mae': mean_absolute_error,
-}
-
-name_to_activation = {
-    'lrelu': LeakyReLU,
-    'prelu': PReLU,
-    'elu': ELU,
-}
-
-
-class TestHistoryCallback(keras.callbacks.Callback):
-    def __init__(self, log_dir, test_data, scoring_method):
-        super(TestHistoryCallback, self).__init__()
-        self.test_data = test_data
-        self.log_dir = log_dir
-        self.summary_writer = tf.summary.FileWriter(log_dir)
-        self.scoring_method = scoring_method
-
-    def on_train_begin(self, logs={}):
-        self.scores = []
-
-    def on_train_end(self, logs={}):
-        self.summary_writer.flush()
-        self.summary_writer.close()
-        return
-
-    def on_epoch_begin(self, epoch, logs={}):
-        return
-
-    def on_epoch_end(self, epoch, logs={}):
-        score = self.scoring_method(self.test_data)
-        summary = tf.Summary()
-        summary.value.add(tag='test_loss_mae', simple_value=score[0])
-        summary.value.add(tag='test_loss_r2', simple_value=score[1])
-        self.summary_writer.add_summary(summary, epoch)
-        return
-
-    def on_batch_begin(self, batch, logs={}):
-        return
-
-    def on_batch_end(self, batch, logs={}):
-        return
-
-
-def make_activation(activation_name):
-    return name_to_activation[activation_name]()
+from module.models.utils.regularizers import make_regularizer
+from module.models.utils.optimizers import make_optimizer
+from module.models.utils.metrics import make_metric
 
 
 class BaseModel(BaseEstimator):
@@ -101,6 +49,8 @@ class BaseModel(BaseEstimator):
 
         self.regularizer = make_regularizer(regularizer_name, regularizer_param)
         self.model = self.build_model()
+        self.opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
+        self.model.compile(loss=self.loss, optimizer=self.opt, metrics=[make_metric('r2')])
 
     def fit(self,
             train_data,
@@ -256,8 +206,8 @@ class BaseModel(BaseEstimator):
             ys = scaler.inverse_transform(ys)
 
         scores = dict()
-        for metric in metrics:
-            scores[metric] = get_metric[metric](ys, y_preds)
+        for metric_name in metrics:
+            scores[metric_name] = make_metric(metric_name)(ys, y_preds)
 
         return scores
 

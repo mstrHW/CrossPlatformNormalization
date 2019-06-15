@@ -1,9 +1,8 @@
-import pytest
 import numpy as np
-from sklearn.model_selection import ParameterGrid, ParameterSampler, KFold
+from sklearn.model_selection import ParameterSampler
 import definitions
-from module.models.grid_search import load_best_model_parameters, saved_models_parameters_generator
-from module.models.dae_keras import coeff_determination
+from module.models.utils.grid_search import load_best_model_parameters, saved_models_parameters_generator
+from module.models.dae import coeff_determination
 from sklearn.metrics import r2_score
 
 

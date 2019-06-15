@@ -1,8 +1,8 @@
 from module.data_processing import data_processing
 import logging
 from module.models.mlp import MLP
-from module.models.utils import save_results
-from module.models.dae_keras import DenoisingAutoencoder
+from module.models.utils.utils import save_results
+from module.models.dae import DenoisingAutoencoder
 
 
 def main():
