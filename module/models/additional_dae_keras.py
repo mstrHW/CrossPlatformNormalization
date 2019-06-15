@@ -28,7 +28,7 @@ def coeff_determination(y_true, y_pred):
 # lrate = LearningRateScheduler(step_decay)
 
 
-class DenoisingAutoencoder(BaseModel):
+class AdditionalDenoisingAutoencoder(BaseModel):
     def __init__(self, features_count, **kwargs):
         BaseModel.__init__(self, features_count, **kwargs)
 
@@ -36,10 +36,11 @@ class DenoisingAutoencoder(BaseModel):
         input_layer = Input(shape=(self.features_count,))
         self.encoder = self.build_encoder(input_layer, self.layers[0], self.activation)
         self.decoder = self.build_decoder(self.encoder, self.layers[1], self.activation, self.output_activation)
-        model = Model(input_layer, self.decoder)
+        self.output = Dense(1, activation=self.output_activation)(self.encoder)
+        model = Model(input_layer, [self.decoder, self.output])
 
         opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
-        model.compile(loss=self.loss, optimizer=opt, metrics=[coeff_determination])
+        model.compile(loss=[self.loss, self.loss], optimizer=opt, metrics=[coeff_determination])
 
         return model
 

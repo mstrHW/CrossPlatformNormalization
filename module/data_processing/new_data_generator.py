@@ -109,7 +109,13 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
         X = self.__data.iloc[indexes]
 
         corrupt_X = self.data_generation(X.values)
-        return corrupt_X, X
+
+        if self.mode == 'train':
+            answer = (corrupt_X, X)
+        else:
+            answer = (X, corrupt_X)
+
+        return answer
 
     def data_generation(self, X):
         corrupt_batch = random_batch(self.corrupt_batch_count)
@@ -131,7 +137,7 @@ class NewNoisedDataGenerator(keras.utils.Sequence):
 
             X[:, i] = cutted_X
 
-        X['GEO'] = [self.corrupt_batch_names[corrupt_batch] for i in range(X.shape[0])]
+        # X['GEO'] = [self.corrupt_batch_names[corrupt_batch] for i in range(X.shape[0])]
 
         return X
 

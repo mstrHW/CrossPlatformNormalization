@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import pickle
 import inspect
+import types
 import keras
 import numpy as np
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau
@@ -10,6 +11,7 @@ from keras.wrappers.scikit_learn import KerasRegressor
 from module.models.utils import make_regularizer
 from module.models.optimizers import make_optimizer
 from keras.layers import LeakyReLU, PReLU, ELU
+import tensorflow as tf
 
 from sklearn.metrics import mean_absolute_error, r2_score
 get_metric = {
@@ -22,6 +24,40 @@ name_to_activation = {
     'prelu': PReLU,
     'elu': ELU,
 }
+
+
+class TestHistoryCallback(keras.callbacks.Callback):
+    def __init__(self, log_dir, test_data, scoring_method):
+        super(TestHistoryCallback, self).__init__()
+        self.test_data = test_data
+        self.log_dir = log_dir
+        self.summary_writer = tf.summary.FileWriter(log_dir)
+        self.scoring_method = scoring_method
+
+    def on_train_begin(self, logs={}):
+        self.scores = []
+
+    def on_train_end(self, logs={}):
+        self.summary_writer.flush()
+        self.summary_writer.close()
+        return
+
+    def on_epoch_begin(self, epoch, logs={}):
+        return
+
+    def on_epoch_end(self, epoch, logs={}):
+        score = self.scoring_method(self.test_data)
+        summary = tf.Summary()
+        summary.value.add(tag='test_loss_mae', simple_value=score[0])
+        summary.value.add(tag='test_loss_r2', simple_value=score[1])
+        self.summary_writer.add_summary(summary, epoch)
+        return
+
+    def on_batch_begin(self, batch, logs={}):
+        return
+
+    def on_batch_end(self, batch, logs={}):
+        return
 
 
 def make_activation(activation_name):
@@ -77,20 +113,29 @@ class BaseModel(BaseEstimator):
             ):
 
         callbacks_list = []
-        # callbacks_list = self.add_early_stopping(callbacks_list, use_early_stopping)
+        callbacks_list = self.add_early_stopping(callbacks_list, use_early_stopping)
         callbacks_list = self.add_reduce_on_plato(callbacks_list, use_early_stopping)
         callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
+        callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
         callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
-        callbacks_list = self.add_test_score(callbacks_list, test_data)
 
-        history = self.model.fit(
-            *train_data,
-            epochs=self.epochs_count,
-            batch_size=self.batch_size,
-            validation_data=val_data,
-            callbacks=callbacks_list,
-            verbose=1,
-        )
+        if isinstance(train_data, types.GeneratorType):
+            history = self.model.fit_generator(
+                train_data,
+                epochs=self.epochs_count,
+                validation_data=val_data,
+                callbacks=callbacks_list,
+                verbose=2,
+            )
+        else:
+            history = self.model.fit(
+                *train_data,
+                epochs=self.epochs_count,
+                batch_size=self.batch_size,
+                validation_data=val_data,
+                callbacks=callbacks_list,
+                verbose=2,
+            )
 
         self.save_training_history(history, loss_history_file_name)
 
@@ -115,7 +160,7 @@ class BaseModel(BaseEstimator):
             reduce_lr = ReduceLROnPlateau(
                 monitor='val_loss',
                 patience=self.patience,
-                min_lr=self.learning_rate,
+                # min_lr=self.learning_rate,
             )
 
             callbacks_list.append(reduce_lr)
@@ -145,9 +190,24 @@ class BaseModel(BaseEstimator):
 
         return callbacks_list
 
-    def add_test_score(self, callbacks_list, test_data):
+    def add_test_score(self, callbacks_list, log_dir, test_data):
         if test_data is not None:
-            score = self.model.evaluate(*test_data)
+            score = TestHistoryCallback(
+                log_dir=log_dir,
+                test_data=test_data,
+                scoring_method=lambda x: self.model.evaluate(*x)
+            )
+            callbacks_list.append(score)
+
+        return callbacks_list
+
+    def add_test_score_generator(self, callbacks_list, log_dir, test_data):
+        if test_data is not None:
+            score = TestHistoryCallback(
+                log_dir=log_dir,
+                test_data=test_data,
+                scoring_method=lambda x: self.model.evaluate_generator(x)
+            )
             callbacks_list.append(score)
 
         return callbacks_list
@@ -156,33 +216,6 @@ class BaseModel(BaseEstimator):
         if loss_history_file_name is not None:
             with open(loss_history_file_name, 'wb') as file:
                 pickle.dump(history.history, file)
-
-    def fit_generator(self,
-            train_data,
-            test_data=None,
-            use_early_stopping=False,
-            loss_history_file_name=None,
-            model_checkpoint_file_name=None,
-            tensorboard_log_dir=None,
-            ):
-
-        callbacks_list = []
-        callbacks_list = self.add_early_stopping(callbacks_list, use_early_stopping)
-        callbacks_list = self.add_reduce_on_plato(callbacks_list, use_early_stopping)
-        callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
-        callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
-
-        history = self.model.fit_generator(
-            train_data,
-            epochs=self.epochs_count,
-            validation_data=test_data,
-            callbacks=callbacks_list,
-            verbose=2,
-        )
-
-        self.save_training_history(history, loss_history_file_name)
-
-        return self
 
     def save_model(self, file_name):
         save_model(self.model, file_name)
@@ -200,46 +233,33 @@ class BaseModel(BaseEstimator):
     def predict_generator(self, generator):
         return self.model.predict_generator(generator)
 
-    def score(self, X, y, metrics=None):
-        if metrics is None:
-            return self.model.evaluate(X, y)
-
+    def score(self, test_data, scaler=None, metrics=None):
         if metrics is str:
             metrics = [metrics]
 
-        scores = dict()
-        y_pred = self.model.predict(X)
+        if isinstance(test_data, types.GeneratorType):
+            ys = np.zeros(shape=(test_data.batch_size, self.features_count))
+            y_preds = np.zeros(shape=(test_data.batch_size, self.features_count))
 
-        for metric in metrics:
-            scores[metric] = get_metric[metric](y, y_pred)
+            for X, y in test_data:
+                y_pred = self.model.predict(X)
 
-        return scores
+                y_preds = np.concatenate((y_preds, y_pred), axis=0)
+                ys = np.concatenate((ys, y), axis=0)
 
-    def score_generator(self, generator, scaler=None, metrics=None):
-        scores = dict()
-
-        ys = np.zeros(shape=(generator.batch_size, self.features_count))
-        y_preds = np.zeros(shape=(generator.batch_size, self.features_count))
-
-        for X, y in generator:
-            y_pred = self.model.predict(X)
-
-            y_preds = np.concatenate((y_preds, y_pred), axis=0)
-            ys = np.concatenate((ys, y), axis=0)
+        else:
+            y_preds = self.model.predict(test_data[0])
+            ys = test_data[1]
 
         if scaler is not None:
             y_preds = scaler.inverse_transform(y_preds)
             ys = scaler.inverse_transform(ys)
 
+        scores = dict()
         for metric in metrics:
             scores[metric] = get_metric[metric](ys, y_preds)
 
         return scores
-
-    def score_generator_wtf(self, generator):
-        # for metric in metrics:
-        #     scores[metric] = get_metric[metric](y, y_pred)
-        return self.model.evaluate_generator(generator)
 
     def get_params(self, deep=True):
         return dict(

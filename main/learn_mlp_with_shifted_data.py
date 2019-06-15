@@ -156,15 +156,23 @@ from definitions import *
 
 data_params = dict(
     features_count=1000,
-    tissues=['Whole blood'],
-    normalize=True,
-    noising_method='shift',
-    batch_size=128,
     rows_count=None,
+    filtered_column='Tissue',
+    using_values='Whole blood',
+    target_column='Age',
+    normalize=True,
+    use_generator=False,
+    noising_method=None,
+    batch_size=128,
 )
 
-from module.data_processing.data_processing import load_data, get_train_test, fit_scaler
-data, best_genes = load_data(data_params['features_count'], data_params['tissues'], data_params['rows_count'])
+from module.data_processing.data_processing import load_data, filter_data, get_train_test
+from sklearn.preprocessing import MinMaxScaler, minmax_scale
+
+
+data, best_genes = load_data(data_params['features_count'])
+data = filter_data(data, data_params['filtered_column'], data_params['using_values'])
+
 train_data, test_data = get_train_test(data)
 
 ref_batch_name = 'GSE33828'
@@ -173,23 +181,18 @@ normalized_ref_data = train_data[train_data['GEO'] == ref_batch_name].copy()
 normalized_train_data = train_data[train_data['GEO'] != ref_batch_name].copy()
 normalized_test_data = test_data.copy()
 
-from sklearn.preprocessing import minmax_scale
+
+def shift_with_log(X):
+    return np.log(X + 1)
 
 scaler = None
-# if data_params['normalize']:
-#     scaler = fit_scaler(data, best_genes)
-#     normalized_ref_data[best_genes] = scaler.transform(normalized_ref_data[best_genes])
-#     normalized_train_data[best_genes] = scaler.transform(normalized_train_data[best_genes])
-#     normalized_test_data[best_genes] = scaler.transform(normalized_test_data[best_genes])
+
 if data_params['normalize']:
-    scaler = fit_scaler(data, best_genes)
+    # scaler = MinMaxScaler(data[best_genes])
     columns = best_genes.tolist()
     columns.append('GEO')
 
-    def shift_with_log(X):
-        return np.log(X + 3)
-
-    my_preprocessing = lambda x: shift_with_log(minmax_scale(x))
+    my_preprocessing = lambda x: minmax_scale(shift_with_log(x))
     cutted = normalized_ref_data[columns]
     normalized_ref_data[best_genes] = cutted.groupby('GEO').transform(lambda x: my_preprocessing(x))
 
@@ -203,34 +206,26 @@ if data_params['normalize']:
 print(normalized_train_data.shape)
 print(normalized_train_data[best_genes].shape)
 
-data_params = dict(
-    features_count=1000,
-    tissues=['Whole blood'],
-    normalize=True,
-    noising_method='gauss',
-    batch_size=128,
-    rows_count=None,
-)
 
-train_generator = NewNoisedDataGenerator(
-    normalized_ref_data,
-    normalized_train_data,
-    best_genes,
-    'test',
-    batch_size=data_params['batch_size'],
-    noising_method=data_params['noising_method'],
-    # shift_probability=0.5,
-)
-
-test_generator = NewNoisedDataGenerator(
-    normalized_ref_data,
-    normalized_test_data,
-    best_genes,
-    'test',
-    batch_size=data_params['batch_size'],
-    noising_method=None,
-    # shift_probability=0.5,
-)
+# train_generator = NewNoisedDataGenerator(
+#     normalized_ref_data,
+#     normalized_train_data,
+#     best_genes,
+#     'test',
+#     batch_size=data_params['batch_size'],
+#     noising_method=data_params['noising_method'],
+#     # shift_probability=0.5,
+# )
+#
+# test_generator = NewNoisedDataGenerator(
+#     normalized_ref_data,
+#     normalized_test_data,
+#     best_genes,
+#     'test',
+#     batch_size=data_params['batch_size'],
+#     noising_method=None,
+#     # shift_probability=0.5,
+# )
 
 
 import os
@@ -283,12 +278,18 @@ learning_params = dict(
     # generator=True,
 )
 
-best_mlp_model.fit_generator(
-    train_generator,
+
+best_mlp_model.fit(
+    (normalized_train_data[best_genes], normalized_train_data['Age']),
     (normalized_test_data[best_genes], normalized_test_data['Age']),
     **learning_params
 )
-
+#
+# best_mlp_model.fit_generator(
+#     train_generator,
+#     (normalized_test_data[best_genes], normalized_test_data['Age']),
+#     **learning_params
+# )
 
 
 best_mlp_model.save_model(os.path.join(cv_model_path, 'model'))

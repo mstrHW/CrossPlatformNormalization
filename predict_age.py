@@ -79,9 +79,6 @@ def search_model_parameters():
     experiment_dir = os.path.join(MODELS_DIR, 'predict_age/mlp')
     make_dirs(experiment_dir)
 
-    tensorboard_dir = os.path.join(experiment_dir, 'tensorboard')
-    make_dirs(tensorboard_dir)
-
     log_dir = os.path.join(experiment_dir, 'log')
     make_dirs(log_dir)
 
@@ -114,17 +111,16 @@ def search_model_parameters():
     input_data, best_genes = load_data(data_params['features_count'])
     input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
 
-    train_data, test_data = get_train_test(input_data)
-    train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
-    test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
-
-    scaler = None
-    if data_params['normalize']:
-        scaler = MinMaxScaler()
-        scaler.fit(input_data[best_genes])
-
-        train_X = scaler.transform(train_X)
-        test_X = scaler.transform(test_X)
+    # train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+    # test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+    #
+    # scaler = None
+    # if data_params['normalize']:
+    #     scaler = MinMaxScaler()
+    #     scaler.fit(input_data[best_genes])
+    #
+    #     train_X = scaler.transform(train_X)
+    #     test_X = scaler.transform(test_X)
 
     logging.info('Start grid search')
 
@@ -159,8 +155,11 @@ def search_model_parameters():
 
     search_parameters(
         lambda **kwargs: MLP(features_count=data_params['features_count'], **kwargs),
-        (train_data, test_data),
-        model_parameters_space,
+        input_data,
+        best_genes,
+        data_params,
+        using_metrics=['r2', 'mae'],
+        model_parameters_space=model_parameters_space,
         learning_parameters=learning_params,
         cross_validation_parameters=dict(n_splits=5, random_state=sklearn_seed, shuffle=True),
         experiment_dir=experiment_dir,
