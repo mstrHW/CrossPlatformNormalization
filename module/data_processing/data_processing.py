@@ -1,12 +1,9 @@
 import logging
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+
 from module.data_processing.data_generator import NoisedDataGenerator
 from module.data_processing.read_data import read_csv, read_genes
 from definitions import *
-
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def load_data(features_count, rows_count=None):

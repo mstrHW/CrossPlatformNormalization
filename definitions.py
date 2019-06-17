@@ -3,10 +3,11 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+# ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = 'D:/Datasets/InsilicoMedicine'
 # sys.append(ROOT_DIR)
 
-DATA_DIR = '/home/aonishchuk/data'
+DATA_DIR = 'D:/Datasets/InsilicoMedicine/data'
 IMAGES_DIR = os.path.join(ROOT_DIR, 'images')
 MODELS_DIR = os.path.join(ROOT_DIR, 'models')
 
@@ -20,7 +21,7 @@ np_seed = 5531
 sklearn_seed = 23
 
 np.random.seed(np_seed)
-tf.random.set_random_seed(np_seed)
+tf.set_random_seed(np_seed)
 
 
 def get_inner_dirs(path):
@@ -36,3 +37,7 @@ def make_dirs(path):
 
 def path_join(left, right):
     return os.path.join(left, right)
+
+
+make_dirs(IMAGES_DIR)
+make_dirs(MODELS_DIR)

@@ -9,7 +9,7 @@ from sklearn.linear_model.base import BaseEstimator
 
 from module.models.utils.regularizers import make_regularizer
 from module.models.utils.optimizers import make_optimizer
-from module.models.utils.metrics import make_metric
+from module.models.utils.metrics import make_metric, make_sklearn_metric
 
 
 class BaseModel(BaseEstimator):
@@ -170,8 +170,13 @@ class BaseModel(BaseEstimator):
     def save_model(self, file_name):
         save_model(self.model, file_name)
 
-    def load_model(self, file_name, custom_objects=None):
-        self.model = load_model(file_name, custom_objects=custom_objects)
+    def load_model(self, file_name):
+        self.model = load_model(
+            file_name,
+            custom_objects=dict(
+                coeff_determination=make_metric('r2'),
+            )
+        )
 
     @abstractmethod
     def build_model(self):
@@ -183,7 +188,7 @@ class BaseModel(BaseEstimator):
     def predict_generator(self, generator):
         return self.model.predict_generator(generator)
 
-    def score(self, test_data, scaler=None, metrics=None):
+    def score(self, test_data, metrics, scaler=None):
         if metrics is str:
             metrics = [metrics]
 

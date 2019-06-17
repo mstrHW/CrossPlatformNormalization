@@ -5,8 +5,8 @@ import json
 import pandas as pd
 import logging
 import definitions
-from module.data_processing.data_processing import make_shifted_data_generator, get_train_test
-from module.data_processing.new_data_generator import NewNoisedDataGenerator
+from module.data_processing.data_processing import get_train_test
+from module.data_processing.data_generator import NoisedDataGenerator
 from sklearn.preprocessing import MinMaxScaler
 from module.models.utils import utils
 
@@ -93,42 +93,42 @@ def restore_search_state(parameters_generator, search_results_file,):
     return parameters_generator, search_results
 
 
-def cv_iteration(k_fold, model, model_dir, train_data, test_data, learning_parameters, using_metrics):
-    # k_fold = k_fold_splits(train_data, cross_validation_parameters)
-    for i, (cv_train_data, cv_val_data) in enumerate(k_fold):
-        cv_model_dir_name = '{}_fold'.format(i)
-        logging.info(cv_model_dir_name)
-
-        cv_model_path = os.path.join(model_dir, cv_model_dir_name)
-        definitions.make_dirs(cv_model_path)
-
-        loss_history_file = os.path.join(cv_model_path, 'loss_history')
-        model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
-        tensorboard_log_dir = os.path.join(cv_model_path, 'tensorboard_log')
-        model_file = os.path.join(cv_model_path, 'model')
-
-        utils.reset_weights(model)
-        model.fit(
-            cv_train_data,
-            val_data=cv_val_data,
-            test_data=test_data,
-            use_early_stopping=learning_parameters['use_early_stopping'],
-            loss_history_file_name=loss_history_file,
-            model_checkpoint_file_name=model_checkpoint_file,
-            tensorboard_log_dir=tensorboard_log_dir,
-        )
-
-        model.save_model(model_file)
-        logging.info('model was saved at {}'.format(model_file))
-
-        model_parameters = model.get_params()
-
-        # using_metrics = ['r2', 'mae']
-
-        train_score = model.score(*cv_train_data, using_metrics)['mae']
-        val_score = model.score(*cv_val_data, using_metrics)['mae']
-        test_score = model.score(*test_data, using_metrics)['mae']
-    return train_score, val_score, test_score
+# def cv_iteration(k_fold, model, model_dir, train_data, test_data, learning_parameters, using_metrics):
+#     # k_fold = k_fold_splits(train_data, cross_validation_parameters)
+#     for i, (cv_train_data, cv_val_data) in enumerate(k_fold):
+#         cv_model_dir_name = '{}_fold'.format(i)
+#         logging.info(cv_model_dir_name)
+#
+#         cv_model_path = os.path.join(model_dir, cv_model_dir_name)
+#         definitions.make_dirs(cv_model_path)
+#
+#         loss_history_file = os.path.join(cv_model_path, 'loss_history')
+#         model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
+#         tensorboard_log_dir = os.path.join(cv_model_path, 'tensorboard_log')
+#         model_file = os.path.join(cv_model_path, 'model')
+#
+#         utils.reset_weights(model)
+#         model.fit(
+#             cv_train_data,
+#             val_data=cv_val_data,
+#             test_data=test_data,
+#             use_early_stopping=learning_parameters['use_early_stopping'],
+#             loss_history_file_name=loss_history_file,
+#             model_checkpoint_file_name=model_checkpoint_file,
+#             tensorboard_log_dir=tensorboard_log_dir,
+#         )
+#
+#         model.save_model(model_file)
+#         logging.info('model was saved at {}'.format(model_file))
+#
+#         model_parameters = model.get_params()
+#
+#         # using_metrics = ['r2', 'mae']
+#
+#         train_score = model.score(*cv_train_data, using_metrics)['mae']
+#         val_score = model.score(*cv_val_data, using_metrics)['mae']
+#         test_score = model.score(*test_data, using_metrics)['mae']
+#     return train_score, val_score, test_score
 
 
 def search_parameters(model_class,
@@ -338,7 +338,7 @@ def search_parameters_generator(model_class,
             cv_model_path = os.path.join(model_dir, cv_model_dir_name)
             definitions.make_dirs(cv_model_path)
 
-            train_generator = NewNoisedDataGenerator(
+            train_generator = NoisedDataGenerator(
                 normalized_ref_data,
                 cv_train_data,
                 best_genes,
@@ -347,7 +347,7 @@ def search_parameters_generator(model_class,
                 noising_method=data_params['noising_method'],
             )
 
-            val_generator = NewNoisedDataGenerator(
+            val_generator = NoisedDataGenerator(
                 normalized_ref_data,
                 cv_val_data,
                 best_genes,
@@ -356,7 +356,7 @@ def search_parameters_generator(model_class,
                 noising_method=data_params['noising_method'],
             )
 
-            test_generator = NewNoisedDataGenerator(
+            test_generator = NoisedDataGenerator(
                 normalized_ref_data,
                 test_data,
                 best_genes,

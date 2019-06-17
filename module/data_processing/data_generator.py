@@ -1,7 +1,7 @@
 import numpy as np
 import keras
 from tqdm import tqdm
-
+import definitions
 from module.data_processing.noising_methods import gaussian_noise
 
 
@@ -36,88 +36,115 @@ def calculate_gene_distribution_params(data, geo_names, gene_names):
 
 
 class NoisedDataGenerator(keras.utils.Sequence):
-    def __init__(self, data, ref_batch_name, geo_names, gene_names, batch_size=32, shuffle=True,
-                 noising_method='shift'):
-        self.batch_distribution_params = calculate_gene_distribution_params(data, geo_names, gene_names)
-        print(self.batch_distribution_params.shape)
 
+    def __init__(self,
+                 reference_batch_data,
+                 corrupt_data,
+                 gene_names,
+                 mode,
+                 batch_size=32,
+                 shuffle=True,
+                 noising_method='shift',
+                 shift_probability=1.0,
+                 ):
+
+        np.random.seed(definitions.np_seed)
+        self.calculate_reference_batch_distribution(reference_batch_data[gene_names])
+        self.calculate_corrupt_batches_distribution(corrupt_data, gene_names)
+        self.calculate_distance_distribution()
+
+        self.corrupt_batch_names = corrupt_data['GEO'].unique()
+        self.mode = mode
         self.noising_method = noising_method
+        self.shift_probability = shift_probability
 
-        self.geo_count = len(geo_names)
-        self.gene_count = len(gene_names)
-
-        self.geo_names = geo_names
-        self.gene_names = gene_names
-
-        print(self.geo_names)
-
-        if noising_method == 'shift':
-            distance = np.zeros((self.geo_count, self.gene_count, 2))
-
-            reference_batch_index = self.geo_names.tolist().index(ref_batch_name)
-            reference_batch_params = self.batch_distribution_params[reference_batch_index]
-
-            for corrupt_batch_index, geo in enumerate(self.geo_names):
-                if corrupt_batch_index == reference_batch_index:
-                    continue
-
-                corrupt_batch_params = self.batch_distribution_params[corrupt_batch_index]
-                corrupt_batch_params[:, 0] = corrupt_batch_params[:, 0] - reference_batch_params[:, 0]
-                corrupt_batch_params[:, 1] = corrupt_batch_params[:, 1] + reference_batch_params[:, 1]
-                corrupt_batch_params[:, 2] = np.sqrt(corrupt_batch_params[:, 1])
-
-                distance[corrupt_batch_index] = corrupt_batch_params[:, [0, 2]]
-
-            distance = np.delete(distance, reference_batch_index, axis=0)
-
-            self.distance = distance
-            self.corrupt_batch_count = self.distance.shape[0]
+        if self.mode == 'train':
+            self.__generate_noise = lambda x_shape, mean, std: gaussian_noise(x_shape, mean, std)
+            self.__data = self.reference_batch_data
         else:
-            self.corrupt_batch_count = self.geo_count
+            self.__generate_noise = lambda x_shape, mean, std: - gaussian_noise(x_shape, mean, std)
+            self.__data = self.corrupt_data
 
+        self.__data = self.__data[gene_names]
+
+        self.data_count = self.__data.shape[0]
         self.batch_size = batch_size
-
-        self.data = data[data['GEO'] == ref_batch_name][self.gene_names]
-        self.data_count = self.data.shape[0]
-        self.ref_batch_name = ref_batch_name
         self.shuffle = shuffle
+
         self.on_epoch_end()
+
+    def calculate_reference_batch_distribution(self, reference_batch_data):
+        answer = reference_batch_data.apply(lambda x: get_distribution_params(x), axis=0)
+        self.reference_batch_data = reference_batch_data
+        self.reference_batch_distribution = np.moveaxis(answer.values, 0, 1)
+
+    def calculate_corrupt_batches_distribution(self, corrupt_data, gene_names):
+        self.corrupt_data = corrupt_data
+        self.corrupt_distribution_params = calculate_gene_distribution_params(corrupt_data, corrupt_data['GEO'].unique(), gene_names)
+
+    def calculate_distance(self, corrupt_batch_params, reference_batch_params):
+        distance = np.zeros(shape=corrupt_batch_params.shape)
+        distance[:, 0] = corrupt_batch_params[:, 0] - reference_batch_params[:, 0]
+        distance[:, 1] = corrupt_batch_params[:, 1] + reference_batch_params[:, 1]
+        distance[:, 2] = np.sqrt(distance[:, 1])
+
+        return distance
+
+    def calculate_distance_distribution(self):
+        distance = np.zeros(shape=self.corrupt_distribution_params.shape)
+
+        for i, corrupt_batch_params in enumerate(self.corrupt_distribution_params):
+            distance[i] = self.calculate_distance(corrupt_batch_params, self.reference_batch_distribution)
+
+        self.distance = distance
+        self.corrupt_batch_count = self.distance.shape[0]
 
     def __len__(self):
         return int(np.floor(self.data_count / self.batch_size))
 
     def __getitem__(self, index):
         indexes = np.random.choice(self.data_count, self.batch_size)
-        X = self.data.iloc[indexes]
-        X = X.values
 
-        corrupt_X = self.data_generation(X)
+        X = self.__data.iloc[indexes]
 
-        return X, corrupt_X
+        corrupt_X = self.data_generation(X.values)
+
+        if self.mode == 'train':
+            answer = (corrupt_X, X)
+        else:
+            answer = (X, corrupt_X)
+
+        return answer
 
     def data_generation(self, X):
         corrupt_batch = random_batch(self.corrupt_batch_count)
-        corrupt_X = X.copy()
 
-        for i in range(corrupt_X.shape[1]):
-            cutted_X = corrupt_X[:, i]
+        for i in range(X.shape[1]):
+            cutted_X = X[:, i]
 
-            flag = np.random.choice(1, p=[0.75, 0.25])
+            flag = np.random.choice(2, 1, p=[1 - self.shift_probability, self.shift_probability])[0]
 
             if self.noising_method == 'noise':
                 mean_ = 0.
                 std_ = 1.
                 cutted_X = cutted_X + gaussian_noise(cutted_X.shape, mean_, std_)
-            elif self.noising_method == 'shifted':
-                mean_, std_ = self.distance[corrupt_batch, i]
+            elif self.noising_method == 'shift':
+                mean_, var_, std_ = self.distance[corrupt_batch, i]
+
                 if flag == 1:
-                    cutted_X = cutted_X + gaussian_noise(cutted_X.shape, mean_, std_)
+                    cutted_X = cutted_X + self.__generate_noise(cutted_X.shape, mean_, std_)
 
-            corrupt_X[:, i] = cutted_X
+            X[:, i] = cutted_X
 
-        return corrupt_X
+        # X['GEO'] = [self.corrupt_batch_names[corrupt_batch] for i in range(X.shape[0])]
+
+        return X
 
     def sample_data(self):
+        '''
+        Doesn't work
+        :return:
+        '''
         reference_batch_index = self.geo_names.tolist().index(self.ref_batch_name)
         corrupt_batch_index = random_batch(self.corrupt_batch_count)
 
@@ -136,3 +163,7 @@ class NoisedDataGenerator(keras.utils.Sequence):
         corrupt_X = X.copy()
         corrupt_X[:self.batch_size] = self.data_generation(corrupt_X[:self.batch_size])
         return X, corrupt_X
+
+
+if __name__ == '__main__':
+    New

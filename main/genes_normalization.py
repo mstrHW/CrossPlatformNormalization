@@ -24,9 +24,10 @@ def main():
         rows_count=None,
     )
 
-    data, best_genes = load_data(data_params['features_count'], data_params['tissues'], data_params['rows_count'])
-    train_data, test_data = get_train_test(data)
+    input_data, best_genes = load_data(data_params['features_count'])
+    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
 
+    train_data, test_data = get_train_test(input_data)
     normalized_train_data = train_data.copy()
     normalized_test_data = test_data.copy()
 

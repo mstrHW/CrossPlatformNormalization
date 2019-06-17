@@ -1,7 +1,9 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, BatchNormalization
 
-from module.models.base_model import BaseModel, make_activation
+from module.models.base_model import BaseModel
+from module.models.utils.activations import make_activation
+from module.models.utils.metrics import make_metric, make_sklearn_metric
 
 
 class MLP(BaseModel):
@@ -36,6 +38,19 @@ class MLP(BaseModel):
         model.add(Dense(self.layers[-1], activation=self.output_activation))
 
         return model
+
+    def score_sklearn(self, test_data, metrics, scaler=None):
+        if metrics is str:
+            metrics = [metrics]
+
+        y_preds = self.model.predict(test_data[0])
+        ys = test_data[1]
+
+        scores = dict()
+        for metric_name in metrics:
+            scores['predictor_{}'.format(metric_name)] = make_sklearn_metric(metric_name)(ys, y_preds)
+
+        return scores
 
 
 if __name__ == '__main__':

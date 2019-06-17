@@ -14,4 +14,4 @@ def make_activation(activation_name):
     except KeyError as e:
         raise ValueError('Undefined optimizer: {}'.format(e.args[0]))
 
-    return activation
+    return activation()
