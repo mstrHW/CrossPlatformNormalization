@@ -2,6 +2,7 @@ from keras.layers import Input, Dense, BatchNormalization
 from keras.models import Model
 import numpy as np
 
+from module.models.base_model import BaseModel
 from module.models.dae import DenoisingAutoencoder
 from module.models.gan import GenerativeAdversarialNetwork
 from module.models.utils.metrics import make_sklearn_metric
@@ -9,9 +10,12 @@ from module.models.utils.activations import make_activation
 from module.models.utils.optimizers import make_optimizer
 
 
-class AdversarialAutoencoder(DenoisingAutoencoder, GenerativeAdversarialNetwork):
+class AdversarialAutoencoder(BaseModel):
     def __init__(self, features_count, latent_dim, **kwargs):
-        DenoisingAutoencoder.__init__(self, features_count, **kwargs)
+        BaseModel.__init__(self, features_count, **kwargs)
+
+        self.dae = DenoisingAutoencoder(features_count, **kwargs)
+        self.gan = GenerativeAdversarialNetwork(features_count, **kwargs)
         self.latent_dim = latent_dim
 
     def build_model(self):

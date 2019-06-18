@@ -4,6 +4,7 @@ from keras.layers import Dense, Dropout, BatchNormalization
 from module.models.base_model import BaseModel
 from module.models.utils.activations import make_activation
 from module.models.utils.metrics import make_metric, make_sklearn_metric
+from module.models.utils.optimizers import make_optimizer
 
 
 class MLP(BaseModel):
@@ -36,6 +37,9 @@ class MLP(BaseModel):
             model.add(Dropout(self.drop_rate))
 
         model.add(Dense(self.layers[-1], activation=self.output_activation))
+
+        opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
+        model.compile(loss=self.loss, optimizer=opt, metrics=[make_metric('r2')])
 
         return model
 

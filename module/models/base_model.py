@@ -10,6 +10,7 @@ from sklearn.linear_model.base import BaseEstimator
 from module.models.utils.regularizers import make_regularizer
 from module.models.utils.optimizers import make_optimizer
 from module.models.utils.metrics import make_metric, make_sklearn_metric
+from module.models.utils.callbacks import TestHistoryCallback
 
 
 class BaseModel(BaseEstimator):
@@ -49,8 +50,6 @@ class BaseModel(BaseEstimator):
 
         self.regularizer = make_regularizer(regularizer_name, regularizer_param)
         self.model = self.build_model()
-        self.opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
-        self.model.compile(loss=self.loss, optimizer=self.opt, metrics=[make_metric('r2')])
 
     def fit(self,
             train_data,

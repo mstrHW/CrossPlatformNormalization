@@ -1,7 +1,8 @@
 from keras.layers import Input, Dense
 from keras.models import Model
 from module.models.dae import DenoisingAutoencoder
-from module.models.utils.metrics import make_sklearn_metric
+from module.models.utils.metrics import make_sklearn_metric, make_metric
+from module.models.utils.optimizers import make_optimizer
 
 
 class DAEwithPredictor(DenoisingAutoencoder):
@@ -15,11 +16,10 @@ class DAEwithPredictor(DenoisingAutoencoder):
         decoded = self.build_decoder(encoded, self.layers[1], self.activation, self.output_activation)
         predicted = Dense(1, activation=self.output_activation, name='predictor')(encoded)
 
-        # self.encoder = Model(input_layer, encoded)
-        # self.decoder = Model(encoded, decoded)
-        # self.predictor = Model(encoded, predicted)
-
         model = Model(input_layer, [decoded, predicted])
+
+        opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
+        model.compile(loss=self.loss, optimizer=opt, metrics=[make_metric('r2')])
 
         return model
 

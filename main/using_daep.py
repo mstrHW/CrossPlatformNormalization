@@ -4,6 +4,11 @@ from module.data_processing.data_processing import *
 from module.models.additional_dae_keras import DAEwithPredictor
 from module.models.mlp import MLP
 
+# ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(ROOT_DIR)
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
+
 # logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
 logging.basicConfig(level=logging.DEBUG)
 logging.debug('Read data')
@@ -126,7 +131,7 @@ learning_params = dict(
 
 logging.debug('Fit model')
 model.fit(
-    (decoded_train_X, train_y),
+    (train_X, train_y),
     (decoded_test_X, test_y),
     **learning_params,
 )
@@ -139,7 +144,7 @@ train_score = model.score_sklearn(
 print(train_score)
 
 test_score = model.score_sklearn(
-    (test_X, test_y),
+    (decoded_test_X, test_y),
     ['r2', 'mae'],
 )
 

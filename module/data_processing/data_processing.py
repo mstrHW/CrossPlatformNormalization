@@ -1,5 +1,6 @@
 import logging
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 from module.data_processing.data_generator import NoisedDataGenerator
 from module.data_processing.read_data import read_csv, read_genes
@@ -38,6 +39,12 @@ def get_train_test(data):
     test_data = data[~train_mask]
 
     return train_data, test_data
+
+
+def fit_scaler(data):
+    scaler = MinMaxScaler()
+    scaler.fit(data)
+    return scaler
 
 
 def make_shifted_data_generator(data, best_genes, batch_size, noising_method='shift'):

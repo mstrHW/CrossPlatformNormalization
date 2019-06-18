@@ -3,6 +3,8 @@ from keras.models import Model
 
 from module.models.base_model import BaseModel
 from module.models.utils.activations import make_activation
+from module.models.utils.optimizers import make_optimizer
+from module.models.utils.metrics import make_metric
 
 
 class DenoisingAutoencoder(BaseModel):
@@ -17,6 +19,8 @@ class DenoisingAutoencoder(BaseModel):
         decoded = self.build_decoder(encoded, self.layers[1], self.activation, self.output_activation)
 
         model = Model(input_layer, decoded)
+        opt = make_optimizer(self.optimizer_name, lr=self.learning_rate)
+        model.compile(loss=self.loss, optimizer=opt, metrics=[make_metric('r2')])
 
         return model
 
