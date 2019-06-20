@@ -3,19 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="8847227a-9621-4dff-b8bd-531fafa63ca0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/using_daep.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/using_daep.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/module/data_processing/data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/module/data_processing/data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/aae.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/aae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/additional_dae_keras.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/additional_dae_keras.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/base_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/dae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/mlp.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/mlp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/analyze_data.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/__analyze_data.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/dae.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/__dae.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/data_processing/test_data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/data_processing/test_data_generator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,20 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/predict_age.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" selection-start-line="11" selection-end-line="12" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/data_processing/data_processing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="55" column="37" lean-forward="true" selection-start-line="55" selection-start-column="37" selection-end-line="55" selection-end-column="37" />
+            <state relative-caret-position="225">
+              <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -53,8 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/data_processing/test_data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="273" column="29" lean-forward="true" selection-start-line="273" selection-start-column="29" selection-end-line="273" selection-end-column="29" />
+            <state relative-caret-position="291">
+              <caret line="265" column="22" selection-start-line="265" selection-start-column="22" selection-end-line="265" selection-end-column="64" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -63,46 +43,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/pandas/core/indexing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="542" selection-start-line="542" selection-end-line="542" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/ops/variables.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="212" selection-start-line="212" selection-end-line="212" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/client/session.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="1318" selection-start-line="1318" selection-end-line="1318" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="140" column="72" selection-start-line="140" selection-start-column="72" selection-end-line="140" selection-end-column="72" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/data_processing/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="62" column="74" selection-start-line="62" selection-start-column="74" selection-end-line="62" selection-end-column="74" />
+            <state relative-caret-position="60">
+              <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="65" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -111,9 +64,39 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/definitions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="870">
+              <caret line="58" selection-start-line="58" selection-end-line="58" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/using_daep.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
+            <state relative-caret-position="1035">
               <caret line="73" column="17" selection-start-line="73" selection-start-column="17" selection-end-line="73" selection-end-column="17" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
@@ -159,6 +142,7 @@
       <find>train_generator</find>
       <find>separate_labels_splits</find>
       <find>log</find>
+      <find>data_generation</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -167,7 +151,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py" />
         <option value="$PROJECT_DIR$/main/search_dae_parameters.py" />
         <option value="$PROJECT_DIR$/module/models/layers.py" />
         <option value="$PROJECT_DIR$/Eve/main.py" />
@@ -206,18 +189,19 @@
         <option value="$PROJECT_DIR$/module/models/gan.py" />
         <option value="$PROJECT_DIR$/main/utils.py" />
         <option value="$PROJECT_DIR$/module/models/utils/grid_search.py" />
-        <option value="$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py" />
         <option value="$PROJECT_DIR$/module/models/aae.py" />
-        <option value="$PROJECT_DIR$/definitions.py" />
-        <option value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
         <option value="$PROJECT_DIR$/module/models/base_model.py" />
         <option value="$PROJECT_DIR$/module/models/dae.py" />
         <option value="$PROJECT_DIR$/module/models/additional_dae_keras.py" />
         <option value="$PROJECT_DIR$/module/models/mlp.py" />
         <option value="$PROJECT_DIR$/main/using_daep.py" />
         <option value="$PROJECT_DIR$/main/tf_test.py" />
+        <option value="$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py" />
+        <option value="$PROJECT_DIR$/definitions.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_generator.py" />
         <option value="$PROJECT_DIR$/tests/data_processing/test_data_generator.py" />
+        <option value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
+        <option value="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" />
       </list>
     </option>
   </component>
@@ -292,7 +276,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/module/models" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -481,6 +465,13 @@
       <workItem from="1560429717488" duration="4559000" />
       <workItem from="1560764218299" duration="18312000" />
       <workItem from="1560849899836" duration="13173000" />
+      <workItem from="1560936329000" duration="51000" />
+      <workItem from="1560937329109" duration="629000" />
+      <workItem from="1560939563787" duration="110000" />
+      <workItem from="1560940628062" duration="17862000" />
+      <workItem from="1561040431396" duration="626000" />
+      <workItem from="1561043745637" duration="1273000" />
+      <workItem from="1561059769406" duration="575000" />
     </task>
     <task id="LOCAL-00001" summary="before rsync">
       <created>1560245647854</created>
@@ -493,39 +484,39 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 14m 57s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 03m 55s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 15m 11s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 18m 53s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 15m 18s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 19m 32s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 15m 25s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 21m 10s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 16m 43s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 21m 47s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 17m 30s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 24m 00s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 22m 04s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 27m 01s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 22m 30s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 34m 15s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 23m 47s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 37m 47s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
-    <history-entry file="pytest_in_test_data_generator_py - 2019.06.18 at 19h 24m 04s.xml">
+    <history-entry file="pytest_in_test_data_generator_py - 2019.06.20 at 13h 49m 27s.xml">
       <configuration name="pytest in test_data_generator.py" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="284439000" />
+    <option name="totallyTimeSpent" value="305565000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -540,15 +531,15 @@
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17155506" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18815717" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="0" sideWeight="0.6292197" visible="true" weight="0.44060475" />
-      <window_info anchor="bottom" id="File Transfer" order="1" sideWeight="0.4665191" weight="0.13390929" />
+      <window_info active="true" anchor="bottom" id="Run" order="0" sideWeight="0.6292197" visible="true" weight="0.4924406" />
+      <window_info anchor="bottom" id="File Transfer" order="1" sideWeight="0.4665191" visible="true" weight="0.23326133" />
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" sideWeight="0.49789253" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="4" sideWeight="0.4980631" weight="0.32937366" />
-      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.49197567" weight="0.41900647" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.49197567" weight="0.51403886" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="8" sideWeight="0.4986165" weight="0.3297414" />
@@ -567,20 +558,20 @@
       <window_info anchor="right" id="Database" order="6" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14111787" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18151632" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="0" sideWeight="0.6314333" visible="true" weight="0.3790497" />
-      <window_info anchor="bottom" id="File Transfer" order="1" sideWeight="0.4670725" weight="0.13390929" />
+      <window_info anchor="bottom" id="Run" order="0" sideWeight="0.6292197" weight="0.4924406" />
+      <window_info anchor="bottom" id="File Transfer" order="1" sideWeight="0.4665191" visible="true" weight="0.23326133" />
       <window_info anchor="bottom" id="Message" order="2" />
-      <window_info anchor="bottom" id="Find" order="3" sideWeight="0.4986165" weight="0.3297414" />
+      <window_info anchor="bottom" id="Find" order="3" sideWeight="0.49789253" weight="0.32936078" />
       <window_info anchor="bottom" id="Version Control" order="4" sideWeight="0.4980631" weight="0.32937366" />
-      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.49308246" weight="0.42008638" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.49197567" weight="0.51403886" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="8" sideWeight="0.4986165" weight="0.3297414" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.48865524" weight="0.32937366" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.3685667" side_tool="true" visible="true" weight="0.3790497" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.48865524" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.3707803" side_tool="true" weight="0.42332613" />
       <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.4975097" weight="0.32937366" />
       <window_info anchor="bottom" id="Docker" order="12" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="13" />
@@ -588,8 +579,8 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="3" />
-      <window_info anchor="right" id="SciView" order="4" visible="true" weight="0.081350304" />
+      <window_info anchor="right" id="R Graphics" order="3" weight="0.32982844" />
+      <window_info anchor="right" id="SciView" order="4" weight="0.081350304" />
       <window_info anchor="right" id="R Packages" order="5" weight="0.32982844" />
       <window_info anchor="right" id="Database" order="6" />
     </layout-to-restore>
@@ -619,6 +610,11 @@
           <line>39</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/data_processing/test_data_generator.py</url>
+          <line>181</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -634,7 +630,7 @@
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$predict_age__1_.coverage" NAME="predict_age (1) Coverage Results" MODIFIED="1559738324666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$pytest_in_test_grid_search_py.coverage" NAME="pytest in test_grid_search.py Coverage Results" MODIFIED="1559738082148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests/models" />
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$tf_test.coverage" NAME="tf_test Coverage Results" MODIFIED="1560865372995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
-    <SUITE FILE_PATH="coverage/CrossPlatformNormalization$pytest_in_test_data_generator_py.coverage" NAME="pytest in test_data_generator.py Coverage Results" MODIFIED="1560875042551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests/data_processing" />
+    <SUITE FILE_PATH="coverage/CrossPlatformNormalization$pytest_in_test_data_generator_py.coverage" NAME="pytest in test_data_generator.py Coverage Results" MODIFIED="1561027641245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests/data_processing" />
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$main.coverage" NAME="main Coverage Results" MODIFIED="1559560320148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Eve" />
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$find_dae_model.coverage" NAME="find_dae_model Coverage Results" MODIFIED="1559046481509" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$using_daep.coverage" NAME="using_daep Coverage Results" MODIFIED="1560793103264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
@@ -646,18 +642,6 @@
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$pytest_in_test_set_zero_py.coverage" NAME="pytest in test_set_zero.py Coverage Results" MODIFIED="1559672250296" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests/models" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/module/models/mSDA.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-687">
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/models/utils/regularizers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -689,15 +673,6 @@
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/keras/engine/base_layer.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/keras/engine/training_utils.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/keras/engine/training.py" />
-    <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/core/numeric.py" />
     <entry file="file://$PROJECT_DIR$/module/models/utils/activations.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -796,29 +771,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/-236671578/tokenize.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6720">
-          <caret line="456" column="23" lean-forward="true" selection-start-line="456" selection-start-column="23" selection-end-line="456" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/-236671578/tokenize.py" />
     <entry file="file://$PROJECT_DIR$/main/search_dae_parameters.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
           <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/definitions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -842,9 +801,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/__analyze_data.ipynb">
-      <provider selected="true" editor-type-id="jupyter-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/notebooks/__analyze_data.ipynb" />
     <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="61">
@@ -868,13 +825,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/keras/engine/training.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="951" selection-start-line="951" selection-end-line="951" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/keras/engine/training.py" />
     <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1095">
@@ -912,47 +863,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/ops/variables.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="212" selection-start-line="212" selection-end-line="212" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/client/session.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="1318" selection-start-line="1318" selection-end-line="1318" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/using_daep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="73" column="17" selection-start-line="73" selection-start-column="17" selection-end-line="73" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/predict_age.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" selection-start-line="11" selection-end-line="12" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="140" column="72" selection-start-line="140" selection-start-column="72" selection-end-line="140" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/tf_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="533">
@@ -963,17 +873,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/pandas/core/indexing.py">
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/pandas/core/indexing.py" />
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/ops/variables.py" />
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/-1569150268/936185866/tensorflow/python/client/session.py" />
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/1122924011/936185866/numpy/core/fromnumeric.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="542" selection-start-line="542" selection-end-line="542" />
+        <state relative-caret-position="-348">
+          <caret line="93" column="4" selection-start-line="93" selection-start-column="4" selection-end-line="93" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/module/data_processing/data_processing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="55" column="37" lean-forward="true" selection-start-line="55" selection-start-column="37" selection-end-line="55" selection-end-column="37" />
+        <state relative-caret-position="1200">
+          <caret line="80" selection-start-line="80" selection-end-line="80" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/predict_age.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -982,25 +908,59 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/module/data_processing/data_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="62" column="74" selection-start-line="62" selection-start-column="74" selection-end-line="62" selection-end-column="74" />
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/definitions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/learn_mlp_with_shifted_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="58" selection-start-line="58" selection-end-line="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/using_daep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1035">
+          <caret line="73" column="17" selection-start-line="73" selection-start-column="17" selection-end-line="73" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/data_processing/test_data_generator.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="273" column="29" lean-forward="true" selection-start-line="273" selection-start-column="29" selection-end-line="273" selection-end-column="29" />
+        <state relative-caret-position="291">
+          <caret line="265" column="22" selection-start-line="265" selection-start-column="22" selection-end-line="265" selection-end-column="64" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

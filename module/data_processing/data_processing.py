@@ -1,8 +1,8 @@
 import logging
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, minmax_scale
 
-from module.data_processing.data_generator import NoisedDataGenerator
+from module.data_processing.noising_methods import gaussian_noise
 from module.data_processing.read_data import read_csv, read_genes
 from definitions import *
 
@@ -47,18 +47,41 @@ def fit_scaler(data):
     return scaler
 
 
-def make_shifted_data_generator(data, best_genes, batch_size, noising_method='shift'):
-    np.random.seed(np_seed)
-    value_counts = data['GEO'].value_counts()
-    unique_geos = data['GEO'].unique()
+def normalize_by_series(data, best_genes):
+    columns = best_genes.tolist()
+    columns.append('GEO')
 
-    max_count_class = value_counts.index.tolist()[0]
-    training_generator = NoisedDataGenerator(
-        data,
-        max_count_class,
-        unique_geos,
-        best_genes,
-        batch_size=batch_size,
-        noising_method=noising_method,
-    )
-    return training_generator
+    cutted_data = data.loc[:, columns]
+    data.loc[:, best_genes] = cutted_data.groupby('GEO').transform(lambda x: minmax_scale(x))
+
+    return data
+
+
+def get_batches(data, batch_size):
+    for i in range(0, data.shape[0], batch_size):
+        yield data[i:i + batch_size]
+
+
+def add_gaussian_noise(data, batch_size, noise_probability_for_gene):
+    for batch in get_batches(data, batch_size):
+        batch_shape = (batch.shape[0], data.shape[1])
+
+        noising_flags = np.random.choice(
+            2,
+            batch_shape,
+            p=[1-noise_probability_for_gene, noise_probability_for_gene],
+        )
+
+        noising_flags = np.array(noising_flags, dtype=bool)
+
+        noise = gaussian_noise(batch_shape, 0.5, 0.5)
+        batch = batch.where(noising_flags, batch + noise)
+        yield batch
+
+
+def apply_log(data, shift=0.):
+    return np.log(data + shift)
+
+
+def revert_log(data, shift=0.):
+    return np.exp(data) - shift

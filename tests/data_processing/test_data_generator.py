@@ -1,28 +1,11 @@
 import pytest
 from sklearn.preprocessing import minmax_scale
 
-
-from module.data_processing.data_generator import NoisedDataGenerator
+from module.data_processing.data_generator import DistanceNoiseGenerator
 from module.data_processing.noising_methods import gaussian_noise
 
 from definitions import *
-from module.data_processing.read_data import read_csv, read_genes
-from module.data_processing.data_processing import load_data, get_train_test, make_shifted_data_generator, filter_data, fit_scaler
-
-
-@pytest.mark.skip(reason="no way of currently testing this")
-def test_data_generation():
-    assert False
-
-
-@pytest.mark.skip(reason="no way of currently testing this")
-def test_using_data_generator():
-    data = read_csv(illu_file, None)
-    using_geos = data['GEO'].unique()
-    using_genes = read_genes(best_genes_file)[:1000]
-    ref_geo_name = data['GEO'].value_counts().index.values[0]
-    print(ref_geo_name)
-    generator = NoisedDataGenerator(data, ref_geo_name, using_geos, using_genes, batch_size=256)
+from module.data_processing.data_processing import load_data, get_train_test, filter_data, fit_scaler
 
 
 @pytest.mark.skip(reason="no way of currently testing this")
@@ -110,30 +93,32 @@ def test_using_gauss_noise():
 
 
 def shift_to_corrupt(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
-    noised_batches_generator = NoisedDataGenerator(
+    noised_batches_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,
         best_genes,
         'train',
         noise_probability,
-        batch_size=batch_size,
     )
-    return noised_batches_generator
+
+    for batch in get_batches(ref_data, batch_size):
+        yield noised_batches_generator.data_generation(batch[best_genes].values)
 
 
 def shift_to_reference(corrupt_data, ref_data, best_genes, noise_probability, batch_size):
-    noised_batches_generator = NoisedDataGenerator(
+    noised_batches_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,
         best_genes,
         'test',
         noise_probability,
-        batch_size=batch_size,
     )
-    return noised_batches_generator
+
+    for batch in get_batches(corrupt_data, batch_size):
+        yield noised_batches_generator.data_generation(batch[best_genes].values)
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
+# @pytest.mark.skip(reason="no way of currently testing this")
 def test_using_distance_noise():
     noise_probability = 0.25
     batch_size = 128
@@ -151,6 +136,8 @@ def test_using_distance_noise():
     _test_data = test_data.copy()
 
     _train_data.loc[:, best_genes] = scaler.transform(_train_data.loc[:, best_genes])
+    ref_data.loc[:, best_genes] = scaler.transform(ref_data.loc[:, best_genes])
+    _test_data.loc[:, best_genes] = scaler.transform(_test_data.loc[:, best_genes])
 
     train_noised_batches_generator = shift_to_corrupt(
         ref_data,
@@ -168,10 +155,67 @@ def test_using_distance_noise():
         batch_size,
     )
 
-    for batch in test_noised_batches_generator:
+    for batch in train_noised_batches_generator:
         pass
 
     assert True
+
+
+def __data_generation(X, corrupt_batches_count, distance, shift_probability):
+    selected_batches = np.random.choice(corrupt_batches_count, X.shape)
+    selected_batches = selected_batches.shape[1] * selected_batches + np.arange(selected_batches.shape[1])  # for broadcasting
+
+    means = np.take(distance[0], selected_batches)
+    stds = np.take(distance[1], selected_batches)
+
+    print(distance[0].shape)
+    print(distance[1].shape)
+
+    print(X.shape)
+    print(means.shape)
+    print(stds.shape)
+
+    selected_genes = np.random.choice(2, X.shape, p=[1 - shift_probability, shift_probability])
+    selected_genes = np.array(selected_genes, dtype=bool)
+    print(selected_genes.shape)
+
+    X[selected_genes] = X[selected_genes] + gaussian_noise(X.shape, means, stds)[selected_genes]
+
+    return X
+
+
+@pytest.mark.skip(reason="no way of currently testing this")
+def test_data_generation():
+    import numpy as np
+
+    np.random.seed(1)
+
+    X = np.random.rand(2, 3)
+
+    distance = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+    ])
+
+    distance2 = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+    ])
+
+    selected_batches = np.array([
+        [0, 1, 0],
+        [1, 2, 1],
+    ])
+
+    answer = np.array([
+        [1, 5, 3],
+        [4, 8, 6],
+    ])
+
+    corrupt_X = __data_generation(X, distance.shape[0], (distance, distance2), 0.25)
+    print(corrupt_X)
 
 
 def normalize_by_series(data, best_genes):
@@ -200,14 +244,6 @@ def test_using_normalization_by_series():
         pass
 
     assert True
-
-
-def apply_log(data, shift=0.):
-    return np.log(data + shift)
-
-
-def revert_log(data, shift=0.):
-    return np.exp(data) - shift
 
 
 @pytest.mark.skip(reason="no way of currently testing this")
@@ -258,51 +294,5 @@ def test_distance_noise_with_log():
     for batch in get_batches(normalized_data, batch_size):
         print(batch[best_genes])
         pass
-
-    assert True
-
-
-def data_generation(X, shift_probability, corrupt_batches_count):
-    # corrupt_batch = random_batch(self.corrupt_batch_count)
-
-    choosed_genes_flag = np.random.choice(2, X.shape, p=[1-shift_probability, shift_probability])
-    choosed_genes_flag = np.array(choosed_genes_flag, dtype=bool)
-
-    choosed_batches_flag = np.random.choice(corrupt_batches_count, X.shape)
-    choosed_batches_flag = np.array(choosed_batches_flag, dtype=bool)
-
-    print(choosed_genes_flag)
-
-    means = dis
-
-    means = [i for i in range(X.shape[1])]
-    stds = [i/X.shape[1] for i in range(X.shape[1])]
-
-    X[choosed_genes_flag] = X[choosed_genes_flag] + gaussian_noise(X.shape, means, stds)[choosed_genes_flag]
-
-    # for i in range(X.shape[1]):
-    #     cutted_X = X[:, i]
-    #
-    #     mean_, var_, std_ = self.distance[corrupt_batch, i]
-    #
-    #     if flag == 1:
-    #         cutted_X = cutted_X + self.__generate_noise(cutted_X.shape, mean_, std_)
-    #
-    #     X[:, i] = cutted_X
-
-    return X
-
-
-def test_broadcast_add_distance_noise():
-    np.random.seed(43)
-
-    X = np.array([
-        np.linspace(0, 1, 50),
-        np.linspace(-1, 1, 50),
-    ])
-    print(X)
-
-    _X = data_generation(X, 0.25)
-    print(_X)
 
     assert True
