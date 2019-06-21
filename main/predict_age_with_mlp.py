@@ -9,10 +9,6 @@ import json
 from imp import reload
 reload(logging)
 
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-
-
 def main():
     logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
     logging.debug('Read data')
@@ -111,6 +107,7 @@ def search_model_parameters():
     input_data, best_genes = load_data(data_params['features_count'])
     input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
 
+    # train_data_test_data = get_train_test(input_data)
     # train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
     # test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
     #
@@ -170,5 +167,8 @@ def search_model_parameters():
 
 
 if __name__ == '__main__':
+    import os
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
     # main()
     search_model_parameters()

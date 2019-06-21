@@ -14,7 +14,7 @@ class DenoisingAutoencoder(BaseModel):
         self.decoder = None
 
     def build_model(self):
-        input_layer = Input(shape=self.features_count)
+        input_layer = Input(shape=(self.features_count,))
         encoded = self.build_encoder(input_layer, self.layers[0], self.activation)
         decoded = self.build_decoder(encoded, self.layers[1], self.activation, self.output_activation)
 

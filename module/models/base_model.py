@@ -211,7 +211,7 @@ class BaseModel(BaseEstimator):
 
         scores = dict()
         for metric_name in metrics:
-            scores[metric_name] = make_metric(metric_name)(ys, y_preds)
+            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
 
         return scores
 

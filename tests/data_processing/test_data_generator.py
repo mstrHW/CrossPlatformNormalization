@@ -118,7 +118,7 @@ def shift_to_reference(corrupt_data, ref_data, best_genes, noise_probability, ba
         yield noised_batches_generator.data_generation(batch[best_genes].values)
 
 
-# @pytest.mark.skip(reason="no way of currently testing this")
+@pytest.mark.skip(reason="no way of currently testing this")
 def test_using_distance_noise():
     noise_probability = 0.25
     batch_size = 128
@@ -168,54 +168,62 @@ def __data_generation(X, corrupt_batches_count, distance, shift_probability):
     means = np.take(distance[0], selected_batches)
     stds = np.take(distance[1], selected_batches)
 
-    print(distance[0].shape)
-    print(distance[1].shape)
-
-    print(X.shape)
-    print(means.shape)
-    print(stds.shape)
-
     selected_genes = np.random.choice(2, X.shape, p=[1 - shift_probability, shift_probability])
     selected_genes = np.array(selected_genes, dtype=bool)
-    print(selected_genes.shape)
 
-    X[selected_genes] = X[selected_genes] + gaussian_noise(X.shape, means, stds)[selected_genes]
+    noise = gaussian_noise(X.shape, means, stds)
+    X = np.where(selected_genes, X, X + noise)
 
     return X
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
+def __data_generation2(X, corrupt_batches_count, distance, shift_probability):
+    corrupt_batch = np.random.randint(corrupt_batches_count)
+    # corrupt_X = X.copy()
+
+    for i in range(X.shape[1]):
+        flag = np.random.choice(2, 1, p=[1 - shift_probability, shift_probability])
+
+        if flag:
+            cutted_X = X[:, i]
+            mean_, std_ = distance[0][corrupt_batch, i], distance[1][corrupt_batch, i]
+            cutted_X = cutted_X + gaussian_noise(cutted_X.shape, mean_, std_)
+
+            X[:, i] = cutted_X
+
+    return X
+
+
+# @pytest.mark.skip(reason="no way of currently testing this")
 def test_data_generation():
     import numpy as np
-
     np.random.seed(1)
 
-    X = np.random.rand(2, 3)
+    batch_size = 128
+    features_count = 10000
+    corrupt_batches_count = 5
 
-    distance = np.array([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-    ])
+    X = np.random.rand(batch_size, features_count)
 
-    distance2 = np.array([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-    ])
+    distance = np.arange(0, int(corrupt_batches_count * features_count)).reshape(
+        (corrupt_batches_count, features_count))
 
-    selected_batches = np.array([
-        [0, 1, 0],
-        [1, 2, 1],
-    ])
+    distance2 = np.arange(0, int(corrupt_batches_count * features_count)).reshape(
+        (corrupt_batches_count, features_count))
 
-    answer = np.array([
-        [1, 5, 3],
-        [4, 8, 6],
-    ])
+    import time
 
-    corrupt_X = __data_generation(X, distance.shape[0], (distance, distance2), 0.25)
-    print(corrupt_X)
+    time1 = time.time()
+    for i in range(1000):
+        corrupt_X = __data_generation(X, distance.shape[0], (distance, distance2), 0.5)
+    time2 = time.time()
+    print('{:s} function took {:.3f} ms'.format(__data_generation.__name__, (time2 - time1) * 1000.0))
+
+    time1 = time.time()
+    for i in range(1000):
+        corrupt_X = __data_generation2(X, distance.shape[0], (distance, distance2), 0.5)
+    time2 = time.time()
+    print('{:s} function took {:.3f} ms'.format(__data_generation2.__name__, (time2 - time1) * 1000.0))
 
 
 def normalize_by_series(data, best_genes):
