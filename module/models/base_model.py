@@ -184,22 +184,32 @@ class BaseModel(BaseEstimator):
     def predict(self, X):
         return self.model.predict(X)
 
-    def predict_generator(self, generator):
-        return self.model.predict_generator(generator)
+    def predict_generator(self, X):
+        y_preds = np.zeros(shape=(1, self.features_count))
+        for batch in X:
+            y_pred = self.model.predict(batch)
+            y_preds = np.concatenate((y_preds, y_pred), axis=0)
+
+        y_preds = y_preds[1:]
+
+        return y_preds
 
     def score(self, test_data, metrics, scaler=None):
         if metrics is str:
             metrics = [metrics]
 
         if isinstance(test_data, types.GeneratorType):
-            ys = np.zeros(shape=(test_data.batch_size, self.features_count))
-            y_preds = np.zeros(shape=(test_data.batch_size, self.features_count))
+            ys = np.zeros(shape=(1, self.features_count))
+            y_preds = np.zeros(shape=(1, self.features_count))
 
             for X, y in test_data:
                 y_pred = self.model.predict(X)
 
                 y_preds = np.concatenate((y_preds, y_pred), axis=0)
                 ys = np.concatenate((ys, y), axis=0)
+
+            ys = ys[1:]
+            y_preds = y_preds[1:]
 
         else:
             y_preds = self.model.predict(test_data[0])
@@ -211,7 +221,7 @@ class BaseModel(BaseEstimator):
 
         scores = dict()
         for metric_name in metrics:
-            scores[metric_name] = make_metric(metric_name)(ys, y_preds)
+            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
 
         return scores
 

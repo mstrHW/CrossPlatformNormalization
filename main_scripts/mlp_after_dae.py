@@ -1,4 +1,4 @@
-from module.data_processing import data_processing
+from module.data_processing.data_processing import load_data, filter_data, get_train_test, get_X_y
 import logging
 from module.models.mlp import MLP
 from module.models.utils.utils import save_results
@@ -9,14 +9,22 @@ def main():
     logging.debug('Read data')
     data_params = dict(
         features_count=1000,
-        tissues=['Whole blood'],
+        rows_count=None,
+        filtered_column='Tissue',
+        using_values='Whole blood',
+        target_column='Age',
         normalize=True,
-        noising_method=None,
-        batch_size=512,
-        rows_count=None
+        use_generator=False,
+        noising_method='shift',
+        batch_size=128,
     )
 
-    train_data, test_data = data_processing.main(False, **data_params)
+    input_data, best_genes = load_data(data_params['features_count'])
+    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
+
+    train_data, test_data = get_train_test(input_data)
+    train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
+    test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
 
     logging.debug('Create model')
 
@@ -74,8 +82,8 @@ def main():
     logging.debug('Fit model')
     model.fit(train_data, test_data, **learning_params)
 
-    train_score = model.calculate_score(*train_data_)
-    test_score = model.calculate_score(*test_data_)
+    train_score = model.score(train_data_, metrics=[])
+    test_score = model.calculate_score(test_data_)
 
     save_results('MLP_after_DAE', data_params, model_params, learning_params, train_score, test_score)
 

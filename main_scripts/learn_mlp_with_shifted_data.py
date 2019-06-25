@@ -20,7 +20,7 @@ data_params = dict(
 )
 
 from module.data_processing.data_processing import load_data, filter_data, get_train_test
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, minmax_scale
 
 
 input_data, best_genes = load_data(data_params['features_count'], data_params['rows_count'])
@@ -40,11 +40,12 @@ def preprocess_data(data, best_genes):
 
     scaler = None
     if data_params['normalize']:
-        scaler = MinMaxScaler(shift_with_log(data[best_genes]))
+        # scaler = MinMaxScaler()
+        # scaler.fit(shift_with_log(data[best_genes]))
         columns = best_genes.tolist()
         columns.append('GEO')
 
-        my_preprocessing = lambda x: scaler.transform(shift_with_log(x))
+        my_preprocessing = lambda x: minmax_scale(shift_with_log(x))
         cutted = normalized_ref_data[columns]
         normalized_ref_data[best_genes] = cutted.groupby('GEO').transform(lambda x: my_preprocessing(x))
 
@@ -90,11 +91,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 
 from module.models.mlp import MLP
-from main.utils import load_best_model
+from main_scripts.utils import load_best_model
 
-best_mlp_model, best_model_path = load_best_model(
+
+models_dir = '/home/aonishchuk/projects/CPN2/models'
+best_mlp_model = load_best_model(
     MLP,
-    os.path.join(MODELS_DIR, 'predict_age/mlp'),
+    os.path.join(models_dir, 'predict_age/mlp'),
     'cv_results.json',
 )
 

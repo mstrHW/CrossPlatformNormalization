@@ -6,7 +6,7 @@ import pandas as pd
 import logging
 import definitions
 from module.data_processing.data_processing import get_train_test
-from module.data_processing.data_generator import NoisedDataGenerator
+from module.data_processing.data_generator import DistanceNoiseGenerator
 from sklearn.preprocessing import MinMaxScaler
 from module.models.utils import utils
 

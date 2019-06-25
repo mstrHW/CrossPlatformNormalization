@@ -108,10 +108,9 @@ class DistanceNoiseGenerator(object):
 
         selected_genes = np.random.choice(2, X.shape, p=[1 - self.shift_probability, self.shift_probability])
         selected_genes = np.array(selected_genes, dtype=bool)
-        print(selected_genes)
 
         noise = self.__generate_noise(X.shape, means, stds)
-        X = X.where(selected_genes, X + noise)
+        X = np.where(selected_genes, X, X + noise)
 
         return X
 
@@ -129,7 +128,7 @@ def shift_to_corrupt(ref_data, corrupt_data, best_genes, noise_probability, batc
         yield noised_batches_generator.data_generation(batch[best_genes].values)
 
 
-def shift_to_reference(corrupt_data, ref_data, best_genes, noise_probability, batch_size):
+def shift_to_reference(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
     noised_batches_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,

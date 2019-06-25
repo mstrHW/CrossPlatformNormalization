@@ -50,8 +50,11 @@ if data_params['normalize']:
 daep_train_y = [train_X, train_y]
 daep_test_y = [test_X, test_y]
 
+# models_dir = MODELS_DIR
+models_dir = '/home/aonishchuk/projects/CPN2/models'
+
 experiment_dir_name = 'genes_normalization/daep'
-model_dir = path_join(MODELS_DIR, experiment_dir_name)
+model_dir = path_join(models_dir, experiment_dir_name)
 make_dirs(model_dir)
 
 loss_history_file = os.path.join(model_dir, 'loss_history')
@@ -108,6 +111,8 @@ print(test_score)
 decoded_train_X = model.predict(train_X)[0]
 decoded_test_X = model.predict(test_X)[0]
 
+
+model_file = os.path.join(model_dir, 'model')
 model_params = dict(
     layers=(1500, 800, 700, 500, 128, 1),
     activation='elu',
@@ -129,12 +134,28 @@ learning_params = dict(
     model_checkpoint_file_name=None,
 )
 
-logging.debug('Fit model')
-model.fit(
-    (train_X, train_y),
-    (decoded_test_X, test_y),
-    **learning_params,
-)
+logging.debug('Fit MLP model')
+
+experiment_dir_name = 'genes_normalization/daep'
+model_dir = path_join(experiment_dir_name, 'mlp')
+make_dirs(model_dir)
+
+loss_history_file = os.path.join(model_dir, 'loss_history')
+model_checkpoint_file = os.path.join(model_dir, 'model.checkpoint')
+tensorboard_dir = os.path.join(model_dir, 'tensorboard_log')
+mlp_model_file = os.path.join(model_dir, 'model')
+
+if os.path.exists(mlp_model_file):
+    model.load_model(mlp_model_file)
+else:
+    model.fit(
+        (train_X, train_y),
+        (decoded_test_X, test_y),
+        **learning_params,
+    )
+
+    model.save_model(mlp_model_file)
+
 
 train_score = model.score_sklearn(
     (train_X, train_y),
