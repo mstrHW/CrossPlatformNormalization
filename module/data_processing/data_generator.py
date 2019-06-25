@@ -115,17 +115,17 @@ class DistanceNoiseGenerator(object):
         return X
 
 
-def shift_to_corrupt(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
+def shift_to_corrupt(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
     noised_batches_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,
         best_genes,
-        'train',
+        mode,
         noise_probability,
     )
 
     for batch in get_batches(ref_data, batch_size):
-        yield noised_batches_generator.data_generation(batch[best_genes].values)
+        yield noised_batches_generator.data_generation(batch[best_genes].values), batch
 
 
 def shift_to_reference(ref_data, corrupt_data, best_genes, noise_probability, batch_size):

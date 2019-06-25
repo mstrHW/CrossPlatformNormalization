@@ -271,7 +271,7 @@ def search_parameters(model_class,
             logging.info('overwrite model parameters file ({})'.format(search_results_file))
 
 
-def search_parameters_generator(model_class,
+def search_parameters_generator22(model_class,
                                 ref_batch_name,
                                 data,
                                 best_genes,
@@ -411,6 +411,218 @@ def search_parameters_generator(model_class,
 
         search_results.append(write_message)
         search_results_file = os.path.join(experiment_dir, results_file)
+
+        with open(search_results_file, 'w') as file:
+            json.dump(search_results, file)
+            logging.info('overwrite model parameters file ({})'.format(search_results_file))
+
+from keras.utils.data_utils import Sequence
+
+class DataGenerator(Sequence):
+    'Generates data for Keras'
+    def __init__(self,
+                 data,
+                 label_columns,
+                 mode='None',
+                 batch_size=32,
+                 ):
+
+        if mode == 'noise':
+            pass
+        elif mode == 'shift':
+            pass
+        elif mode == 'None':
+            pass
+
+        train_generator = shift_to_corrupt(
+            normalized_ref_data,
+            cv_train_data,
+            best_genes,
+            0.25,
+            batch_size=batch_size,
+        )
+
+        self.data = data
+        self.batch_size = batch_size
+        self.on_epoch_end()
+
+    def __len__(self):
+        'Denotes the number of batches per epoch'
+        return int(np.floor(len(self.data.shape[0]) / self.batch_size))
+
+    def __getitem__(self, index):
+        'Generate one batch of data'
+        # Generate indexes of the batch
+        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+
+        # Find list of IDs
+        list_IDs_temp = [self.list_IDs[k] for k in indexes]
+
+        # Generate data
+        X, y = self.__data_generation(list_IDs_temp)
+
+        return X, y
+
+    def on_epoch_end(self):
+        'Updates indexes after each epoch'
+        self.indexes = np.arange(len(self.list_IDs))
+        if self.shuffle == True:
+            np.random.shuffle(self.indexes)
+
+    def __data_generation(self, list_IDs_temp):
+        'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
+        # Initialization
+        X = np.empty((self.batch_size, *self.dim, self.n_channels))
+        y = np.empty((self.batch_size), dtype=int)
+
+        # Generate data
+        for i, ID in enumerate(list_IDs_temp):
+            # Store sample
+            X[i,] = np.load('data/' + ID + '.npy')
+
+            # Store class
+            y[i] = self.labels[ID]
+
+        return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
+
+def search_parameters_generator(model_class,
+                    ref_batch_name,
+                      data,
+                      best_genes,
+                      data_params,
+                      using_metrics,
+                      model_parameters_space,
+                      learning_parameters,
+                      cross_validation_parameters,
+                      experiment_dir,
+                      results_file,
+                      search_method_name='grid',
+                      random_n_iter=150,
+                      ):
+    use_generator = True
+
+    logging.info('Start search method : {}'.format(search_method_name))
+    search_method = ParameterGrid
+    if search_method_name == 'random':
+        search_method = lambda kwargs: ParameterSampler(kwargs,
+                                                        n_iter=random_n_iter,
+                                                        random_state=definitions.sklearn_seed)
+
+    train_data, test_data = get_train_test(data)
+
+    normalized_ref_data = train_data[train_data['GEO'] == ref_batch_name].copy()
+    normalized_train_data = train_data[train_data['GEO'] != ref_batch_name].copy()
+    normalized_test_data = test_data.copy()
+
+    scaler = None
+    if data_params['normalize']:
+        scaler = MinMaxScaler()
+        scaler.fit(data[best_genes])
+
+        normalized_ref_data[best_genes] = scaler.transform(normalized_ref_data[best_genes])
+        normalized_train_data[best_genes] = scaler.transform(normalized_train_data[best_genes])
+        normalized_test_data[best_genes] = scaler.transform(normalized_test_data[best_genes])
+
+    # test_data = test_data[best_genes], test_data['Age']
+
+    parameters_generator = search_method(model_parameters_space)
+
+    search_results_file = os.path.join(experiment_dir, results_file)
+    parameters_generator, search_results = restore_search_state(parameters_generator, search_results_file)
+
+    cv_splits_count = cross_validation_parameters['n_splits']
+
+    trained_models_dir = os.path.join(experiment_dir, 'trained_models')
+    definitions.make_dirs(trained_models_dir)
+    logging.info('trained models dir created at path : {}'.format(trained_models_dir))
+
+    for params in parameters_generator:
+
+        logging.info('current parameters : {}'.format(params))
+
+        model_dir = create_model_directory(trained_models_dir)
+
+        cv_scores = np.zeros((cv_splits_count, 3))
+        model_parameters = []
+
+        model = model_class(**params)
+
+        for i, (cv_train_data, cv_val_data) in enumerate(separate_labels_splits(train_data, best_genes, cross_validation_parameters)):
+            cv_model_dir_name = '{}_fold'.format(i)
+            logging.info(cv_model_dir_name)
+
+            cv_model_path = os.path.join(model_dir, cv_model_dir_name)
+            definitions.make_dirs(cv_model_path)
+
+            loss_history_file = os.path.join(cv_model_path, 'loss_history')
+            model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
+            cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
+
+            train_generator = shift_to_corrupt(
+                normalized_ref_data,
+                cv_train_data,
+                best_genes,
+                0.25,
+                batch_size=data_params['batch_size'],
+            )
+
+            val_generator = shift_to_corrupt(
+                normalized_ref_data,
+                cv_val_data,
+                best_genes,
+                1.,
+                batch_size=data_params['batch_size'],
+                mode='test',
+            )
+
+            test_generator = shift_to_corrupt(
+                normalized_ref_data,
+                test_data,
+                best_genes,
+                1.,
+                batch_size=data_params['batch_size'],
+                mode='test',
+            )
+
+            utils.reset_weights(model)
+            model.fit(
+                train_generator,
+                val_data=val_generator,
+                test_data=test_generator,
+                use_early_stopping=learning_parameters['use_early_stopping'],
+                loss_history_file_name=loss_history_file,
+                model_checkpoint_file_name=model_checkpoint_file,
+                tensorboard_log_dir=cv_tensorboard_dir,
+            )
+
+            model_file = os.path.join(cv_model_path, 'model')
+            model.save_model(model_file)
+            logging.info('model was saved at {}'.format(model_file))
+
+            model_parameters = model.get_params()
+
+            train_score = model.score(cv_train_data, using_metrics)['mae']
+            val_score = model.score(cv_val_data, using_metrics)['mae']
+            test_score = model.score(test_generator, using_metrics)['mae']
+
+            cv_scores[i] = [train_score, val_score, test_score]
+
+        mean_cv_scores = cv_scores.mean(axis=0)
+        cv_scores = np.append(cv_scores, [mean_cv_scores], axis=0)
+
+        save_cross_validation_scores(cv_scores, cv_splits_count, model_dir)
+
+        write_message = dict(
+            params=model_parameters,
+            scores=dict(
+                train=mean_cv_scores[0],
+                val=mean_cv_scores[1],
+                test=mean_cv_scores[2],
+            ),
+            model_path=model_dir,
+        )
+
+        search_results.append(write_message)
 
         with open(search_results_file, 'w') as file:
             json.dump(search_results, file)

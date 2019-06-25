@@ -118,7 +118,7 @@ def main():
 
 def search_model_parameters():
     np.random.seed(np_seed)
-    tf.set_random_seed(np_seed)
+    tf.random.set_random_seed(np_seed)
 
     experiment_path = os.path.join(MODELS_DIR, 'genes_normalization/dae')
     if not os.path.exists(experiment_path):
@@ -171,7 +171,7 @@ def search_model_parameters():
     activation = ['elu', 'lrelu', 'prelu']
     # dropout_rate = [0.25, 0.5, 0.75]
     regularization_param = [10 ** -i for i in range(3, 7)]
-    epochs_count = 5,
+    epochs_count = 2000,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
     learning_rate = 1e-3,
