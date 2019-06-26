@@ -14,6 +14,7 @@ IMAGES_DIR = os.path.join(ROOT_DIR, 'images')
 MODELS_DIR = os.path.join(ROOT_DIR, 'models')
 
 illu_file = os.path.join(DATA_DIR, 'illu_rawnorm.csv')
+test_file = os.path.join(DATA_DIR, 'mini_illu_rawnorm.csv')
 genes_file = os.path.join(DATA_DIR, 'illu_genes.pkl')
 landmarks_file = os.path.join(DATA_DIR, 'landmarks.txt')
 kkochetov_model_params_file = os.path.join(DATA_DIR, 'archs.json')

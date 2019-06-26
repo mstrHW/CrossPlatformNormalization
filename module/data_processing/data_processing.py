@@ -7,6 +7,14 @@ from module.data_processing.read_data import read_csv, read_genes
 from definitions import *
 
 
+def load_test_data(features_count, rows_count=None):
+    logging.debug('Read files')
+    data = read_csv(test_file, rows_count)
+    best_genes = read_genes(best_genes_file)[:features_count]
+
+    return data, best_genes
+
+
 def load_data(features_count, rows_count=None):
     logging.debug('Read files')
     data = read_csv(illu_file, rows_count)
@@ -62,21 +70,20 @@ def get_batches(data, batch_size):
         yield data[i:i + batch_size]
 
 
-def add_gaussian_noise(data, batch_size, noise_probability_for_gene):
-    for batch in get_batches(data, batch_size):
-        batch_shape = (batch.shape[0], data.shape[1])
+def add_gaussian_noise(data, noise_probability_for_gene):
+    batch_shape = (data.shape[0], data.shape[1])
 
-        noising_flags = np.random.choice(
-            2,
-            batch_shape,
-            p=[1-noise_probability_for_gene, noise_probability_for_gene],
-        )
+    noising_flags = np.random.choice(
+        2,
+        batch_shape,
+        p=[1-noise_probability_for_gene, noise_probability_for_gene],
+    )
 
-        noising_flags = np.array(noising_flags, dtype=bool)
+    noising_flags = np.array(noising_flags, dtype=bool)
 
-        noise = gaussian_noise(batch_shape, 0.5, 0.5)
-        batch = batch.where(noising_flags, batch + noise)
-        yield batch
+    noise = gaussian_noise(batch_shape, 0.5, 0.5)
+    data = data.where(noising_flags, data + noise)
+    return data
 
 
 def apply_log(data, shift=0.):

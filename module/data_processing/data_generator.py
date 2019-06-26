@@ -6,14 +6,6 @@ from module.data_processing.noising_methods import gaussian_noise
 from module.data_processing.data_processing import get_batches
 
 
-def random_for_each_gene(corrupt_batch_count, genes_count):
-    return np.random.randint(corrupt_batch_count, size=(genes_count,))
-
-
-def random_batch(corrupt_batch_count):
-    return np.random.randint(corrupt_batch_count)
-
-
 def get_distribution_params(gene):
     mean_ = gene.mean()
     var_ = gene.var(ddof=0)

@@ -9,6 +9,7 @@ import json
 from imp import reload
 reload(logging)
 
+
 def main():
     logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
     logging.debug('Read data')
