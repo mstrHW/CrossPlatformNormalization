@@ -13,7 +13,12 @@ class processing_conveyor(object):
         }
 
         self.processing_sequence = processing_sequence
-        self.input_data, self.best_genes = load_data(**self.processing_sequence['load_data'])
+
+        if 'load_test_data' in self.processing_sequence.keys():
+            self.input_data, self.best_genes = load_test_data(**self.processing_sequence['load_test_data'])
+        else:
+            self.input_data, self.best_genes = load_data(**self.processing_sequence['load_data'])
+
         self.scaler = None
         self.processed_data = self.parse_sequence()
 

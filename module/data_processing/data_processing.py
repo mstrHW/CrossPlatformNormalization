@@ -20,6 +20,9 @@ def load_data(features_count, rows_count=None):
     data = read_csv(illu_file, rows_count)
     best_genes = read_genes(best_genes_file)[:features_count]
 
+    test_df = data.groupby('GEO').apply(lambda x: x[:50])
+    test_df.to_csv(test_file, index=False)
+
     return data, best_genes
 
 
@@ -82,7 +85,7 @@ def add_gaussian_noise(data, noise_probability_for_gene):
     noising_flags = np.array(noising_flags, dtype=bool)
 
     noise = gaussian_noise(batch_shape, 0.5, 0.5)
-    data = data.where(noising_flags, data + noise)
+    data = np.where(noising_flags, data, data + noise)
     return data
 
 

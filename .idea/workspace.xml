@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41a7acb0-5ec5-48d1-af30-b285a208b7d7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/data_processing/data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/module/data_processing/data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/__analyze_data-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/__analyze_data-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/__analyze_data.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/__analyze_data.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/collect_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/collect_results.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/search_dae_parameters.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -31,12 +29,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py">
+        <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-969">
-              <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+            <state relative-caret-position="370">
+              <caret line="207" column="26" selection-start-line="207" selection-start-column="26" selection-end-line="207" selection-end-column="26" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#433#4008#0" />
               </folding>
             </state>
           </provider>
@@ -45,7 +44,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-670">
+            <state relative-caret-position="1599">
               <caret line="185" selection-start-line="185" selection-end-line="185" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
@@ -54,11 +53,22 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2160">
+              <folding>
+                <element signature="e#0#74#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/data_processing/data_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="123" selection-start-line="123" selection-end-line="133" />
+            <state relative-caret-position="391">
+              <caret line="91" column="84" selection-start-line="91" selection-start-column="84" selection-end-line="91" selection-end-column="84" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -67,28 +77,32 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notebooks/__analyze_data.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="0" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notebooks/__dae.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="0" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py">
+        <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1183">
-              <caret line="70" column="10" selection-start-line="70" selection-start-column="10" selection-end-line="70" selection-end-column="10" />
+            <state relative-caret-position="161">
+              <caret line="156" column="27" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#405#2212#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/models/mlp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-451">
+              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="52" column="25" lean-forward="true" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="25" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -96,22 +110,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/notebooks/collect_results.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="0" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/definitions.py">
+        <entry file="file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="27">
-              <caret line="5" column="53" selection-start-line="5" selection-start-column="53" selection-end-line="5" selection-end-column="53" />
+            <state relative-caret-position="414">
+              <caret line="75" column="10" lean-forward="true" selection-start-line="75" selection-start-column="10" selection-end-line="75" selection-end-column="10" />
               <folding>
-                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#0#46#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -120,8 +125,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/data_processing/data_processing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="84" column="50" selection-start-line="84" selection-start-column="50" selection-end-line="84" selection-end-column="50" />
+            <state relative-caret-position="165">
+              <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -139,25 +144,25 @@
       <list>
         <option value="$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_generator.py" />
-        <option value="$PROJECT_DIR$/definitions.py" />
         <option value="$PROJECT_DIR$/notebooks/collect_results.ipynb" />
-        <option value="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" />
+        <option value="$PROJECT_DIR$/definitions.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
+        <option value="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" />
+        <option value="$PROJECT_DIR$/main_scripts/genes_normalization.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="279" />
-    <option name="y" value="285" />
-    <option name="width" value="1595" />
-    <option name="height" value="653" />
+    <option name="x" value="247" />
+    <option name="y" value="34" />
+    <option name="width" value="1657" />
+    <option name="height" value="1031" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -195,15 +200,26 @@
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
               <item name="notebooks" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Документы/GitHub/TradingBot" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -231,6 +247,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -256,54 +273,56 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1561484574213</updated>
+      <workItem from="1561540054545" duration="12721000" />
     </task>
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="12721000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19424461" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.32936078" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="File Transfer" visible="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32937366" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32937366" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="right" id="Remote Host" />
+      <window_info anchor="right" id="R Packages" />
+      <window_info anchor="right" id="R Graphics" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" id="Database" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py</url>
-          <line>20</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1250">
-          <caret line="52" column="25" lean-forward="true" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main_scripts/using_msda.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -326,30 +345,7 @@
     <entry file="file://$PROJECT_DIR$/main_scripts/data_preprocessing.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="16" column="65" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/pandas/core/ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="1455" selection-start-line="1455" selection-end-line="1455" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/pandas/core/ops.py" />
     <entry file="file://$PROJECT_DIR$/main_scripts/tf_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -359,10 +355,98 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="16" column="23" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notebooks/__dae.ipynb">
+      <provider selected="true" editor-type-id="jupyter-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notebooks/__analyze_data.ipynb">
+      <provider selected="true" editor-type-id="jupyter-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/definitions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="31" column="51" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/notebooks/collect_results.ipynb">
+      <provider selected="true" editor-type-id="jupyter-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
+        <state relative-caret-position="165">
           <caret line="11" column="30" lean-forward="true" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/data_understanding.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/data_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/data_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="91" column="84" selection-start-line="91" selection-start-column="84" selection-end-line="91" selection-end-column="84" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="75" column="10" lean-forward="true" selection-start-line="75" selection-start-column="10" selection-end-line="75" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="52" column="25" lean-forward="true" selection-start-line="52" selection-start-column="25" selection-end-line="52" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -375,19 +459,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_with_mlp.py">
+    <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-969">
-          <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+        <state relative-caret-position="370">
+          <caret line="207" column="26" selection-start-line="207" selection-start-column="26" selection-end-line="207" selection-end-column="26" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#433#4008#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="156" column="27" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#405#2212#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/models/mlp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-451">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-670">
+        <state relative-caret-position="1599">
           <caret line="185" selection-start-line="185" selection-end-line="185" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
@@ -395,64 +498,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/definitions.py">
+    <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="5" column="53" selection-start-line="5" selection-start-column="53" selection-end-line="5" selection-end-column="53" />
+        <state relative-caret-position="-2160">
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#74#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/data_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="84" column="50" selection-start-line="84" selection-start-column="50" selection-end-line="84" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/data_generating_cases.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1183">
-          <caret line="70" column="10" selection-start-line="70" selection-start-column="10" selection-end-line="70" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/data_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="123" selection-start-line="123" selection-end-line="133" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/__dae.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/__analyze_data.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/collect_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
         </state>
       </provider>
     </entry>
