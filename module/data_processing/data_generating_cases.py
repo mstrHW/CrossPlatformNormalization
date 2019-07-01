@@ -23,24 +23,27 @@ class processing_conveyor(object):
         self.processed_data = self.parse_sequence()
 
     def normalize_data(self, data, method='default'):
+        _data = data.copy()
         if method == 'default':
             self.scaler = MinMaxScaler()
             self.scaler.fit(data[self.best_genes])
-            data.loc[:, self.best_genes] = self.scaler.transform(data[self.best_genes])
+            _data.loc[:, self.best_genes] = self.scaler.transform(_data[self.best_genes])
         elif method == 'series':
-            data = normalize_by_series(data, self.best_genes)
+            _data = normalize_by_series(_data, self.best_genes)
         else:
             print('Unknown normalization method')
 
-        return data
+        return _data
 
     def apply_log(self, data, shift=0.):
-        data.loc[:, self.best_genes] = apply_log(data[self.best_genes], shift)
-        return data
+        _data = data.copy()
+        _data.loc[:, self.best_genes] = apply_log(_data[self.best_genes], shift)
+        return _data
 
     def parse_sequence(self):
         data = self.input_data
         items = list(self.processing_sequence.items())
+
         for method, params in items[1:]:
             data = self.conveyor_map[method](data, **params)
         return data

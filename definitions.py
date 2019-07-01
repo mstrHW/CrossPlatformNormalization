@@ -3,12 +3,12 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-# ROOT_DIR = 'D:/Datasets/InsilicoMedicine'
+# ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = 'D:/Datasets/InsilicoMedicine'
 sys.path.append(ROOT_DIR)
 
-DATA_DIR = '/home/aonishchuk/data'
-# DATA_DIR = 'D:/Datasets/InsilicoMedicine/data'
+# DATA_DIR = '/home/aonishchuk/data'
+DATA_DIR = 'D:/Datasets/InsilicoMedicine/data'
 
 IMAGES_DIR = os.path.join(ROOT_DIR, 'images')
 MODELS_DIR = os.path.join(ROOT_DIR, 'models')

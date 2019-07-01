@@ -6,8 +6,6 @@ import pandas as pd
 import logging
 import definitions
 from module.data_processing.data_processing import get_train_test
-from module.data_processing.data_generator import DistanceNoiseGenerator
-from sklearn.preprocessing import MinMaxScaler
 from module.models.utils import utils
 
 
@@ -34,7 +32,7 @@ def k_fold_splits(train_data, cross_validation_parameters):
         yield (train_X, train_y), (val_X, val_y)
 
 
-def separate_labels_splits(train_data, best_genes, cross_validation_parameters):
+def separate_labels_splits(train_data, cross_validation_parameters):
     geos = train_data['GEO'].value_counts().keys()
     splits_count = cross_validation_parameters['n_splits']
 
@@ -48,23 +46,17 @@ def separate_labels_splits(train_data, best_genes, cross_validation_parameters):
             cv_train_data = train_data[~cv_val_mask]
             cv_val_data = train_data[cv_val_mask]
 
-            train_X = cv_train_data[best_genes]
-            val_X = cv_val_data[best_genes]
-
-            train_y = cv_train_data['Age']
-            val_y = cv_val_data['Age']
-
-            yield (train_X, train_y), (val_X, val_y)
+            yield cv_train_data, cv_val_data
 
 
 def k_fold_splits_generator(train_data, cross_validation_parameters):
     k_fold = KFold(**cross_validation_parameters)
 
     for train_indexes, val_indexes in k_fold.split(train_data):
-        train_X = train_data.iloc[train_indexes]
-        val_X = train_data.iloc[val_indexes]
+        cv_train_data = train_data.iloc[train_indexes]
+        cv_val_data = train_data.iloc[val_indexes]
 
-        yield (train_X, val_X)
+        yield cv_train_data, cv_val_data
 
 
 def save_cross_validation_scores(cv_scores, cv_splits_count, model_path):
@@ -78,7 +70,7 @@ def save_cross_validation_scores(cv_scores, cv_splits_count, model_path):
     logging.info('cross_validation scores was saved at {}'.format(cv_scores_file))
 
 
-def restore_search_state(parameters_generator, search_results_file,):
+def restore_search_state(parameters_generator, search_results_file):
     search_results = []
     if os.path.exists(search_results_file):
         with open(search_results_file) as json_file:
@@ -93,78 +85,58 @@ def restore_search_state(parameters_generator, search_results_file,):
     return parameters_generator, search_results
 
 
-# def cv_iteration(k_fold, model, model_dir, train_data, test_data, learning_parameters, using_metrics):
-#     # k_fold = k_fold_splits(train_data, cross_validation_parameters)
-#     for i, (cv_train_data, cv_val_data) in enumerate(k_fold):
-#         cv_model_dir_name = '{}_fold'.format(i)
-#         logging.info(cv_model_dir_name)
-#
-#         cv_model_path = os.path.join(model_dir, cv_model_dir_name)
-#         definitions.make_dirs(cv_model_path)
-#
-#         loss_history_file = os.path.join(cv_model_path, 'loss_history')
-#         model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
-#         tensorboard_log_dir = os.path.join(cv_model_path, 'tensorboard_log')
-#         model_file = os.path.join(cv_model_path, 'model')
-#
-#         utils.reset_weights(model)
-#         model.fit(
-#             cv_train_data,
-#             val_data=cv_val_data,
-#             test_data=test_data,
-#             use_early_stopping=learning_parameters['use_early_stopping'],
-#             loss_history_file_name=loss_history_file,
-#             model_checkpoint_file_name=model_checkpoint_file,
-#             tensorboard_log_dir=tensorboard_log_dir,
-#         )
-#
-#         model.save_model(model_file)
-#         logging.info('model was saved at {}'.format(model_file))
-#
-#         model_parameters = model.get_params()
-#
-#         # using_metrics = ['r2', 'mae']
-#
-#         train_score = model.score(*cv_train_data, using_metrics)['mae']
-#         val_score = model.score(*cv_val_data, using_metrics)['mae']
-#         test_score = model.score(*test_data, using_metrics)['mae']
-#     return train_score, val_score, test_score
+def cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, get_x_y_method, using_metrics):
+    train_X, train_y = get_x_y_method(cv_train_data)
+    val_X, val_y = get_x_y_method(cv_val_data)
+    test_X, test_y = get_x_y_method(test_data)
+
+    loss_history_file = os.path.join(cv_model_path, 'loss_history')
+    model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
+    cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
+
+    utils.reset_weights(model)
+    model.fit(
+        (train_X, train_y),
+        val_data=(val_X, val_y),
+        test_data=(test_X, test_y),
+        loss_history_file_name=loss_history_file,
+        model_checkpoint_file_name=model_checkpoint_file,
+        tensorboard_log_dir=cv_tensorboard_dir,
+    )
+
+    model_file = os.path.join(cv_model_path, 'model')
+    model.save_model(model_file)
+    logging.info('model was saved at {}'.format(model_file))
+
+    train_score = model.score(train_X, train_y, using_metrics)
+    val_score = model.score(val_X, val_y, using_metrics)
+    test_score = model.score(test_X, test_y, using_metrics)
+
+    return train_score, val_score, test_score
 
 
 def search_parameters(model_class,
-                      data,
-                      best_genes,
-                      data_params,
+                      train_data,
+                      test_data,
+                      cross_validation_method,
+                      cross_validation_parameters,
+                      get_x_y_method,
                       using_metrics,
                       model_parameters_space,
-                      learning_parameters,
-                      cross_validation_parameters,
                       experiment_dir,
                       results_file,
                       search_method_name='grid',
                       random_n_iter=150,
                       ):
-    use_generator = True
 
     logging.info('Start search method : {}'.format(search_method_name))
-    search_method = ParameterGrid
-    if search_method_name == 'random':
-        search_method = lambda kwargs: ParameterSampler(kwargs,
-                                                        n_iter=random_n_iter,
-                                                        random_state=definitions.sklearn_seed)
 
-    train_data, test_data = get_train_test(data)
+    choose_search_method = {
+        'grid': ParameterGrid,
+        'random': lambda kwargs: ParameterSampler(kwargs, n_iter=random_n_iter, random_state=definitions.sklearn_seed)
+    }
 
-    scaler = None
-    if data_params['normalize']:
-        scaler = MinMaxScaler()
-        scaler.fit(data[best_genes])
-
-        train_data.loc[:, best_genes] = scaler.transform(train_data[best_genes])
-        test_data.loc[:, best_genes] = scaler.transform(test_data[best_genes])
-
-    test_data = test_data[best_genes], test_data['Age']
-
+    search_method = choose_search_method[search_method_name]
     parameters_generator = search_method(model_parameters_space)
 
     search_results_file = os.path.join(experiment_dir, results_file)
@@ -177,436 +149,36 @@ def search_parameters(model_class,
     logging.info('trained models dir created at path : {}'.format(trained_models_dir))
 
     for params in parameters_generator:
-
+        print(params)
         logging.info('current parameters : {}'.format(params))
 
         model_dir = create_model_directory(trained_models_dir)
+        logging.info('model directory : {}'.format(model_dir))
 
         cv_scores = np.zeros((cv_splits_count, 3))
-        model_parameters = []
-
         model = model_class(**params)
 
-        for i, (cv_train_data, cv_val_data) in enumerate(separate_labels_splits(train_data, best_genes, cross_validation_parameters)):
+        for i, (cv_train_data, cv_val_data) in enumerate(cross_validation_method(train_data, cross_validation_parameters)):
             cv_model_dir_name = '{}_fold'.format(i)
-            logging.info(cv_model_dir_name)
-
             cv_model_path = os.path.join(model_dir, cv_model_dir_name)
             definitions.make_dirs(cv_model_path)
 
-            loss_history_file = os.path.join(cv_model_path, 'loss_history')
-            model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
-            cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
+            logging.info(cv_model_path)
 
-            # if create_generator:
-            #     train_generator = NewNoisedDataGenerator(
-            #         normalized_ref_data,
-            #         cv_train_data,
-            #         best_genes,
-            #         'train',
-            #         batch_size=data_params['batch_size'],
-            #         noising_method=data_params['noising_method'],
-            #     )
-            #
-            #     val_generator = NewNoisedDataGenerator(
-            #         normalized_ref_data,
-            #         cv_val_data,
-            #         best_genes,
-            #         'test',
-            #         batch_size=data_params['batch_size'],
-            #         noising_method=data_params['noising_method'],
-            #     )
-            #
-            #     test_generator = NewNoisedDataGenerator(
-            #         normalized_ref_data,
-            #         test_data,
-            #         best_genes,
-            #         'test',
-            #         batch_size=data_params['batch_size'],
-            #         noising_method=data_params['noising_method'],
-            #     )
-
-            utils.reset_weights(model)
-            model.fit(
+            train_score, val_score, test_score = cv_iteration(
+                model,
+                cv_model_path,
                 cv_train_data,
-                val_data=cv_val_data,
-                test_data=test_data,
-                use_early_stopping=learning_parameters['use_early_stopping'],
-                loss_history_file_name=loss_history_file,
-                model_checkpoint_file_name=model_checkpoint_file,
-                tensorboard_log_dir=cv_tensorboard_dir,
-            )
-
-            model_file = os.path.join(cv_model_path, 'model')
-            model.save_model(model_file)
-            logging.info('model was saved at {}'.format(model_file))
-
-            model_parameters = model.get_params()
-
-            train_score = model.score(cv_train_data, using_metrics)['mae']
-            val_score = model.score(cv_val_data, using_metrics)['mae']
-            test_score = model.score(test_data, using_metrics)['mae']
-
-            cv_scores[i] = [train_score, val_score, test_score]
-
-        mean_cv_scores = cv_scores.mean(axis=0)
-        cv_scores = np.append(cv_scores, [mean_cv_scores], axis=0)
-
-        save_cross_validation_scores(cv_scores, cv_splits_count, model_dir)
-
-        write_message = dict(
-            params=model_parameters,
-            scores=dict(
-                train=mean_cv_scores[0],
-                val=mean_cv_scores[1],
-                test=mean_cv_scores[2],
-            ),
-            model_path=model_dir,
-        )
-
-        search_results.append(write_message)
-
-        with open(search_results_file, 'w') as file:
-            json.dump(search_results, file)
-            logging.info('overwrite model parameters file ({})'.format(search_results_file))
-
-
-def search_parameters_generator22(model_class,
-                                ref_batch_name,
-                                data,
-                                best_genes,
-                                data_params,
-                                using_metrics,
-                                model_parameters_space,
-                                learning_parameters,
-                                cross_validation_parameters,
-                                experiment_dir,
-                                results_file,
-                                search_method_name='grid',
-                                random_n_iter=150,
-                                ):
-
-    logging.info('Start search method : {}'.format(search_method_name))
-    search_method = ParameterGrid
-    if search_method_name == 'random':
-        search_method = lambda kwargs: ParameterSampler(kwargs,
-                                                        n_iter=random_n_iter,
-                                                        random_state=definitions.sklearn_seed)
-
-    train_data, test_data = get_train_test(data)
-
-    normalized_ref_data = train_data[train_data['GEO'] == ref_batch_name].copy()
-    normalized_train_data = train_data[train_data['GEO'] != ref_batch_name].copy()
-    normalized_test_data = test_data.copy()
-
-    scaler = None
-    if data_params['normalize']:
-        scaler = MinMaxScaler()
-        scaler.fit(data[best_genes])
-
-        normalized_ref_data[best_genes] = scaler.transform(normalized_ref_data[best_genes])
-        normalized_train_data[best_genes] = scaler.transform(normalized_train_data[best_genes])
-        normalized_test_data[best_genes] = scaler.transform(normalized_test_data[best_genes])
-
-    parameters_generator = search_method(model_parameters_space)
-
-    search_results_file = os.path.join(experiment_dir, results_file)
-    parameters_generator, search_results = restore_search_state(parameters_generator, search_results_file)
-
-    cv_splits_count = cross_validation_parameters['n_splits']
-    # tensorboard_log_dir = os.path.join(experiment_dir, 'tensorboard_log')
-    trained_models_dir = os.path.join(experiment_dir, 'trained_models')
-
-    # definitions.make_dirs(tensorboard_log_dir)
-    definitions.make_dirs(trained_models_dir)
-
-    for params in parameters_generator:
-
-        logging.info('current parameters : {}'.format(params))
-
-        model_dir = create_model_directory(trained_models_dir)
-
-        cv_scores = np.zeros((cv_splits_count, 3))
-        model_parameters = []
-
-        model = model_class(**params)
-
-        for i, (cv_train_data, cv_val_data) in enumerate(k_fold_splits_generator(normalized_train_data, cross_validation_parameters)):
-            cv_model_dir_name = '{}_fold'.format(i)
-            logging.info(cv_model_dir_name)
-
-            cv_model_path = os.path.join(model_dir, cv_model_dir_name)
-            definitions.make_dirs(cv_model_path)
-
-            train_generator = NoisedDataGenerator(
-                normalized_ref_data,
-                cv_train_data,
-                best_genes,
-                'train',
-                batch_size=data_params['batch_size'],
-                noising_method=data_params['noising_method'],
-            )
-
-            val_generator = NoisedDataGenerator(
-                normalized_ref_data,
                 cv_val_data,
-                best_genes,
-                'test',
-                batch_size=data_params['batch_size'],
-                noising_method=data_params['noising_method'],
-            )
-
-            test_generator = NoisedDataGenerator(
-                normalized_ref_data,
                 test_data,
-                best_genes,
-                'test',
-                batch_size=data_params['batch_size'],
-                noising_method=data_params['noising_method'],
+                get_x_y_method,
+                using_metrics,
             )
+            cv_scores[i] = [train_score['r2'], val_score['r2'], test_score['r2']]
 
-            loss_history_file = os.path.join(cv_model_path, 'loss_history')
-            model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
-            cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
-            model_file = os.path.join(cv_model_path, 'model')
+            cv_scores[i] = [0, 0, 0]
 
-            reset_weights(model)
-            model.fit(
-                train_generator,
-                val_data=val_generator,
-                test_data=test_generator,
-                use_early_stopping=learning_parameters['use_early_stopping'],
-                loss_history_file_name=loss_history_file,
-                model_checkpoint_file_name=model_checkpoint_file,
-                tensorboard_log_dir=cv_tensorboard_dir,
-            )
-
-            model.save_model(model_file)
-            logging.info('model was saved at {}'.format(model_file))
-
-            model_parameters = model.get_params()
-
-            using_metrics = ['r2', 'mae']
-
-            train_score = model.score(train_generator, scaler, using_metrics)['r2']
-            val_score = model.score(val_generator, scaler, using_metrics)['r2']
-            test_score = model.score(test_generator, scaler, using_metrics)['r2']
-
-            cv_scores[i] = [train_score, val_score, test_score]
-
-        mean_cv_scores = cv_scores.mean(axis=0)
-        cv_scores = np.append(cv_scores, [mean_cv_scores], axis=0)
-
-        save_cross_validation_scores(cv_scores, cv_splits_count, model_dir)
-
-        write_message = dict(
-            params=model_parameters,
-            scores=dict(
-                train=mean_cv_scores[0],
-                val=mean_cv_scores[1],
-                test=mean_cv_scores[2],
-            ),
-            model_path=model_dir,
-        )
-
-        search_results.append(write_message)
-        search_results_file = os.path.join(experiment_dir, results_file)
-
-        with open(search_results_file, 'w') as file:
-            json.dump(search_results, file)
-            logging.info('overwrite model parameters file ({})'.format(search_results_file))
-
-from keras.utils.data_utils import Sequence
-
-class DataGenerator(Sequence):
-    'Generates data for Keras'
-    def __init__(self,
-                 data,
-                 label_columns,
-                 mode='None',
-                 batch_size=32,
-                 ):
-
-        if mode == 'noise':
-            pass
-        elif mode == 'shift':
-            pass
-        elif mode == 'None':
-            pass
-
-        train_generator = shift_to_corrupt(
-            normalized_ref_data,
-            cv_train_data,
-            best_genes,
-            0.25,
-            batch_size=batch_size,
-        )
-
-        self.data = data
-        self.batch_size = batch_size
-        self.on_epoch_end()
-
-    def __len__(self):
-        'Denotes the number of batches per epoch'
-        return int(np.floor(len(self.data.shape[0]) / self.batch_size))
-
-    def __getitem__(self, index):
-        'Generate one batch of data'
-        # Generate indexes of the batch
-        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
-
-        # Find list of IDs
-        list_IDs_temp = [self.list_IDs[k] for k in indexes]
-
-        # Generate data
-        X, y = self.__data_generation(list_IDs_temp)
-
-        return X, y
-
-    def on_epoch_end(self):
-        'Updates indexes after each epoch'
-        self.indexes = np.arange(len(self.list_IDs))
-        if self.shuffle == True:
-            np.random.shuffle(self.indexes)
-
-    def __data_generation(self, list_IDs_temp):
-        'Generates data containing batch_size samples' # X : (n_samples, *dim, n_channels)
-        # Initialization
-        X = np.empty((self.batch_size, *self.dim, self.n_channels))
-        y = np.empty((self.batch_size), dtype=int)
-
-        # Generate data
-        for i, ID in enumerate(list_IDs_temp):
-            # Store sample
-            X[i,] = np.load('data/' + ID + '.npy')
-
-            # Store class
-            y[i] = self.labels[ID]
-
-        return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
-
-def search_parameters_generator(model_class,
-                    ref_batch_name,
-                      data,
-                      best_genes,
-                      data_params,
-                      using_metrics,
-                      model_parameters_space,
-                      learning_parameters,
-                      cross_validation_parameters,
-                      experiment_dir,
-                      results_file,
-                      search_method_name='grid',
-                      random_n_iter=150,
-                      ):
-    use_generator = True
-
-    logging.info('Start search method : {}'.format(search_method_name))
-    search_method = ParameterGrid
-    if search_method_name == 'random':
-        search_method = lambda kwargs: ParameterSampler(kwargs,
-                                                        n_iter=random_n_iter,
-                                                        random_state=definitions.sklearn_seed)
-
-    train_data, test_data = get_train_test(data)
-
-    normalized_ref_data = train_data[train_data['GEO'] == ref_batch_name].copy()
-    normalized_train_data = train_data[train_data['GEO'] != ref_batch_name].copy()
-    normalized_test_data = test_data.copy()
-
-    scaler = None
-    if data_params['normalize']:
-        scaler = MinMaxScaler()
-        scaler.fit(data[best_genes])
-
-        normalized_ref_data[best_genes] = scaler.transform(normalized_ref_data[best_genes])
-        normalized_train_data[best_genes] = scaler.transform(normalized_train_data[best_genes])
-        normalized_test_data[best_genes] = scaler.transform(normalized_test_data[best_genes])
-
-    # test_data = test_data[best_genes], test_data['Age']
-
-    parameters_generator = search_method(model_parameters_space)
-
-    search_results_file = os.path.join(experiment_dir, results_file)
-    parameters_generator, search_results = restore_search_state(parameters_generator, search_results_file)
-
-    cv_splits_count = cross_validation_parameters['n_splits']
-
-    trained_models_dir = os.path.join(experiment_dir, 'trained_models')
-    definitions.make_dirs(trained_models_dir)
-    logging.info('trained models dir created at path : {}'.format(trained_models_dir))
-
-    for params in parameters_generator:
-
-        logging.info('current parameters : {}'.format(params))
-
-        model_dir = create_model_directory(trained_models_dir)
-
-        cv_scores = np.zeros((cv_splits_count, 3))
-        model_parameters = []
-
-        model = model_class(**params)
-
-        for i, (cv_train_data, cv_val_data) in enumerate(separate_labels_splits(train_data, best_genes, cross_validation_parameters)):
-            cv_model_dir_name = '{}_fold'.format(i)
-            logging.info(cv_model_dir_name)
-
-            cv_model_path = os.path.join(model_dir, cv_model_dir_name)
-            definitions.make_dirs(cv_model_path)
-
-            loss_history_file = os.path.join(cv_model_path, 'loss_history')
-            model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
-            cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
-
-            train_generator = shift_to_corrupt(
-                normalized_ref_data,
-                cv_train_data,
-                best_genes,
-                0.25,
-                batch_size=data_params['batch_size'],
-            )
-
-            val_generator = shift_to_corrupt(
-                normalized_ref_data,
-                cv_val_data,
-                best_genes,
-                1.,
-                batch_size=data_params['batch_size'],
-                mode='test',
-            )
-
-            test_generator = shift_to_corrupt(
-                normalized_ref_data,
-                test_data,
-                best_genes,
-                1.,
-                batch_size=data_params['batch_size'],
-                mode='test',
-            )
-
-            utils.reset_weights(model)
-            model.fit(
-                train_generator,
-                val_data=val_generator,
-                test_data=test_generator,
-                use_early_stopping=learning_parameters['use_early_stopping'],
-                loss_history_file_name=loss_history_file,
-                model_checkpoint_file_name=model_checkpoint_file,
-                tensorboard_log_dir=cv_tensorboard_dir,
-            )
-
-            model_file = os.path.join(cv_model_path, 'model')
-            model.save_model(model_file)
-            logging.info('model was saved at {}'.format(model_file))
-
-            model_parameters = model.get_params()
-
-            train_score = model.score(cv_train_data, using_metrics)['mae']
-            val_score = model.score(cv_val_data, using_metrics)['mae']
-            test_score = model.score(test_generator, using_metrics)['mae']
-
-            cv_scores[i] = [train_score, val_score, test_score]
-
+        model_parameters = model.get_params()
         mean_cv_scores = cv_scores.mean(axis=0)
         cv_scores = np.append(cv_scores, [mean_cv_scores], axis=0)
 
@@ -694,3 +266,101 @@ def load_best_model_parameters(model_directory, results_file):
     best_model_path = data[best_model_index][2]
 
     return best_parameters, best_scores, best_model_path
+
+
+def choose_cross_validation(method='default'):
+    cross_validation = None
+    if method == 'default':
+        cross_validation = k_fold_splits_generator
+    elif method == 'custom':
+        cross_validation = separate_labels_splits
+    return cross_validation
+
+
+def demo():
+    processing_sequence = {
+        'load_test_data': dict(
+            features_count=1000,
+            rows_count=None,
+        ),
+        'filter_data': dict(
+            filtered_column='Tissue',
+            using_values='Whole blood',
+        ),
+        'apply_logarithm': dict(
+            shift=3,
+        ),
+        'normalization': dict(
+            method='series',
+        ),
+    }
+
+    from module.data_processing.data_generating_cases import processing_conveyor
+    data = processing_conveyor(processing_sequence)
+    print(data.processed_data[data.best_genes])
+
+    train_data, test_data = get_train_test(data.processed_data)
+
+    from definitions import sklearn_seed, MODELS_DIR, make_dirs
+    cross_validation_parameters = dict(
+        n_splits=5,
+        random_state=sklearn_seed,
+        shuffle=True,
+    )
+
+    cross_validation_method = choose_cross_validation(method='custom')
+    get_x_y_method = lambda x: (x[data.best_genes], x['Age'])
+
+    layers = [
+        (256, 128, 64, 1),
+        (512, 256, 128, 1),
+        (512, 384, 256, 128, 1),
+        (768, 512, 384, 192, 1),
+        (1024, 768, 512, 384, 128, 1),
+        (1536, 1024, 768, 384, 192, 1),
+    ]
+    activation = ['elu', 'lrelu', 'prelu']
+    dropout_rate = [0.25, 0.5, 0.75]
+    regularization_param = [10 ** -i for i in range(3, 7)]
+    epochs_count = 1,
+    loss = 'mae',
+    optimizer = ['adam', 'rmsprop'] #, 'eve's
+
+    model_parameters_space = dict(
+        layers=layers,
+        drop_rate=dropout_rate,
+        activation=activation,
+        regularizer_param=regularization_param,
+        epochs_count=epochs_count,
+        loss=loss,
+        optimizer_name=optimizer,
+        use_early_stopping=(True,)
+    )
+
+    experiment_dir = os.path.join(MODELS_DIR, 'predict_age/mlp/test')
+    make_dirs(experiment_dir)
+
+    log_dir = os.path.join(experiment_dir, 'log')
+    make_dirs(log_dir)
+
+    log_name = 'log.log'
+    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(log_dir, log_name))
+    logging.info('Read data')
+
+    from module.models.mlp import MLP
+    search_parameters(
+        lambda **params: MLP(data.processing_sequence['load_test_data']['features_count'], **params),
+        train_data,
+        test_data,
+        cross_validation_method,
+        cross_validation_parameters,
+        get_x_y_method,
+        ['r2'],
+        model_parameters_space,
+        experiment_dir,
+        'cv_results.json',
+    )
+
+
+if __name__ == '__main__':
+    demo()

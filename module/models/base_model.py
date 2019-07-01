@@ -30,6 +30,7 @@ class BaseModel(BaseEstimator):
                  batch_size=128,
                  patience=200,
                  learning_rate_decay_method='on_plato',
+                 use_early_stopping=True,
                  ):
 
         self.features_count = features_count
@@ -47,44 +48,54 @@ class BaseModel(BaseEstimator):
         self.loss = loss
         self.batch_size = batch_size
         self.patience = patience
+        self.use_early_stopping = use_early_stopping
 
         self.regularizer = make_regularizer(regularizer_name, regularizer_param)
         self.model = self.build_model()
+
+    def create_callbacks(self,
+                         model_checkpoint_file_name,
+                         tensorboard_log_dir,
+                         test_data,
+                         ):
+
+        callbacks_list = []
+        callbacks_list = self.add_early_stopping(callbacks_list, self.use_early_stopping)
+        callbacks_list = self.add_reduce_on_plato(callbacks_list, self.use_early_stopping)
+        callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
+
+        if isinstance(test_data, types.GeneratorType):
+            callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data)
+        else:
+            callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
+
+        callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
+
+        return callbacks_list
 
     def fit(self,
             train_data,
             val_data=None,
             test_data=None,
-            use_early_stopping=False,
             loss_history_file_name=None,
             model_checkpoint_file_name=None,
             tensorboard_log_dir=None,
             ):
 
-        callbacks_list = []
-        callbacks_list = self.add_early_stopping(callbacks_list, use_early_stopping)
-        callbacks_list = self.add_reduce_on_plato(callbacks_list, use_early_stopping)
-        callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
-        callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
-        callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
+        callbacks_list = self.create_callbacks(
+            model_checkpoint_file_name,
+            tensorboard_log_dir,
+            test_data,
+        )
 
-        if isinstance(train_data, types.GeneratorType):
-            history = self.model.fit_generator(
-                train_data,
-                epochs=self.epochs_count,
-                validation_data=val_data,
-                callbacks=callbacks_list,
-                verbose=2,
-            )
-        else:
-            history = self.model.fit(
-                *train_data,
-                epochs=self.epochs_count,
-                batch_size=self.batch_size,
-                validation_data=val_data,
-                callbacks=callbacks_list,
-                verbose=2,
-            )
+        history = self.model.fit(
+            *train_data,
+            epochs=self.epochs_count,
+            batch_size=self.batch_size,
+            validation_data=val_data,
+            callbacks=callbacks_list,
+            verbose=1,
+        )
 
         self.save_training_history(history, loss_history_file_name)
 
@@ -194,34 +205,15 @@ class BaseModel(BaseEstimator):
 
         return y_preds
 
-    def score(self, test_data, metrics, scaler=None):
+    def score(self, X, y, metrics):
         if metrics is str:
             metrics = [metrics]
 
-        if isinstance(test_data, types.GeneratorType):
-            ys = np.zeros(shape=(1, self.features_count))
-            y_preds = np.zeros(shape=(1, self.features_count))
-
-            for X, y in test_data:
-                y_pred = self.model.predict(X)
-
-                y_preds = np.concatenate((y_preds, y_pred), axis=0)
-                ys = np.concatenate((ys, y), axis=0)
-
-            ys = ys[1:]
-            y_preds = y_preds[1:]
-
-        else:
-            y_preds = self.model.predict(test_data[0])
-            ys = test_data[1]
-
-        if scaler is not None:
-            y_preds = scaler.inverse_transform(y_preds)
-            ys = scaler.inverse_transform(ys)
+        y_preds = self.model.predict(X)
 
         scores = dict()
         for metric_name in metrics:
-            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
+            scores[metric_name] = make_sklearn_metric(metric_name)(y, y_preds)
 
         return scores
 

@@ -65,27 +65,6 @@ print(normalized_train_data.shape)
 print(normalized_train_data[best_genes].shape)
 
 
-# train_generator = NewNoisedDataGenerator(
-#     normalized_ref_data,
-#     normalized_train_data,
-#     best_genes,
-#     'test',
-#     batch_size=data_params['batch_size'],
-#     noising_method=data_params['noising_method'],
-#     # shift_probability=0.5,
-# )
-#
-# test_generator = NewNoisedDataGenerator(
-#     normalized_ref_data,
-#     normalized_test_data,
-#     best_genes,
-#     'test',
-#     batch_size=data_params['batch_size'],
-#     noising_method=None,
-#     # shift_probability=0.5,
-# )
-
-
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
@@ -105,11 +84,9 @@ cv_model_path = '/home/aonishchuk/projects/CPN2/test_models/learn_mlp_with_shift
 make_dirs(cv_model_path)
 
 learning_params = dict(
-    use_early_stopping=True,
     loss_history_file_name=os.path.join(cv_model_path, 'loss_history'),
     model_checkpoint_file_name=os.path.join(cv_model_path, 'model.checkpoint'),
     tensorboard_log_dir=os.path.join(cv_model_path, 'tensorboard_log'),
-    # generator=True,
 )
 
 
