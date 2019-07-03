@@ -6,10 +6,11 @@ import argparse
 import sys
 sys.path.append('../')
 
-from module.data_processing.ProcessingConveyor import processing_conveyor
+from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import *
 from module.models.dae_with_predictor import DAEwithPredictor
 from module.models.mlp import MLP
+from definitions import *
 
 
 def search_model_parameters(args):
@@ -22,11 +23,9 @@ def search_model_parameters(args):
     experiment_dir = args.experiment_dir
     make_dirs(experiment_dir)
 
-    log_dir = os.path.join(experiment_dir, 'log')
-    make_dirs(log_dir)
+    log_file = path_join(args.experiment_dir, 'log.log')
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
 
-    log_name = 'log.log'
-    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(log_dir, log_name))
     logging.info('Read data')
 
     processing_sequence = {
@@ -43,17 +42,9 @@ def search_model_parameters(args):
         ),
     }
 
-    data_wrapper = processing_conveyor(processing_sequence)
+    data_wrapper = ProcessingConveyor(processing_sequence)
     train_data, test_data = get_train_test(data_wrapper.processed_data)
     best_genes = data_wrapper.best_genes
-
-    train_X = train_data[best_genes]
-    train_y = train_data['Age']
-    daep_train_y = [train_X, train_y]
-
-    test_X = test_data[best_genes]
-    test_y = test_data['Age']
-    daep_test_y = [test_X, test_y]
 
     logging.info('Start grid search')
 
@@ -94,8 +85,9 @@ def search_model_parameters(args):
         model.load_model(model_file)
     else:
         model.fit(
-            (train_X, daep_train_y),
-            (test_X, daep_test_y),
+            train_data,
+            best_genes,
+            test_data,
             loss_history_file_name=loss_history_file,
             model_checkpoint_file_name=model_checkpoint_file,
             tensorboard_log_dir=tensorboard_dir,
@@ -104,15 +96,13 @@ def search_model_parameters(args):
         model.save_model(model_file)
 
     train_score = model.score(
-        (train_X, daep_train_y),
+        *train_data,
         ['r2', 'mae'],
-        scaler,
     )
 
     test_score = model.score(
-        (test_X, daep_test_y),
+        *test_data,
         ['r2', 'mae'],
-        scaler,
     )
 
     write_message = dict(
@@ -126,8 +116,8 @@ def search_model_parameters(args):
         json.dump(write_message, file)
         logging.info('overwrite model parameters file ({})'.format(results_file))
 
-    decoded_train_X = model.predict(train_X)[0]
-    decoded_test_X = model.predict(test_X)[0]
+    decoded_train_X = model.predict(train_data[0])[0]
+    decoded_test_X = model.predict(test_data[0])[0]
 
     model_params = dict(
         layers=(1500, 800, 700, 500, 128, 1),
@@ -166,20 +156,20 @@ def search_model_parameters(args):
         model.load_model(model_file)
     else:
         model.fit(
-            (train_X, train_y),
-            (decoded_test_X, test_y),
+            train_data,
+            (decoded_test_X, test_data[1]),
             **learning_params,
         )
 
         model.save_model(model_file)
 
     train_score = model.score_sklearn(
-        (train_X, train_y),
+        train_data,
         ['r2', 'mae'],
     )
 
     test_score = model.score_sklearn(
-        (decoded_test_X, test_y),
+        (decoded_test_X, test_data[1]),
         ['r2', 'mae'],
     )
 

@@ -1,42 +1,107 @@
-import csv
+import os
+import json
+import logging
+import numpy as np
 import pandas as pd
-from keras import backend as K
-import tensorflow as tf
-
-from definitions import *
 
 
-def save_results(model_name, data_params, model_params, learning_params, train_score, test_score):
-    fields = ['model_name', 'data_params', 'model_params', 'learning_params', 'train_score', 'test_score']
-    results_file = os.path.join(MODELS_DIR, '{}_results.csv'.format(model_name))
-    file_exists = os.path.exists(results_file)
+def saved_models_parameters_generator(model_directory, results_file):
+    cv_results_file = os.path.join(model_directory, results_file)
 
-    with open(results_file, 'a') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(fields)
-        writer.writerow([model_name, data_params, model_params, learning_params, train_score, test_score])
+    with open(cv_results_file) as json_file:
+        data = json.load(json_file)
+
+        for i, node in enumerate(data):
+            yield node['params'], node['scores'], node['model_path']
 
 
-def save_search_results(cv_results, best_params, best_score, title):
-    results_df = pd.DataFrame.from_dict(cv_results)
-    results_file = os.path.join(MODELS_DIR, '{}_results.csv'.format(title))
-    results_df.to_csv(results_file)
+def load_best_model_parameters(model_directory, results_file, best_on='test', condition='min'):
+    cv_scores = []
+    data = []
 
-    best_model_file = os.path.join(MODELS_DIR, '{}_best_model.csv'.format(title))
-    fields = ['best_params', 'best_score']
-    file_exists = os.path.exists(best_model_file)
+    condition_index = 0
+    if best_on == 'val':
+        condition_index = 1
+    elif best_on == 'test':
+        condition_index = 2
 
-    with open(best_model_file, 'a') as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(fields)
-        writer.writerow([best_params, best_score])
+    condition_lambda = lambda x: x.argmin()
+    if condition == 'max':
+        condition_lambda = lambda x: x.argmax()
+
+    for (parameters, scores, model_path) in saved_models_parameters_generator(model_directory, results_file):
+        data.append([parameters, scores, model_path])
+        cv_scores.append([scores['train'], scores['val'], scores['test']])
+
+    cv_scores = np.array(cv_scores)
+    best_model_index = condition_lambda(cv_scores[:, condition_index])
+
+    best_parameters = data[best_model_index][0]
+    best_scores = data[best_model_index][1]
+    best_model_path = data[best_model_index][2]
+
+    cv_scores_file = os.path.join(best_model_path, 'cv_scores.csv')
+    cv_scores_data = pd.read_csv(cv_scores_file)
+
+    best_model_index = condition_lambda(cv_scores_data[best_on].values)
+    best_fold_path = os.path.join(best_model_path, '{}_fold'.format(best_model_index))
+
+    if not os.path.exists(best_fold_path):  # for older version of experiment structure
+        best_fold_path = os.path.join(best_model_path, str(best_model_index))
+
+    return best_parameters, best_scores, best_model_path, best_fold_path
 
 
-def reset_weights(model):
-    session = K.get_session()
-    tf.set_random_seed(sklearn_seed)
-    for layer in model.layers:
-        if hasattr(layer, 'kernel_initializer'):
-            layer.kernel.initializer.run(session=session)
+def all_models_predict(model_class,
+                       train_data,
+                       test_data,
+                       model_directory,
+                       results_file,
+                       cross_validation_method,
+                       cross_validation_parameters,
+                       predicts_file='predicts.json',
+                       ):
+
+    for (parameters, scores, model_files) in saved_models_parameters_generator(model_directory, results_file):
+
+        for cv_train_data, cv_val_data in cross_validation_method(train_data, cross_validation_parameters):
+            model = model_class(**parameters)
+            model.load_model(model_files['model_file'])
+
+            train_y_pred = model.predict(cv_train_data[0])
+            val_y_pred = model.predict(cv_val_data[0])
+            test_y_pred = model.predict(test_data[0])
+
+            write_message = dict(
+                train=train_y_pred,
+                val=val_y_pred,
+                test=test_y_pred,
+            )
+
+            _predicts_file = os.path.join(model_files['model_dir'], predicts_file)
+
+            __save_predicts(_predicts_file, write_message)
+
+
+def __save_predicts(predicts_file, write_message):
+    with open(predicts_file, 'w') as file:
+        json.dump(write_message, file)
+        logging.info('predicts was saved at {}'.format(predicts_file))
+
+
+if __name__ == '__main__':
+    from definitions import *
+    from module.models.mlp import MLP
+
+    # best_parameters, best_scores, best_model_path, best_fold_path = load_best_model_parameters(
+    #     path_join(MODELS_DIR, 'predict_age/mlp'),
+    #     'cv_results.json',
+    # )
+    #
+    # model = MLP(**best_parameters)
+    # model.load_model(path_join(best_fold_path, 'model'))
+
+
+    all_models_predict(
+        MLP,
+    )

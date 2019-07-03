@@ -39,9 +39,12 @@ def load_best_model(model_class, model_directory, results_file, best_on='test', 
         cv_scores_data = pd.read_csv(cv_scores_file)
 
         best_model_index = condition_lambda(cv_scores_data[best_on].values)
-        best_model_path = os.path.join(best_model_path, str(best_model_index))
+        best_fold_path = os.path.join(best_model_path, '{}_fold'.format(best_model_index))
+
+        if not os.path.exists(best_fold_path):  # for older version of experiment structure
+            best_fold_path = os.path.join(best_model_path, str(best_model_index))
 
         model = model_class(**best_parameters)
-        model.load_model(os.path.join(best_model_path, 'model'))
+        model.load_model(os.path.join(best_fold_path, 'model'))
 
     return model

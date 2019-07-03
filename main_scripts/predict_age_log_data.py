@@ -7,7 +7,7 @@ import json
 import argparse
 
 from definitions import *
-from module.data_processing.ProcessingConveyor import ProcessingConveyor
+from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from module.models.mlp import MLP
 from main_scripts.utils import load_best_model
@@ -16,7 +16,11 @@ from main_scripts.utils import load_best_model
 def main(args):
     os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_device_number
 
-    logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
+    experiment_dir = args.experiment_dir
+    make_dirs(experiment_dir)
+
+    log_file = path_join(experiment_dir, 'log.log')
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
     logging.debug('Read data')
 
     processing_sequence = {
@@ -47,13 +51,10 @@ def main(args):
         'cv_results.json',
     )
 
-    model_path = args.experiment_dir
-    make_dirs(model_path)
-
     learning_params = dict(
-        loss_history_file_name=os.path.join(model_path, 'loss_history'),
-        model_checkpoint_file_name=os.path.join(model_path, 'model.checkpoint'),
-        tensorboard_log_dir=os.path.join(model_path, 'tensorboard_log'),
+        loss_history_file_name=os.path.join(experiment_dir, 'loss_history'),
+        model_checkpoint_file_name=os.path.join(experiment_dir, 'model.checkpoint'),
+        tensorboard_log_dir=os.path.join(experiment_dir, 'tensorboard_log'),
     )
 
     target_column = 'Age'
@@ -64,20 +65,27 @@ def main(args):
         **learning_params
     )
 
-    best_mlp_model.save_model(os.path.join(model_path, 'model'))
+    best_mlp_model.save_model(os.path.join(experiment_dir, 'model'))
 
     train_pred = best_mlp_model.predict(train_data[best_genes])
     test_pred = best_mlp_model.predict(test_data[best_genes])
 
-    train_score = mean_absolute_error(train_data[target_column], train_pred), r2_score(train_data[target_column], train_pred)
-    test_score = mean_absolute_error(test_data[target_column], test_pred), r2_score(test_data[target_column], test_pred)
+    train_score = dict(
+        mae=mean_absolute_error(train_data[target_column], train_pred),
+        r2=r2_score(train_data[target_column], train_pred),
+    )
+
+    test_score = dict(
+        mae=mean_absolute_error(test_data[target_column], test_pred),
+        r2=r2_score(test_data[target_column], test_pred),
+    )
 
     write_message = dict(
         train_results=train_score,
         test_results=test_score,
     )
 
-    results_file = args.results_file_name
+    results_file = path_join(args.experiment_dir, args.results_file_name)
 
     with open(results_file, 'w') as file:
         json.dump(write_message, file)

@@ -1,7 +1,7 @@
 import pytest
 from sklearn.preprocessing import minmax_scale
 
-from module.data_processing.NoisedDataGeneration import DistanceNoiseGenerator
+from module.data_processing.distance_noise_generation import DistanceNoiseGenerator
 from module.data_processing.noising_methods import gaussian_noise
 
 from definitions import *

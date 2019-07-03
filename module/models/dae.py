@@ -7,7 +7,7 @@ from module.models.base_model import BaseModel
 from module.models.utils.activations import make_activation
 from module.models.utils.optimizers import make_optimizer
 from module.models.utils.metrics import make_metric, make_sklearn_metric
-from module.data_processing.NoisedDataGeneration import DistanceNoiseGenerator
+from module.data_processing.distance_noise_generation import DistanceNoiseGenerator
 from module.data_processing.data_processing import get_batches
 
 
@@ -20,7 +20,7 @@ def get_train_generator(ref_data, corrupt_data, best_genes, noise_probability, b
         noise_probability,
     )
 
-    while True:
+    while True:     # For using with keras TODO: use keras generator class
         for batch in get_batches(ref_data, batch_size):
             corrupt_X = train_noised_generator.data_generation(batch[best_genes])
             y = batch[best_genes]
@@ -97,7 +97,9 @@ class DenoisingAutoencoder(BaseModel):
 
         train_X, train_y = train_data
         val_X, val_y = val_data
-        test_X, test_y = test_data
+
+        if test_data is not None:
+            test_X, test_y = test_data
 
         ref_batch_name = train_X['GEO'].value_counts().keys()[0]
         ref_mask = train_X['GEO'] == ref_batch_name
@@ -125,20 +127,29 @@ class DenoisingAutoencoder(BaseModel):
             self.batch_size,
         )
 
-        test_generator = get_test_generator(
-            ref_data,
-            test_X,
-            best_genes,
-            self.noise_probability,
-            self.batch_size,
-        )
+        if test_data is not None:
+            test_generator = get_test_generator(
+                ref_data,
+                test_X,
+                best_genes,
+                self.noise_probability,
+                self.batch_size,
+            )
 
-        callbacks_list = self.create_callbacks(
-            model_checkpoint_file_name,
-            tensorboard_log_dir,
-            test_generator,
-            steps_count=test_X.shape[0] / self.batch_size,
-        )
+        if test_data is not None:
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                test_generator,
+                steps_count=test_X.shape[0] / self.batch_size,
+            )
+        else:
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                val_generator,
+                steps_count=test_X.shape[0] / self.batch_size,
+            )
 
         history = self.model.fit_generator(
             train_generator,

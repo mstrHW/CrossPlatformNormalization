@@ -7,8 +7,9 @@ import sys
 sys.path.append('../')
 
 from module.models.mlp import MLP
-from module.models.utils.grid_search import search_parameters, choose_cross_validation
-from module.data_processing.ProcessingConveyor import ProcessingConveyor
+from module.models.utils.grid_search import search_parameters
+from module.models.utils.cross_validation import choose_cross_validation
+from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from definitions import *
 
@@ -27,7 +28,9 @@ def search_model_parameters(args):
     make_dirs(log_dir)
 
     log_name = 'log.log'
-    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(log_dir, log_name))
+    log_file = path_join(log_dir, log_name)
+
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
     logging.info('Read data')
 
     processing_sequence = {
@@ -60,7 +63,7 @@ def search_model_parameters(args):
     activation = ['elu', 'lrelu', 'prelu']
     dropout_rate = [0.25, 0.5, 0.75]
     regularization_param = [10 ** -i for i in range(3, 7)]
-    epochs_count = 2000,
+    epochs_count = 600,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
 
@@ -104,13 +107,13 @@ def search_model_parameters(args):
     get_x_y_method = lambda x: (x[data_wrapper.best_genes], x['Age'])
 
     search_parameters(
-        lambda **params: MLP(data_wrapper.processing_sequence['load_test_data']['features_count'], **params),
+        lambda **params: MLP(data_wrapper.processing_sequence['load_data']['features_count'], **params),
         train_data,
         test_data,
         cross_validation_method,
         cross_validation_parameters,
         get_x_y_method,
-        ['r2'],
+        ['mae'],
         model_parameters_space,
         experiment_dir,
         args.cv_results_file_name,

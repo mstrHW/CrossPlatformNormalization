@@ -1,29 +1,7 @@
-import logging
-import pandas as pd
-from sklearn.preprocessing import MinMaxScaler, minmax_scale
+import numpy as np
+from sklearn.preprocessing import minmax_scale, MinMaxScaler
 
 from module.data_processing.noising_methods import gaussian_noise
-from module.data_processing.read_data import read_csv, read_genes
-from definitions import *
-
-
-def load_test_data(features_count, rows_count=None):
-    logging.debug('Read files')
-    data = read_csv(test_file, rows_count)
-    best_genes = read_genes(best_genes_file)[:features_count]
-
-    return data, best_genes
-
-
-def load_data(features_count, rows_count=None):
-    logging.debug('Read files')
-    data = read_csv(illu_file, rows_count)
-    best_genes = read_genes(best_genes_file)[:features_count]
-
-    test_df = data.groupby('GEO').apply(lambda x: x[:50])
-    test_df.to_csv(test_file, index=False)
-
-    return data, best_genes
 
 
 def filter_data(data, filtered_column, using_values):
@@ -35,27 +13,12 @@ def filter_data(data, filtered_column, using_values):
     return filtered_data
 
 
-def get_X_y(data, using_genes, target_column=None):
-    X = data[using_genes].astype('float').values
-
-    numeric_targets = data[pd.to_numeric(data[target_column], errors='coerce').notnull()]
-    y = numeric_targets[target_column].astype('float').values
-
-    return X, y
-
-
 def get_train_test(data):
     train_mask = data['Training'] == 'Y'
     train_data = data[train_mask]
     test_data = data[~train_mask]
 
     return train_data, test_data
-
-
-def fit_scaler(data):
-    scaler = MinMaxScaler()
-    scaler.fit(data)
-    return scaler
 
 
 def normalize_by_series(data, best_genes):
@@ -66,6 +29,14 @@ def normalize_by_series(data, best_genes):
     data.loc[:, best_genes] = cutted_data.groupby('GEO').transform(lambda x: minmax_scale(x))
 
     return data
+
+
+def apply_log(data, shift=0.):
+    return np.log(data + shift)
+
+
+def revert_log(data, shift=0.):
+    return np.exp(data) - shift
 
 
 def get_batches(data, batch_size):
@@ -87,11 +58,3 @@ def add_gaussian_noise(data, noise_probability_for_gene):
     noise = gaussian_noise(batch_shape, 0.5, 0.5)
     data = np.where(noising_flags, data, data + noise)
     return data
-
-
-def apply_log(data, shift=0.):
-    return np.log(data + shift)
-
-
-def revert_log(data, shift=0.):
-    return np.exp(data) - shift

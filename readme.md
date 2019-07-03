@@ -5,31 +5,37 @@
 
 ```
 .
-├── definitions.py          # Defines key folders, files and variables for project
-├── main_scripts                    # Documentation files (alternatively `doc`)
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
+├── definitions.py                  # Defines key folders, files and variables for project
+├── main_scripts                    # Scripts for executing experiments and getting results
+|   ├── genes_normalization.py
+|   ├── predict_age.py
+|   ├── predict_age_after_dae.py
+|   ├── predict_age_log_data.py
+|   ├── using_daep.py
+|   ├── utils.py
 |   └── notebooks
-|       ├── notebooks
-|       ├── notebooks
-|       └── notebooks
-└── module # 
+|       ├── analyze_data.ipynb
+|       ├── data_processing.ipynb
+|       └── collect_results.ipynb
+└── module                          # Base folder for implemented methods and models 
     ├── data_processing     #
-    |   ├── notebooks
-    |   ├── notebooks
-    |   ├── notebooks
-    |   ├── notebooks
-    |   └── notebooks        
+    |   ├── data_processing.py
+    |   ├── nosing_methods.py
+    |   ├── NoisedDataGeneration
+    |   └── ProcessingConveyor   
     ├── models              #
     |   ├── base_model.py
     |   ├── dae.py
     |   ├── dae_with_predictor.py
     |   ├── mlp.py
-    |   └── notebooks
+    |   └── utils
+    |       ├── activations.py
+    |       ├── callbacks.py
+    |       ├── metrics.py
+    |       ├── optimizers.py
+    |       ├── regularizers.py
+    |       ├── grid_search.py
+    |       └── utils.py
     └── plot_graphs
 
 ```
@@ -40,37 +46,20 @@
 .
 ├── experiment_1
 ├── experiment_2
-|   ├── model_1
-|   └── model_2
-|       ├── cv_results.json
-|       ├── experiment_meta_parameters.json
-|       ├── log.log
-|       └── trained_models
-|           ├── cv_0
-|           └── cv_1
-|               ├── 0_fold
-|               └── 1_fold
-|                   ├── loss_history
-|                   ├── model
-|                   ├── model.checkpoint
-|                   └── tensorboard_log
-├── models                  # Compiled files (alternatively `dist`)
-├── main_scripts                    # Documentation files (alternatively `doc`)
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   ├── README.md
-|   └── notebooks
-|       ├── notebooks
-|       ├── notebooks
-|       └── notebooks
-├── src                     # Source files (alternatively `lib` or `app`)
-├── test                    # Automated tests (alternatively `spec` or `tests`)
-├── tools                   # Tools and utilities
-├── LICENSE
-└── README.md
+    ├── model_1
+    └── model_2
+        ├── cv_results.json
+        ├── experiment_meta_parameters.json
+        ├── log.log
+        └── trained_models
+            ├── cv_0
+            └── cv_1
+                ├── 0_fold
+                └── 1_fold
+                    ├── loss_history
+                    ├── model
+                    ├── model.checkpoint
+                    └── tensorboard_log
 ```
 
 ## Data processing
@@ -105,15 +94,49 @@ processing_sequence = {
     ),
 }
 
-data = ProcessingConveyor(processing_sequence)
-best_genes = data.best_genes
-processed__data = data.processed_data
+processing_conveyor = ProcessingConveyor(processing_sequence)
+best_genes = processing_conveyor.best_genes
+processed__data = processing_conveyor.processed_data
+```
+
+### Generating noise
+
+#### Usage
+
+```python
+from module.data_processing.NoisedDataGeneration import DistanceNoiseGenerator
+from module.data_processing.data_processing import get_batches
+
+best_genes = processing_conveyor.best_genes
+processed__data = processing_conveyor.processed_data
+
+ref_batch_name = processed__data['GEO'].value_counts().keys()[0]
+ref_batch_mask = processed__data['GEO'] == ref_batch_name
+
+ref_batch = processed__data[ref_batch_mask]
+corrupt_data = processed__data[~ref_batch_mask]
+
+noise_probability = 0.5
+batch_size = 128
+
+train_noised_generator = DistanceNoiseGenerator(
+    ref_batch,
+    corrupt_data,
+    best_genes,
+    'train',
+    noise_probability,
+)
+
+for batch in get_batches(ref_batch, batch_size):
+    corrupt_X = train_noised_generator.data_generation(batch[best_genes])
+    y = batch[best_genes]
 ```
 
 ## Models
 
 1. MLP
     #### Usage
+    
     ```python
     from module.models.mlp import MLP
     

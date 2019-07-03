@@ -1,8 +1,50 @@
 from keras.layers import Input, Dense
 from keras.models import Model
+import numpy as np
+
 from module.models.dae import DenoisingAutoencoder
 from module.models.utils.metrics import make_sklearn_metric, make_metric
 from module.models.utils.optimizers import make_optimizer
+from module.data_processing.distance_noise_generation import DistanceNoiseGenerator
+from module.data_processing.data_processing import get_batches
+
+
+def get_train_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
+    train_noised_generator = DistanceNoiseGenerator(
+        ref_data,
+        corrupt_data,
+        best_genes,
+        'train',
+        noise_probability,
+    )
+
+    while True:     # For using with keras TODO: use keras generator class
+        for batch in get_batches(ref_data, batch_size):
+            corrupt_X = train_noised_generator.data_generation(batch[best_genes])
+            y = batch[best_genes]
+            age_column = batch['Age']
+            yield corrupt_X, [y, age_column]
+            if mode == 'test':
+                return
+
+
+def get_test_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
+    train_noised_generator = DistanceNoiseGenerator(
+        ref_data,
+        corrupt_data,
+        best_genes,
+        'test',
+        noise_probability,
+    )
+
+    while True:
+        for batch in get_batches(ref_data, batch_size):
+            X = batch[best_genes]
+            corrupt_y = train_noised_generator.data_generation(batch[best_genes])
+            age_column = batch['Age']
+            yield X, [corrupt_y, age_column]
+            if mode == 'test':
+                return
 
 
 class DAEwithPredictor(DenoisingAutoencoder):
@@ -25,6 +67,7 @@ class DAEwithPredictor(DenoisingAutoencoder):
 
     def fit(self,
             train_data,
+            best_genes,
             val_data=None,
             test_data=None,
             loss_history_file_name=None,
@@ -32,34 +75,108 @@ class DAEwithPredictor(DenoisingAutoencoder):
             tensorboard_log_dir=None,
             ):
 
-        return DenoisingAutoencoder.fit(
-            train_data,
-            val_data,
-            test_data,
-            loss_history_file_name,
-            model_checkpoint_file_name,
-            tensorboard_log_dir,
+        ref_batch_name = train_data['GEO'].value_counts().keys()[0]
+        ref_mask = train_data['GEO'] == ref_batch_name
+
+        ref_data = train_data[ref_mask]
+        corrupt_data = train_data[~ref_mask]
+
+        train_generator = get_train_generator(
+            ref_data,
+            corrupt_data,
+            best_genes,
+            self.noise_probability,
+            self.batch_size,
         )
 
-    def score(self, test_data, metrics, scaler=None):
+        val_generator = get_test_generator(
+            ref_data,
+            val_data,
+            best_genes,
+            self.noise_probability,
+            self.batch_size,
+        )
+
+        if test_data is not None:
+            test_generator = get_test_generator(
+                ref_data,
+                test_data,
+                best_genes,
+                self.noise_probability,
+                self.batch_size,
+            )
+
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                test_generator,
+                steps_count=test_data.shape[0] / self.batch_size,
+            )
+        else:
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                val_generator,
+                steps_count=val_data.shape[0] / self.batch_size,
+            )
+
+        history = self.model.fit_generator(
+            train_generator,
+            epochs=self.epochs_count,
+            validation_data=val_generator,
+            callbacks=callbacks_list,
+            verbose=1,
+            steps_per_epoch=ref_data.shape[0] / self.batch_size,
+            validation_steps=val_data.shape[0] / self.batch_size,
+        )
+
+        self.ref_data = ref_data
+        self.best_genes = best_genes
+        self.save_training_history(history, loss_history_file_name)
+
+        return self
+
+    def score(self, X, y, metrics, mode='train'):
         if metrics is str:
             metrics = [metrics]
 
-        y_preds = self.model.predict(test_data[0])
-        decoder_pred, predictor_pred = y_preds
+        if mode == 'train':
+            ref_batch_name = X['GEO'].value_counts().keys()[0]
+            ref_mask = X['GEO'] == ref_batch_name
 
-        ys = test_data[1]
-        decoder_y, predictor_y = ys
+            corrupt_data = X[~ref_mask]
 
-        if scaler is not None:
-            decoder_pred = scaler.inverse_transform(decoder_pred)
-            decoder_y = scaler.inverse_transform(decoder_y)
+            generator = get_train_generator(
+                self.ref_data,
+                corrupt_data,
+                self.best_genes,
+                self.noise_probability,
+                self.batch_size,
+                'test',
+            )
+        else:
+            generator = get_test_generator(
+                self.ref_data,
+                X,
+                self.best_genes,
+                self.noise_probability,
+                self.batch_size,
+                'test',
+            )
+
+        y_preds = []
+        ys = []
+        for batch_X, batch_y in generator:
+            batch_predicts = self.model.predict_on_batch(batch_X)
+            y_preds.append(batch_predicts)
+
+            ys.append(batch_y)
+
+        y_preds = np.concatenate(y_preds, axis=0)
+        ys = np.concatenate(ys, axis=0)
 
         scores = dict()
         for metric_name in metrics:
-            scores['decoder_{}'.format(metric_name)] = make_sklearn_metric(metric_name)(decoder_y, decoder_pred)
-
-        for metric_name in metrics:
-            scores['predictor_{}'.format(metric_name)] = make_sklearn_metric(metric_name)(predictor_y, predictor_pred)
+            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
 
         return scores

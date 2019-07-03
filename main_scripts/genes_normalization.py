@@ -9,8 +9,9 @@ sys.path.append("../")
 
 from module.models.dae import DenoisingAutoencoder
 from module.data_processing.data_processing import get_train_test
-from module.models.utils.grid_search import search_parameters, choose_cross_validation
-from module.data_processing.ProcessingConveyor import processing_conveyor
+from module.models.utils.cross_validation import choose_cross_validation
+from module.models.utils.grid_search import search_parameters
+from module.data_processing.processing_conveyor import ProcessingConveyor
 from definitions import *
 
 
@@ -25,12 +26,13 @@ def search_model_parameters(args):
     if not os.path.exists(experiment_dir):
         os.makedirs(experiment_dir)
 
-    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(experiment_dir, 'log.log'))
+    log_file = path_join(experiment_dir, 'log.log')
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
 
     logging.info('Read data')
 
     processing_sequence = {
-        'load_test_data': dict(
+        'load_data': dict(
             features_count=1000,
             rows_count=None,
         ),
@@ -43,7 +45,7 @@ def search_model_parameters(args):
         ),
     }
 
-    data_wrapper = processing_conveyor(processing_sequence)
+    data_wrapper = ProcessingConveyor(processing_sequence)
     train_data, test_data = get_train_test(data_wrapper.processed_data)
 
     cross_validation_method_name = 'default'
@@ -112,7 +114,7 @@ def search_model_parameters(args):
 
     search_parameters(
         lambda **params: DenoisingAutoencoder(
-            data_wrapper.processing_sequence['load_test_data']['features_count'],
+            data_wrapper.processing_sequence['load_data']['features_count'],
             0.25,
             **params,
         ),

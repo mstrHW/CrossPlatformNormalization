@@ -9,7 +9,7 @@ from imp import reload
 
 from definitions import *
 from module.models.dae import DenoisingAutoencoder
-from module.data_processing.ProcessingConveyor import processing_conveyor
+from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test, get_batches
 from module.models.mlp import MLP
 from main_scripts.utils import load_best_model
@@ -22,7 +22,8 @@ def main(args):
     np.random.seed(np_seed)
     tf.set_random_seed(np_seed)
 
-    logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
+    log_file = path_join(args.experiment_dir, 'log.log')
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
     logging.debug('Read data')
 
     processing_sequence = {
@@ -39,7 +40,7 @@ def main(args):
         ),
     }
 
-    data_wrapper = processing_conveyor(processing_sequence)
+    data_wrapper = ProcessingConveyor(processing_sequence)
     train_data, test_data = get_train_test(data_wrapper.processed_data)
     best_genes = data_wrapper.best_genes
 
@@ -48,6 +49,7 @@ def main(args):
         DenoisingAutoencoder,
         models_dir,
         'cv_results.json',
+        condition='max',
     )
 
     model_path = args.experiment_dir
@@ -62,7 +64,7 @@ def main(args):
     target_column = 'Age'
 
     (train_X, train_y) = train_data[best_genes], train_data[target_column]
-    (test_X, test_y) = test_data
+    (test_X, test_y) = test_data[best_genes], test_data[target_column]
     train_X_ = best_dae_model.predict(train_X)
     test_X_ = best_dae_model.predict(test_X)
 
@@ -87,17 +89,22 @@ def main(args):
     train_pred = best_mlp_model.predict(train_data[best_genes])
     test_pred = best_mlp_model.predict(test_data[best_genes])
 
-    train_score = mean_absolute_error(train_data[target_column], train_pred), r2_score(train_data[target_column],
-                                                                                       train_pred)
-    test_score = mean_absolute_error(test_data[target_column], test_pred), r2_score(test_data[target_column],
-                                                                                    test_pred)
+    train_score = dict(
+        mae=mean_absolute_error(train_data[target_column], train_pred),
+        r2=r2_score(train_data[target_column], train_pred),
+    )
+
+    test_score = dict(
+        mae=mean_absolute_error(test_data[target_column], test_pred),
+        r2=r2_score(test_data[target_column], test_pred),
+    )
 
     write_message = dict(
         train_results=train_score,
         test_results=test_score,
     )
 
-    results_file = args.results_file_name
+    results_file = path_join(args.experiment_dir, args.results_file_name)
 
     with open(results_file, 'w') as file:
         json.dump(write_message, file)
