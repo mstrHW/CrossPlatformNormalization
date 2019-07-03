@@ -3,7 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from module.data_processing.data_processing import load_test_data, load_data, filter_data, normalize_by_series, apply_log
 
 
-class processing_conveyor(object):
+class ProcessingConveyor(object):
     def __init__(self, processing_sequence):
 
         self.conveyor_map = {
@@ -50,18 +50,6 @@ class processing_conveyor(object):
 
 
 def demo():
-    # data_params = dict(
-    #     features_count=1000,
-    #     rows_count=None,
-    #     filtered_column='Tissue',
-    #     using_values='Whole blood',
-    #     target_column='Age',
-    #     normalize=True,
-    #     use_generator=False,
-    #     noising_method=None,
-    #     batch_size=128,
-    # )
-
     processing_sequence = {
         'load_data': dict(
             features_count=1000,
@@ -79,7 +67,7 @@ def demo():
         ),
     }
 
-    data = processing_conveyor(processing_sequence)
+    data = ProcessingConveyor(processing_sequence)
     print(data.processed_data[data.best_genes])
 
 

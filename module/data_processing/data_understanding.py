@@ -32,11 +32,3 @@ def kde_fit(x, bandwidth=0.2, **kwargs):
 def sample_from_kde(kde, x_grid):
     log_pdf = kde.score_samples(x_grid[:, np.newaxis])
     return np.exp(log_pdf)
-
-
-def main():
-    shapiro_test_result = check_normal_distribution(uniq_geo, gene_names)
-
-
-if __name__ == '__main__':
-    main()

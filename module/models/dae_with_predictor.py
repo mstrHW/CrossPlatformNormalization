@@ -23,6 +23,24 @@ class DAEwithPredictor(DenoisingAutoencoder):
 
         return model
 
+    def fit(self,
+            train_data,
+            val_data=None,
+            test_data=None,
+            loss_history_file_name=None,
+            model_checkpoint_file_name=None,
+            tensorboard_log_dir=None,
+            ):
+
+        return DenoisingAutoencoder.fit(
+            train_data,
+            val_data,
+            test_data,
+            loss_history_file_name,
+            model_checkpoint_file_name,
+            tensorboard_log_dir,
+        )
+
     def score(self, test_data, metrics, scaler=None):
         if metrics is str:
             metrics = [metrics]

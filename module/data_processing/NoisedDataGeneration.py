@@ -1,9 +1,8 @@
 import numpy as np
-import keras
 from tqdm import tqdm
+
 import definitions
 from module.data_processing.noising_methods import gaussian_noise
-from module.data_processing.data_processing import get_batches
 
 
 def get_distribution_params(gene):
@@ -105,32 +104,6 @@ class DistanceNoiseGenerator(object):
         X = np.where(selected_genes, X, X + noise)
 
         return X
-
-
-def shift_to_corrupt(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
-    noised_batches_generator = DistanceNoiseGenerator(
-        ref_data,
-        corrupt_data,
-        best_genes,
-        mode,
-        noise_probability,
-    )
-
-    for batch in get_batches(ref_data, batch_size):
-        yield noised_batches_generator.data_generation(batch[best_genes].values), batch
-
-
-def shift_to_reference(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
-    noised_batches_generator = DistanceNoiseGenerator(
-        ref_data,
-        corrupt_data,
-        best_genes,
-        'test',
-        noise_probability,
-    )
-
-    for batch in get_batches(corrupt_data, batch_size):
-        yield noised_batches_generator.data_generation(batch[best_genes].values)
 
 
 if __name__ == '__main__':

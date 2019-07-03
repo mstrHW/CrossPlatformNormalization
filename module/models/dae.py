@@ -1,15 +1,17 @@
 from keras.layers import Input, Dense, BatchNormalization, Dropout
 from keras.models import Model
 import math
+import numpy as np
 
 from module.models.base_model import BaseModel
 from module.models.utils.activations import make_activation
 from module.models.utils.optimizers import make_optimizer
-from module.models.utils.metrics import make_metric
-from module.data_processing.data_generator import DistanceNoiseGenerator, get_batches
+from module.models.utils.metrics import make_metric, make_sklearn_metric
+from module.data_processing.NoisedDataGeneration import DistanceNoiseGenerator
+from module.data_processing.data_processing import get_batches
 
 
-def get_train_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
+def get_train_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
     train_noised_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,
@@ -18,13 +20,16 @@ def get_train_generator(ref_data, corrupt_data, best_genes, noise_probability, b
         noise_probability,
     )
 
-    for batch in get_batches(ref_data, batch_size):
-        corrupt_X = train_noised_generator.data_generation(batch)
-        y = batch
-        yield corrupt_X, y
+    while True:
+        for batch in get_batches(ref_data, batch_size):
+            corrupt_X = train_noised_generator.data_generation(batch[best_genes])
+            y = batch[best_genes]
+            yield corrupt_X, y
+            if mode == 'test':
+                return
 
 
-def get_test_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size):
+def get_test_generator(ref_data, corrupt_data, best_genes, noise_probability, batch_size, mode='train'):
     train_noised_generator = DistanceNoiseGenerator(
         ref_data,
         corrupt_data,
@@ -33,14 +38,17 @@ def get_test_generator(ref_data, corrupt_data, best_genes, noise_probability, ba
         noise_probability,
     )
 
-    for batch in get_batches(ref_data, batch_size):
-        X = batch
-        corrupt_y = train_noised_generator.data_generation(batch)
-        yield X, corrupt_y
+    while True:
+        for batch in get_batches(ref_data, batch_size):
+            X = batch[best_genes]
+            corrupt_y = train_noised_generator.data_generation(batch[best_genes])
+            yield X, corrupt_y
+            if mode == 'test':
+                return
 
 
 class DenoisingAutoencoder(BaseModel):
-    def __init__(self, features_count, noise_probability, **kwargs):
+    def __init__(self, features_count, noise_probability=0.25, **kwargs):
         BaseModel.__init__(self, features_count, **kwargs)
         self.encoder = None
         self.decoder = None
@@ -129,6 +137,7 @@ class DenoisingAutoencoder(BaseModel):
             model_checkpoint_file_name,
             tensorboard_log_dir,
             test_generator,
+            steps_count=test_X.shape[0] / self.batch_size,
         )
 
         history = self.model.fit_generator(
@@ -141,6 +150,59 @@ class DenoisingAutoencoder(BaseModel):
             validation_steps=val_X.shape[0] / self.batch_size,
         )
 
+        self.ref_data = ref_data
+        self.best_genes = best_genes
         self.save_training_history(history, loss_history_file_name)
 
         return self
+
+    def score(self, X, y, metrics, mode='train'):
+        if metrics is str:
+            metrics = [metrics]
+
+        if mode == 'train':
+            ref_batch_name = X['GEO'].value_counts().keys()[0]
+            ref_mask = X['GEO'] == ref_batch_name
+
+            corrupt_data = X[~ref_mask]
+
+            generator = get_train_generator(
+                self.ref_data,
+                corrupt_data,
+                self.best_genes,
+                self.noise_probability,
+                self.batch_size,
+                'test',
+            )
+        else:
+            generator = get_test_generator(
+                self.ref_data,
+                X,
+                self.best_genes,
+                self.noise_probability,
+                self.batch_size,
+                'test',
+            )
+
+        y_preds = []
+        ys = []
+        for batch_X, batch_y in generator:
+            batch_predicts = self.model.predict_on_batch(batch_X)
+            y_preds.append(batch_predicts)
+
+            ys.append(batch_y)
+
+        y_preds = np.concatenate(y_preds, axis=0)
+        ys = np.concatenate(ys, axis=0)
+
+        scores = dict()
+        for metric_name in metrics:
+            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
+
+        return scores
+
+    def get_params(self, deep=True):
+        params = BaseModel.get_params(self, deep)
+        params['noise_probability'] = self.noise_probability
+
+        return params

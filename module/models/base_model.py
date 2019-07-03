@@ -57,6 +57,7 @@ class BaseModel(BaseEstimator):
                          model_checkpoint_file_name,
                          tensorboard_log_dir,
                          test_data,
+                         steps_count=0,
                          ):
 
         callbacks_list = []
@@ -65,7 +66,7 @@ class BaseModel(BaseEstimator):
         callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
 
         if isinstance(test_data, types.GeneratorType):
-            callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data)
+            callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data, steps_count)
         else:
             callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
 
@@ -161,13 +162,17 @@ class BaseModel(BaseEstimator):
 
         return callbacks_list
 
-    def add_test_score_generator(self, callbacks_list, log_dir, test_data):
+    def add_test_score_generator(self, callbacks_list, log_dir, test_data, steps_count):
         if test_data is not None:
             score = TestHistoryCallback(
                 log_dir=log_dir,
                 test_data=test_data,
-                scoring_method=lambda x: self.model.evaluate_generator(x)
+                scoring_method=lambda x: self.model.evaluate_generator(
+                    x,
+                    steps=steps_count,
+                )
             )
+
             callbacks_list.append(score)
 
         return callbacks_list
@@ -205,7 +210,7 @@ class BaseModel(BaseEstimator):
 
         return y_preds
 
-    def score(self, X, y, metrics):
+    def score(self, X, y, metrics, mode='train'):
         if metrics is str:
             metrics = [metrics]
 

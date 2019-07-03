@@ -2,22 +2,26 @@ import logging
 import os
 import json
 from imp import reload
+import argparse
+import sys
+sys.path.append("../")
+
 
 from module.models.dae import DenoisingAutoencoder
 from module.data_processing.data_processing import get_train_test
 from module.models.utils.grid_search import search_parameters, choose_cross_validation
-from module.data_processing.data_generating_cases import processing_conveyor
+from module.data_processing.ProcessingConveyor import processing_conveyor
 from definitions import *
 
 
-def search_model_parameters():
+def search_model_parameters(args):
     reload(logging)
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_device_number
 
     np.random.seed(np_seed)
     tf.set_random_seed(np_seed)
 
-    experiment_dir = os.path.join(MODELS_DIR, 'genes_normalization/dae/test/trained')
+    experiment_dir = args.experiment_dir
     if not os.path.exists(experiment_dir):
         os.makedirs(experiment_dir)
 
@@ -72,7 +76,7 @@ def search_model_parameters():
             cross_validation=cross_validation_parameters,
         )
         json.dump(write_message, file)
-        logging.info('experiment meta parameters was saved at file {}'.format(data_parameters_file))
+        logging.info('data processing parameters was saved at file {}'.format(data_parameters_file))
 
     logging.info('Start grid search')
 
@@ -90,10 +94,10 @@ def search_model_parameters():
             (384, 1000)
         ),
     ]
+
     activation = ['elu', 'lrelu', 'prelu']
-    # dropout_rate = [0.25, 0.5, 0.75]
     regularization_param = [10 ** -i for i in range(3, 7)]
-    epochs_count = 2000,
+    epochs_count = 1,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
 
@@ -120,10 +124,45 @@ def search_model_parameters():
         ['r2'],
         model_parameters_space,
         experiment_dir,
-        'cv_results_dae_test.json',
-        'random',
+        args.cv_results_file_name,
+        args.search_method,
+        args.n_iters,
     )
 
 
 if __name__ == '__main__':
-    search_model_parameters()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--experiment_dir",
+        type=str,
+        help="increase output verbosity",
+    )
+
+    parser.add_argument(
+        "--cv_results_file_name",
+        type=str,
+        default='cv_results.json',
+        help="increase output verbosity")
+
+    parser.add_argument(
+        "--search_method",
+        type=str,
+        default='random',
+        help="increase output verbosity",
+
+    )
+    parser.add_argument(
+        "--n_iters",
+        type=int,
+        default=100,
+        help="increase output verbosity",
+    )
+
+    parser.add_argument(
+        "--cuda_device_number",
+        type=str,
+        default='0',
+        help="increase output verbosity",
+    )
+    args = parser.parse_args()
+    search_model_parameters(args)

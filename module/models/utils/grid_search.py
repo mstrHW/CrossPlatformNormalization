@@ -295,7 +295,7 @@ def demo():
         ),
     }
 
-    from module.data_processing.data_generating_cases import processing_conveyor
+    from module.data_processing.ProcessingConveyor import processing_conveyor
     data = processing_conveyor(processing_sequence)
     print(data.processed_data[data.best_genes])
 

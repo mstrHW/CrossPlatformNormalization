@@ -1,172 +1,220 @@
-from sklearn.preprocessing import MinMaxScaler
+import logging
+import json
+from imp import reload
+import os
+import argparse
+import sys
+sys.path.append('../')
 
+from module.data_processing.ProcessingConveyor import processing_conveyor
 from module.data_processing.data_processing import *
-from module.models.additional_dae_keras import DAEwithPredictor
+from module.models.dae_with_predictor import DAEwithPredictor
 from module.models.mlp import MLP
 
-# ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-# sys.path.append(ROOT_DIR)
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
+def search_model_parameters(args):
+    reload(logging)
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_device_number
 
-# logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
-logging.basicConfig(level=logging.DEBUG)
-logging.debug('Read data')
-data_params = dict(
-    features_count=1000,
-    rows_count=None,
-    filtered_column='Tissue',
-    using_values='Whole blood',
-    target_column='Age',
-    normalize=True,
-    use_generator=False,
-    noising_method=None,
-    batch_size=128,
-)
+    np.random.seed(np_seed)
+    tf.set_random_seed(np_seed)
 
+    experiment_dir = args.experiment_dir
+    make_dirs(experiment_dir)
 
-input_data, best_genes = load_data(data_params['features_count'], data_params['rows_count'])
-input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
+    log_dir = os.path.join(experiment_dir, 'log')
+    make_dirs(log_dir)
 
-train_data, test_data = get_train_test(input_data)
-train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
-test_X, test_y = get_X_y(test_data, using_genes=best_genes, target_column=data_params['target_column'])
+    log_name = 'log.log'
+    logging.basicConfig(level=logging.DEBUG, filename=os.path.join(log_dir, log_name))
+    logging.info('Read data')
 
-logging.debug('Normalize data')
-scaler = None
-if data_params['normalize']:
-    scaler = MinMaxScaler()
-    scaler.fit(input_data[best_genes])
+    processing_sequence = {
+        'load_test_data': dict(
+            features_count=1000,
+            rows_count=None,
+        ),
+        'filter_data': dict(
+            filtered_column='Tissue',
+            using_values='Whole blood',
+        ),
+        'normalization': dict(
+            method='series',
+        ),
+    }
 
-    train_X = scaler.transform(train_X)
-    test_X = scaler.transform(test_X)
+    data_wrapper = processing_conveyor(processing_sequence)
+    train_data, test_data = get_train_test(data_wrapper.processed_data)
+    best_genes = data_wrapper.best_genes
 
-# train_y = np.array([train_y]).T
-# train_y = np.concatenate((train_X, train_y), axis=1)
-#
-# test_y = np.array([test_y]).T
-# test_y = np.concatenate((test_X, test_y), axis=1)
+    train_X = train_data[best_genes]
+    train_y = train_data['Age']
+    daep_train_y = [train_X, train_y]
 
-daep_train_y = [train_X, train_y]
-daep_test_y = [test_X, test_y]
+    test_X = test_data[best_genes]
+    test_y = test_data['Age']
+    daep_test_y = [test_X, test_y]
 
-# models_dir = MODELS_DIR
-models_dir = '/home/aonishchuk/projects/CPN2/models'
+    logging.info('Start grid search')
 
-experiment_dir_name = 'genes_normalization/daep'
-model_dir = path_join(models_dir, experiment_dir_name)
-make_dirs(model_dir)
+    model = DAEwithPredictor(
+        data_wrapper.processing_sequence['load_test_data']['features_count'],
+        layers=[
+            (1000, 384, 64),
+            (384, 1000)
+        ],
+        activation='elu',
+        regularizer_name='l1_l2',
+        regularizer_param=1e-3,
+        epochs_count=2000,
+        learning_rate=0.0001,
+        loss='mae',
+        patience=200,
+        optimizer_name='adam',
+    )
 
-loss_history_file = os.path.join(model_dir, 'loss_history')
-model_checkpoint_file = os.path.join(model_dir, 'model.checkpoint')
-tensorboard_dir = os.path.join(model_dir, 'tensorboard_log')
-model_file = os.path.join(model_dir, 'model')
+    experiment_meta_params_file = os.path.join(experiment_dir, 'experiment_meta_parameters.json')
+    with open(experiment_meta_params_file, 'w') as file:
+        write_message = dict(
+            np_seed=np_seed,
+            sklearn_seed=sklearn_seed,
+        )
+        json.dump(write_message, file)
+        logging.info('experiment meta parameters was saved at file {}'.format(experiment_meta_params_file))
 
-model = DAEwithPredictor(
-    data_params['features_count'],
-    layers=[
-        (1000, 384, 64),
-        (384, 1000)
-    ],
-    activation='elu',
-    regularizer_name='l1_l2',
-    regularizer_param=1e-3,
-    epochs_count=2000,
-    learning_rate=0.0001,
-    loss='mae',
-    patience=200,
-    optimizer_name='adam',
-)
+    model_dir = os.path.join(experiment_dir, 'dae')
+    make_dirs(model_dir)
 
-if os.path.exists(model_file):
-    model.load_model(model_file)
-else:
-    model.fit(
+    loss_history_file = os.path.join(model_dir, 'loss_history')
+    model_checkpoint_file = os.path.join(model_dir, 'model.checkpoint')
+    tensorboard_dir = os.path.join(model_dir, 'tensorboard_log')
+    model_file = os.path.join(model_dir, 'model')
+
+    if os.path.exists(model_file):
+        model.load_model(model_file)
+    else:
+        model.fit(
+            (train_X, daep_train_y),
+            (test_X, daep_test_y),
+            loss_history_file_name=loss_history_file,
+            model_checkpoint_file_name=model_checkpoint_file,
+            tensorboard_log_dir=tensorboard_dir,
+        )
+
+        model.save_model(model_file)
+
+    train_score = model.score(
         (train_X, daep_train_y),
+        ['r2', 'mae'],
+        scaler,
+    )
+
+    test_score = model.score(
         (test_X, daep_test_y),
-        use_early_stopping=True,
+        ['r2', 'mae'],
+        scaler,
+    )
+
+    write_message = dict(
+        train_results=train_score,
+        test_results=test_score,
+    )
+
+    results_file = os.path.join(model_dir, args.results_file_name)
+
+    with open(results_file, 'w') as file:
+        json.dump(write_message, file)
+        logging.info('overwrite model parameters file ({})'.format(results_file))
+
+    decoded_train_X = model.predict(train_X)[0]
+    decoded_test_X = model.predict(test_X)[0]
+
+    model_params = dict(
+        layers=(1500, 800, 700, 500, 128, 1),
+        activation='elu',
+        drop_rate=0.5,
+        regularizer_name='l1_l2',
+        regularizer_param=1e-3,
+        epochs_count=2000,
+        loss='mae',
+        patience=200,
+        optimizer_name='adam',
+    )
+
+    model = MLP(
+        data_wrapper.processing_sequence['load_test_data']['features_count'],
+        **model_params,
+    )
+
+    logging.debug('Fit MLP model')
+
+    model_dir = os.path.join(experiment_dir, 'mlp')
+    make_dirs(model_dir)
+
+    loss_history_file = os.path.join(model_dir, 'loss_history')
+    model_checkpoint_file = os.path.join(model_dir, 'model.checkpoint')
+    tensorboard_dir = os.path.join(model_dir, 'tensorboard_log')
+    model_file = os.path.join(model_dir, 'model')
+
+    learning_params = dict(
         loss_history_file_name=loss_history_file,
         model_checkpoint_file_name=model_checkpoint_file,
         tensorboard_log_dir=tensorboard_dir,
     )
 
-    model.save_model(model_file)
+    if os.path.exists(model_file):
+        model.load_model(model_file)
+    else:
+        model.fit(
+            (train_X, train_y),
+            (decoded_test_X, test_y),
+            **learning_params,
+        )
 
-train_score = model.score(
-    (train_X, daep_train_y),
-    ['r2', 'mae'],
-    scaler,
-)
+        model.save_model(model_file)
 
-print(train_score)
-
-test_score = model.score(
-    (test_X, daep_test_y),
-    ['r2', 'mae'],
-    scaler,
-)
-
-print(test_score)
-
-decoded_train_X = model.predict(train_X)[0]
-decoded_test_X = model.predict(test_X)[0]
-
-
-model_file = os.path.join(model_dir, 'model')
-model_params = dict(
-    layers=(1500, 800, 700, 500, 128, 1),
-    activation='elu',
-    drop_rate=0.5,
-    regularizer_name='l1_l2',
-    regularizer_param=1e-3,
-    epochs_count=2000,
-    loss='mae',
-    batch_size=data_params['batch_size'],
-    patience=200,
-    optimizer_name='adam',
-)
-
-model = MLP(features_count=data_params['features_count'], **model_params)
-
-learning_params = dict(
-    use_early_stopping=True,
-    loss_history_file_name=None,
-    model_checkpoint_file_name=None,
-)
-
-logging.debug('Fit MLP model')
-
-experiment_dir_name = 'genes_normalization/daep'
-model_dir = path_join(experiment_dir_name, 'mlp')
-make_dirs(model_dir)
-
-loss_history_file = os.path.join(model_dir, 'loss_history')
-model_checkpoint_file = os.path.join(model_dir, 'model.checkpoint')
-tensorboard_dir = os.path.join(model_dir, 'tensorboard_log')
-mlp_model_file = os.path.join(model_dir, 'model')
-
-if os.path.exists(mlp_model_file):
-    model.load_model(mlp_model_file)
-else:
-    model.fit(
+    train_score = model.score_sklearn(
         (train_X, train_y),
-        (decoded_test_X, test_y),
-        **learning_params,
+        ['r2', 'mae'],
     )
 
-    model.save_model(mlp_model_file)
+    test_score = model.score_sklearn(
+        (decoded_test_X, test_y),
+        ['r2', 'mae'],
+    )
+
+    write_message = dict(
+        train_results=train_score,
+        test_results=test_score,
+    )
+
+    results_file = os.path.join(model_dir, args.results_file_name)
+
+    with open(results_file, 'w') as file:
+        json.dump(write_message, file)
+        logging.info('overwrite model parameters file ({})'.format(results_file))
 
 
-train_score = model.score_sklearn(
-    (train_X, train_y),
-    ['r2', 'mae'],
-)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--experiment_dir",
+        type=str,
+        help="increase output verbosity",
+    )
 
-print(train_score)
+    parser.add_argument(
+        "--results_file_name",
+        type=str,
+        default='results.json',
+        help="increase output verbosity")
 
-test_score = model.score_sklearn(
-    (decoded_test_X, test_y),
-    ['r2', 'mae'],
-)
+    parser.add_argument(
+        "--cuda_device_number",
+        type=str,
+        default='0',
+        help="increase output verbosity",
+    )
+    args = parser.parse_args()
+    search_model_parameters(args)
 
-print(test_score)

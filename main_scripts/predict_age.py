@@ -1,82 +1,24 @@
 import logging
+import json
+from imp import reload
+import os
+import argparse
 
 from module.models.mlp import MLP
 from module.models.utils.grid_search import search_parameters, choose_cross_validation
-from module.data_processing.data_generating_cases import processing_conveyor
+from module.data_processing.ProcessingConveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from definitions import *
-import json
-from imp import reload
-reload(logging)
-
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
-def main():
-    logging.basicConfig(level=logging.DEBUG, filename=r'log.log')
-    logging.debug('Read data')
-    data_params = dict(
-        features_count=1000,
-        rows_count=None,
-        filtered_column='Tissue',
-        using_values='Whole blood',
-        target_column='Age',
-        normalize=True,
-        use_generator=False,
-        noising_method=None,
-        batch_size=128,
-    )
+def search_model_parameters(args):
+    reload(logging)
+    os.environ["CUDA_VISIBLE_DEVICES"] = args['cuda_device_number']
 
-    input_data, best_genes = load_data(data_params['features_count'])
-    input_data = filter_data(input_data, data_params['filtered_column'], data_params['using_values'])
+    np.random.seed(np_seed)
+    tf.set_random_seed(np_seed)
 
-    train_data, test_data = get_train_test(input_data)
-    train_X, train_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
-    test_X, test_y = get_X_y(train_data, using_genes=best_genes, target_column=data_params['target_column'])
-
-    scaler = None
-    if data_params['normalize']:
-        scaler = MinMaxScaler()
-        scaler.fit(input_data[best_genes])
-
-        train_X = scaler.transform(train_X)
-        test_X = scaler.transform(test_X)
-
-    logging.debug('Create model')
-
-    model_params = dict(
-        layers=(1500, 800, 700, 500, 128, 1),
-        activation='elu',
-        drop_rate=0.5,
-        regularizer_name='l1_l2',
-        regularizer_param=1e-3,
-        epochs_count=100,
-        learning_rate=0.00001,
-        loss='mae',
-        batch_size=data_params['batch_size'],
-        patience=200,
-        optimizer_name='eve',
-    )
-
-    model = MLP(features_count=data_params['features_count'], **model_params)
-
-    learning_params = dict(
-        use_early_stopping=True,
-        loss_history_file_name=None,
-        model_checkpoint_file_name=None,
-    )
-
-    logging.debug('Fit model')
-    model.fit(
-        *(train_X, train_y),
-        (test_X, test_y),
-        **learning_params,
-    )
-
-
-def search_model_parameters():
-    experiment_dir = os.path.join(MODELS_DIR, 'predict_age/mlp/test/trained')
+    experiment_dir = args['experiment_dir']
     make_dirs(experiment_dir)
 
     log_dir = os.path.join(experiment_dir, 'log')
@@ -100,7 +42,7 @@ def search_model_parameters():
         ),
     }
 
-    data_wrapper = processing_conveyor(processing_sequence)
+    data_wrapper = ProcessingConveyor(processing_sequence)
     train_data, test_data = get_train_test(data_wrapper.processed_data)
 
     logging.info('Start grid search')
@@ -169,11 +111,45 @@ def search_model_parameters():
         ['r2'],
         model_parameters_space,
         experiment_dir,
-        'cv_results_mlp_test.json',
-        'random',
+        args['cv_results_file_name'],
+        args['search_method'],
+        args['n_iters'],
     )
 
 
 if __name__ == '__main__':
-    # main_scripts()
-    search_model_parameters()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--experiment_dir",
+        type=str,
+        help="increase output verbosity",
+    )
+
+    parser.add_argument(
+        "--cv_results_file_name",
+        type=str,
+        default='cv_results.json',
+        help="increase output verbosity")
+
+    parser.add_argument(
+        "--search_method",
+        type=str,
+        default='random',
+        help="increase output verbosity",
+
+    )
+    parser.add_argument(
+        "--n_iters",
+        type=int,
+        default=100,
+        help="increase output verbosity",
+    )
+
+    parser.add_argument(
+        "--cuda_device_number",
+        type=str,
+        default='0',
+        help="increase output verbosity",
+    )
+    args = parser.parse_args()
+    search_model_parameters(args)
