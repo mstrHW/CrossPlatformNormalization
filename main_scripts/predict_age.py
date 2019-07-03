@@ -3,6 +3,8 @@ import json
 from imp import reload
 import os
 import argparse
+import sys
+sys.path.append('../')
 
 from module.models.mlp import MLP
 from module.models.utils.grid_search import search_parameters, choose_cross_validation
@@ -13,12 +15,12 @@ from definitions import *
 
 def search_model_parameters(args):
     reload(logging)
-    os.environ["CUDA_VISIBLE_DEVICES"] = args['cuda_device_number']
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_device_number
 
     np.random.seed(np_seed)
     tf.set_random_seed(np_seed)
 
-    experiment_dir = args['experiment_dir']
+    experiment_dir = args.experiment_dir
     make_dirs(experiment_dir)
 
     log_dir = os.path.join(experiment_dir, 'log')
@@ -29,7 +31,7 @@ def search_model_parameters(args):
     logging.info('Read data')
 
     processing_sequence = {
-        'load_test_data': dict(
+        'load_data': dict(
             features_count=1000,
             rows_count=None,
         ),
@@ -111,9 +113,9 @@ def search_model_parameters(args):
         ['r2'],
         model_parameters_space,
         experiment_dir,
-        args['cv_results_file_name'],
-        args['search_method'],
-        args['n_iters'],
+        args.cv_results_file_name,
+        args.search_method,
+        args.n_iters,
     )
 
 

@@ -2,25 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41a7acb0-5ec5-48d1-af30-b285a208b7d7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CrossPlatformNormalization.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/definitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/definitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/genes_normalization.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/genes_normalization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/learn_mlp_with_shifted_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_scripts/predict_age.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/using_daep.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/using_daep.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/ProcessingConveyor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/data_processing/data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/NoisedDataGeneration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/data_processing/data_understanding.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/data_processing/data_understanding.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/additional_dae_keras.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/dae_with_predictor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/base_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/dae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/utils/grid_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/utils/grid_search.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/data_processing/test_data_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/data_processing/test_data_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -84,11 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="130" column="27" selection-start-line="130" selection-start-column="17" selection-end-line="130" selection-end-column="27" />
+            <state relative-caret-position="240">
+              <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -96,12 +80,12 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="480">
-                <caret line="32" column="12" lean-forward="true" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+              <first_editor relative-caret-position="560">
+                <caret line="211" lean-forward="true" selection-start-line="211" selection-end-line="211" />
               </first_editor>
               <second_editor />
             </state>
@@ -123,8 +107,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/definitions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+            <state relative-caret-position="135">
+              <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -167,7 +151,6 @@
         <option value="$PROJECT_DIR$/notebooks/collect_results.ipynb" />
         <option value="$PROJECT_DIR$/main_scripts/learn_mlp_with_shifted_data.py" />
         <option value="$PROJECT_DIR$/module/models/utils/grid_search.py" />
-        <option value="$PROJECT_DIR$/definitions.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
         <option value="$PROJECT_DIR$/module/models/base_model.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_generating_cases.py" />
@@ -178,10 +161,11 @@
         <option value="$PROJECT_DIR$/main_scripts/using_daep.py" />
         <option value="$PROJECT_DIR$/module/models/additional_dae_keras.py" />
         <option value="$PROJECT_DIR$/module/data_processing/ProcessingConveyor.py" />
-        <option value="$PROJECT_DIR$/main_scripts/predict_age.py" />
         <option value="$PROJECT_DIR$/main_scripts/genes_normalization.py" />
         <option value="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" />
         <option value="$PROJECT_DIR$/readme.md" />
+        <option value="$PROJECT_DIR$/definitions.py" />
+        <option value="$PROJECT_DIR$/main_scripts/predict_age.py" />
       </list>
     </option>
   </component>
@@ -380,12 +364,12 @@
       <option name="presentableId" value="Default" />
       <updated>1561484574213</updated>
       <workItem from="1561540054545" duration="12721000" />
-      <workItem from="1561974913022" duration="29154000" />
+      <workItem from="1561974913022" duration="30544000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41875000" />
+    <option name="totallyTimeSpent" value="43265000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -398,8 +382,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19590482" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19590482" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -410,7 +395,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32937366" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32829374" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -719,16 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="130" column="27" selection-start-line="130" selection-start-column="17" selection-end-line="130" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
@@ -766,16 +741,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/definitions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/data_processing/data_understanding.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -796,13 +761,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/definitions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="480">
-            <caret line="32" column="12" lean-forward="true" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+          <first_editor relative-caret-position="560">
+            <caret line="211" lean-forward="true" selection-start-line="211" selection-end-line="211" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

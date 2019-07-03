@@ -111,45 +111,45 @@ processed__data = data.processed_data
 ```
 
 ## Models
-    1. MLP
+
+1. MLP
+    #### Usage
+    ```python
+    from module.models.mlp import MLP
     
-#### Usage
-```python
-from module.models.mlp import MLP
-
-model_params = dict(
-    layers=(1500, 800, 700, 500, 128, 1),
-    activation='elu',
-    drop_rate=0.5,
-    regularizer_name='l1_l2',
-    regularizer_param=1e-3,
-    epochs_count=2000,
-    loss='mae',
-    patience=200,
-    optimizer_name='adam',
-)
-
-
-model = MLP(
-    features_count=1000,
-    **model_params,
-)
-
-
-model.fit(train_X, train_y)
-model.score(test_X, test_y)
-
-```
-    2. DAE
-    3. DAE with predictor
+    model_params = dict(
+        layers=(1500, 800, 700, 500, 128, 1),
+        activation='elu',
+        drop_rate=0.5,
+        regularizer_name='l1_l2',
+        regularizer_param=1e-3,
+        epochs_count=2000,
+        loss='mae',
+        patience=200,
+        optimizer_name='adam',
+    )
+    
+    
+    model = MLP(
+        features_count=1000,
+        **model_params,
+    )
+    
+    
+    model.fit(train_X, train_y)
+    model.score(test_X, test_y)
+    
+    ```
+2. DAE
+3. DAE with predictor
 
 ## Experiments
 
 ### Predict age with mlp
 
-    * *Experiment directory*: /predict_age/mlp/
-    * *Best model*: cv_19
-    * *Main script*: main_scripts/predict_age.py
+* *Experiment directory* : /predict_age/mlp/
+* *Best model* : cv_19
+* *Main script* : main_scripts/predict_age.py
     
 script_parameters:
 
@@ -163,9 +163,9 @@ script_parameters:
 
 ### Genes normalization with dae
 
-    * *Experiment directory*: /genes_normalization/dae/
-    * *Best model*: ---
-    * *Main script*: main_scripts/genes_normalization.py
+* *Experiment directory*: /genes_normalization/dae/
+* *Best model*: ---
+* *Main script*: main_scripts/genes_normalization.py
     
 script_parameters:
 
@@ -179,9 +179,9 @@ script_parameters:
 
 ### Predict age with mlp (+ logarithm on data)
 
-    * *Experiment directory*: /predict_age_log_data/
-    * *Best model*: ---
-    * *Main script*: main_scripts/predict_age_log_data.py
+* *Experiment directory*: /predict_age_log_data/
+* *Best model*: ---
+* *Main script*: main_scripts/predict_age_log_data.py
     
 script_parameters:
 
@@ -212,9 +212,9 @@ processing_sequence = {
 ```
 and noising method was distance noise with 50% probability of noising genes
 
-    * *Experiment directory*: /predict_age_log_data/
-    * *Best model*: ---
-    * *Main script*: main_scripts/predict_age_log_data.py
+* *Experiment directory*: /predict_age_log_data/
+* *Best model*: ---
+* *Main script*: main_scripts/predict_age_log_data.py
     
 script_parameters:
 

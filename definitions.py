@@ -7,7 +7,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 # ROOT_DIR = 'D:/Datasets/InsilicoMedicine'
 sys.path.append(ROOT_DIR)
 
-DATA_DIR = '/home/aonishchuk/data'
+DATA_DIR = '/home/mstrhw/data'
 # DATA_DIR = 'D:/Datasets/InsilicoMedicine/data'
 
 IMAGES_DIR = os.path.join(ROOT_DIR, 'images')
