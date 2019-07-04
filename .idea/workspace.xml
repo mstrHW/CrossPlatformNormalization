@@ -2,15 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41a7acb0-5ec5-48d1-af30-b285a208b7d7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/main_scripts/genes_normalization.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/genes_normalization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/predict_age.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/using_daep.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/using_daep.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/base_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/dae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/dae_with_predictor.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/dae_with_predictor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/utils/grid_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/utils/grid_search.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,8 +16,8 @@
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="454">
-                <caret line="205" column="59" selection-start-line="205" selection-start-column="59" selection-end-line="205" selection-end-column="59" />
+              <first_editor relative-caret-position="262">
+                <caret line="73" column="8" selection-start-line="73" selection-start-column="8" selection-end-line="73" selection-end-column="8" />
               </first_editor>
               <second_editor />
             </state>
@@ -34,9 +25,30 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="28" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="20" column="18" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
+            <state relative-caret-position="2987">
               <caret line="284" column="25" selection-start-line="284" selection-start-column="11" selection-end-line="284" selection-end-column="25" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -50,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="18" selection-start-line="18" selection-end-line="41" selection-end-column="12" />
+            <state relative-caret-position="153">
+              <caret line="63" selection-start-line="63" selection-end-line="75" selection-end-column="5" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -62,8 +74,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" selection-start-line="17" selection-end-line="17" selection-end-column="83" />
+            <state relative-caret-position="102">
+              <caret line="147" selection-start-line="147" selection-end-line="166" selection-end-column="45" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -93,19 +105,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main_scripts/mlp_after_dae.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="106" column="4" lean-forward="true" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1547">
-              <caret line="91" column="31" selection-start-line="91" selection-start-column="31" selection-end-line="91" selection-end-column="31" />
+            <state relative-caret-position="34">
+              <caret line="53" selection-start-line="53" selection-end-line="68" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -117,18 +120,6 @@
               <caret line="63" column="102" selection-start-line="63" selection-start-column="102" selection-end-line="63" selection-end-column="102" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="148" selection-start-line="148" selection-end-line="148" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -684,13 +675,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="8" lean-forward="true" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/sklearn/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="169">
@@ -808,16 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="45" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/core/fromnumeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -882,13 +856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1547">
-          <caret line="91" column="31" selection-start-line="91" selection-start-column="31" selection-end-line="91" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
@@ -906,29 +873,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" selection-start-line="17" selection-end-line="17" selection-end-column="83" />
+        <state relative-caret-position="153">
+          <caret line="63" selection-start-line="63" selection-end-line="75" selection-end-column="5" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
+    <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="18" selection-start-line="18" selection-end-line="41" selection-end-column="12" />
+        <state relative-caret-position="102">
+          <caret line="147" selection-start-line="147" selection-end-line="166" selection-end-column="45" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="53" selection-start-line="53" selection-end-line="68" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
+        <state relative-caret-position="2987">
           <caret line="284" column="25" selection-start-line="284" selection-start-column="11" selection-end-line="284" selection-end-column="25" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
@@ -938,11 +912,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="18" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="28" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="454">
-            <caret line="205" column="59" selection-start-line="205" selection-start-column="59" selection-end-line="205" selection-end-column="59" />
+          <first_editor relative-caret-position="262">
+            <caret line="73" column="8" selection-start-line="73" selection-start-column="8" selection-end-line="73" selection-end-column="8" />
           </first_editor>
           <second_editor />
         </state>

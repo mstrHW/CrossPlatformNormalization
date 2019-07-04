@@ -44,34 +44,34 @@
 
 ```
 .
-├── experiment_1
-├── experiment_2
-    ├── model_1
-    └── model_2
-        ├── cv_results.json
-        ├── experiment_meta_parameters.json
-        ├── log.log
+├── experiment_1                                # folder for first experiment
+├── experiment_2                                # folder for second experiment
+    ├── model_1                                 # folder for first model
+    └── model_2                                 # folder for second model
+        ├── cv_results.json                     # contains parameters, scores and directory of models gived by search parameters method
+        ├── experiment_meta_parameters.json     # numpy and sklearn seed values
+        ├── data_parameters.json                # preprocessing sequence for data
+        ├── log.log                             # contains key stages of search method executing
         └── trained_models
-            ├── cv_0
-            └── cv_1
-                ├── 0_fold
-                └── 1_fold
-                    ├── loss_history
-                    ├── model
-                    ├── model.checkpoint
-                    └── tensorboard_log
+            ├── cv_0                            # folder for first set of parameters
+            └── cv_1                            # folder for second set of parameters
+            ├── 0_fold                          # first set of cross-validation results
+            └── 1_fold
+                ├── loss_history                # contains train and test scores collected during training
+                ├── model                       # saved model file
+                ├── model.checkpoint            # last checkpoint file
+                └── tensorboard_log             # contains parameters and scores collected during training
 ```
 
-## Data processing
+## Data processing (code_path: module/data_preprocessing)
 
-### Normalization
-
-### Logarithm
-
-### Noising
+For data processing was used following methods:
+1. Normalization (MinMaxScale from sklearn)
+2. Series normalization (MinMaxScale for each group of GEO in data separately)  (code_file: data_processing.py, method: series_normalization)
+3. Logarithm (code_file: data_processing.py, method: apply_log)
 
 ### Processing conveyor
-
+For more convenient usage and documentation of methods ProcessingConveyor class was implemented.
 #### Usage
 
 ```python
@@ -100,6 +100,9 @@ processed__data = processing_conveyor.processed_data
 ```
 
 ### Generating noise
+For data noising was used following methods:
+    1. Gaussian noise (code_file: noising_methods.py, method: gaussian_noise)
+    2. Distance noise: use distance of distributions (code_file: distance_noise_generation.py, class: DistanceNoiseGenerator)
 
 #### Usage
 
@@ -169,6 +172,39 @@ for batch in get_batches(ref_batch, batch_size):
 ## Experiments
 
 ### Predict age with mlp
+```python
+processing_sequence = {
+    'load_data': dict(
+        features_count=1000,
+        rows_count=None,
+    ),
+    'filter_data': dict(
+        filtered_column='Tissue',
+        using_values='Whole blood',
+    ),
+    'normalization': dict(
+        method='series',
+    ),
+}
+```
+
+Parameters space:
+```python
+layers = [
+    (256, 128, 64, 1),
+    (512, 256, 128, 1),
+    (512, 384, 256, 128, 1),
+    (768, 512, 384, 192, 1),
+    (1024, 768, 512, 384, 128, 1),
+    (1536, 1024, 768, 384, 192, 1),
+]
+activation = ['elu', 'lrelu', 'prelu']
+dropout_rate = [0.25, 0.5, 0.75]
+regularization_param = [10 ** -i for i in range(3, 7)]
+epochs_count = 2000,
+loss = 'mae',
+optimizer = ['adam', 'rmsprop']
+```
 
 * *Experiment directory* : /predict_age/mlp/
 * *Best model* : cv_19
@@ -185,6 +221,47 @@ script_parameters:
 | cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
 ### Genes normalization with dae
+Data preprocessing parameters:
+```python
+processing_sequence = {
+    'load_data': dict(
+        features_count=1000,
+        rows_count=None,
+    ),
+    'filter_data': dict(
+        filtered_column='Tissue',
+        using_values='Whole blood',
+    ),
+    'normalization': dict(
+        method='series',
+    ),
+}
+```
+and noising method was distance noise with 50% probability of noising genes
+
+Parameters space:
+```python
+layers = [
+    (
+        (1000, 512, 256, 128, 64),
+        (128, 256, 512, 1000)
+    ),
+    (
+        (1000, 512, 256, 64),
+        (256, 512, 1000)
+    ),
+    (
+        (1000, 384, 64),
+        (384, 1000)
+    ),
+]
+
+activation = ['elu', 'lrelu', 'prelu']
+regularization_param = [10 ** -i for i in range(3, 7)]
+epochs_count = 2000,
+loss = 'mae',
+optimizer = ['adam', 'rmsprop']
+```
 
 * *Experiment directory*: /genes_normalization/dae/
 * *Best model*: ---
@@ -201,6 +278,26 @@ script_parameters:
 | cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
 ### Predict age with mlp (+ logarithm on data)
+Data preprocessing parameters:
+
+```python
+processing_sequence = {
+    'load_test_data': dict(
+        features_count=1000,
+        rows_count=None,
+    ),
+    'filter_data': dict(
+        filtered_column='Tissue',
+        using_values='Whole blood',
+    ),
+    'apply_logarithm': dict(
+        shift=3.,
+    ),
+    'normalization': dict(
+        method='series',
+    ),
+}
+```
 
 * *Experiment directory*: /predict_age_log_data/
 * *Best model*: --- (search parameters method was not used)
