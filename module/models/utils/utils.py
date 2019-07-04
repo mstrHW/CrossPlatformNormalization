@@ -101,7 +101,3 @@ if __name__ == '__main__':
     # model = MLP(**best_parameters)
     # model.load_model(path_join(best_fold_path, 'model'))
 
-
-    all_models_predict(
-        MLP,
-    )

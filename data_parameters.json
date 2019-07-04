@@ -1,1 +1,0 @@
-{"data_processing": {"load_test_data": {"features_count": 1000, "rows_count": null}, "filter_data": {"filtered_column": "Tissue", "using_values": "Whole blood"}, "normalization": {"method": "series"}}, "cross_validation_method": "custom", "cross_validation": {"n_splits": 5, "random_state": 23, "shuffle": true}}

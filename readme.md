@@ -13,17 +13,17 @@
 |   ├── predict_age_log_data.py
 |   ├── using_daep.py
 |   ├── utils.py
-|   └── notebooks
+|   └── notebooks                   # Jupyter notebooks were used for data analysis and experiments results visualization
 |       ├── analyze_data.ipynb
 |       ├── data_processing.ipynb
 |       └── collect_results.ipynb
 └── module                          # Base folder for implemented methods and models 
-    ├── data_processing     #
+    ├── data_processing             # Defines methods of data loading, preprocessing and noising
     |   ├── data_processing.py
     |   ├── nosing_methods.py
     |   ├── distance_noise_generation
     |   └── processing_conveyor   
-    ├── models              #
+    ├── models                      # Defines classes for each used in experiments models
     |   ├── base_model.py
     |   ├── dae.py
     |   ├── dae_with_predictor.py
@@ -63,14 +63,14 @@
                 └── tensorboard_log             # contains parameters and scores collected during training
 ```
 
-## Data processing (code_path: module/data_preprocessing)
+## Data processing (code_path: module/data_processing)
 
 For data processing was used following methods:
 1. Normalization (MinMaxScale from sklearn)
 2. Series normalization (MinMaxScale for each group of GEO in data separately)  (code_file: data_processing.py, method: series_normalization)
 3. Logarithm (code_file: data_processing.py, method: apply_log)
 
-### Processing conveyor
+### Processing conveyor (code_file: module/data_processing/processing_conveyor)
 For more convenient usage and documentation of methods ProcessingConveyor class was implemented.
 #### Usage
 
@@ -99,7 +99,7 @@ best_genes = processing_conveyor.best_genes
 processed__data = processing_conveyor.processed_data
 ```
 
-### Generating noise
+### Generating noise (code_path: module/data_processing)
 For data noising was used following methods:
     1. Gaussian noise (code_file: noising_methods.py, method: gaussian_noise)
     2. Distance noise: use distance of distributions (code_file: distance_noise_generation.py, class: DistanceNoiseGenerator)
@@ -135,9 +135,9 @@ for batch in get_batches(ref_batch, batch_size):
     y = batch[best_genes]
 ```
 
-## Models
+## Models (code_path: module/models)
 
-1. MLP
+1. MLP (code_file: mlp.py)
     #### Usage
     
     ```python
@@ -166,8 +166,8 @@ for batch in get_batches(ref_batch, batch_size):
     model.score(test_generator, ['mae', 'r2'])
     
     ```
-2. DAE
-3. DAE with predictor
+2. DAE (code_file: dae.py)
+3. DAE with predictor (code_file: dae_with_predictor.py)
 
 ## Experiments
 
