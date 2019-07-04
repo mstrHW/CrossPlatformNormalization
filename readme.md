@@ -21,8 +21,8 @@
     ├── data_processing     #
     |   ├── data_processing.py
     |   ├── nosing_methods.py
-    |   ├── NoisedDataGeneration
-    |   └── ProcessingConveyor   
+    |   ├── distance_noise_generation
+    |   └── processing_conveyor   
     ├── models              #
     |   ├── base_model.py
     |   ├── dae.py
@@ -75,7 +75,7 @@
 #### Usage
 
 ```python
-from module.data_processing.ProcessingConveyor import ProcessingConveyor
+from module.data_processing.processing_conveyor import ProcessingConveyor
 
 processing_sequence = {
     'load_data': dict(
@@ -104,7 +104,7 @@ processed__data = processing_conveyor.processed_data
 #### Usage
 
 ```python
-from module.data_processing.NoisedDataGeneration import DistanceNoiseGenerator
+from module.data_processing.distance_noise_generation import DistanceNoiseGenerator
 from module.data_processing.data_processing import get_batches
 
 best_genes = processing_conveyor.best_genes
@@ -159,8 +159,8 @@ for batch in get_batches(ref_batch, batch_size):
     )
     
     
-    model.fit(train_X, train_y)
-    model.score(test_X, test_y)
+    model.fit(train_generator)
+    model.score(test_generator, ['mae', 'r2'])
     
     ```
 2. DAE
@@ -178,11 +178,11 @@ script_parameters:
 
 | parameter | type | default value | description |
 | --- | --- | --- | --- |
-| experiment_dir | str | --- | description |
-| cv_results_file_name | str | cv_results.json| description |
-| search_method | str | random | description |
-| n_iters | int | 100 | description |
-| cuda_device_number | str | 0 | description |
+| experiment_dir | str | --- | path to directory for current experiment trained models and results |
+| cv_results_file_name | str | cv_results.json| file name of search parameters results |
+| search_method | str | random | choose 'random' or 'grid' search |
+| n_iters | int | 100 | number of search iterations for random search |
+| cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
 ### Genes normalization with dae
 
@@ -194,26 +194,26 @@ script_parameters:
 
 | parameter | type | default value | description |
 | --- | --- | --- | --- |
-| experiment_dir | str | --- | description |
-| cv_results_file_name | str | cv_results.json| description |
-| search_method | str | random | description |
-| n_iters | int | 100 | description |
-| cuda_device_number | str | 0 | description |
+| experiment_dir | str | --- | path to directory for current experiment trained models and results |
+| cv_results_file_name | str | cv_results.json| file name of search parameters results |
+| search_method | str | random | choose 'random' or 'grid' search |
+| n_iters | int | 100 | number of search iterations for random search |
+| cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
 ### Predict age with mlp (+ logarithm on data)
 
 * *Experiment directory*: /predict_age_log_data/
-* *Best model*: ---
+* *Best model*: --- (search parameters method was not used)
 * *Main script*: main_scripts/predict_age_log_data.py
     
 script_parameters:
 
 | parameter | type | default value | description |
 | --- | --- | --- | --- |
-| experiment_dir | str | --- | description |
-| mlp_models_dir | str | --- | description |
-| results_file_name | str | results.json| description |
-| cuda_device_number | str | 0 | description |
+| experiment_dir | str | --- | path to directory for current experiment trained models and results |
+| mlp_models_dir | str | --- | path to directory of predicting age with mlp experiment |
+| results_file_name | str | results.json| name of file with score results |
+| cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
 ### Genes normalization and predict age using dae with predictor
 #### Description:
@@ -235,15 +235,14 @@ processing_sequence = {
 ```
 and noising method was distance noise with 50% probability of noising genes
 
-* *Experiment directory*: /predict_age_log_data/
+* *Experiment directory*: /genes_normalization/daep
 * *Best model*: ---
-* *Main script*: main_scripts/predict_age_log_data.py
+* *Main script*: main_scripts/using_daep.py
     
 script_parameters:
 
 | parameter | type | default value | description |
 | --- | --- | --- | --- |
-| experiment_dir | str | --- | description |
-| mlp_models_dir | str | --- | description |
-| results_file_name | str | results.json| description |
-| cuda_device_number | str | 0 | description |
+| experiment_dir | str | --- | path to directory for current experiment trained models and results |
+| results_file_name | str | results.json| name of file with score results |
+| cuda_device_number | str | 0 | number of gpu for execute tensorflow |

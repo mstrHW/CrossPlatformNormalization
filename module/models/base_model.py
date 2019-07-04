@@ -53,6 +53,44 @@ class BaseModel(BaseEstimator):
         self.regularizer = make_regularizer(regularizer_name, regularizer_param)
         self.model = self.build_model()
 
+    def fit(self,
+            train_generator,
+            val_generator=None,
+            test_generator=None,
+            loss_history_file_name=None,
+            model_checkpoint_file_name=None,
+            tensorboard_log_dir=None,
+            ):
+
+        if test_generator is not None:
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                test_generator,
+                steps_count=len(test_generator),
+            )
+        else:
+            callbacks_list = self.create_callbacks(
+                model_checkpoint_file_name,
+                tensorboard_log_dir,
+                val_generator,
+                steps_count=len(val_generator),
+            )
+
+        history = self.model.fit_generator(
+            train_generator,
+            epochs=self.epochs_count,
+            validation_data=val_generator,
+            callbacks=callbacks_list,
+            verbose=1,
+            steps_per_epoch=len(train_generator),
+            validation_steps=len(val_generator),
+        )
+
+        self.save_training_history(history, loss_history_file_name)
+
+        return self
+
     def create_callbacks(self,
                          model_checkpoint_file_name,
                          tensorboard_log_dir,
@@ -65,7 +103,7 @@ class BaseModel(BaseEstimator):
         callbacks_list = self.add_reduce_on_plato(callbacks_list, self.use_early_stopping)
         callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
 
-        if isinstance(test_data, types.GeneratorType):
+        if isinstance(test_data, keras.utils.Sequence):
             callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data, steps_count)
         else:
             callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
@@ -73,34 +111,6 @@ class BaseModel(BaseEstimator):
         callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
 
         return callbacks_list
-
-    def fit(self,
-            train_data,
-            val_data=None,
-            test_data=None,
-            loss_history_file_name=None,
-            model_checkpoint_file_name=None,
-            tensorboard_log_dir=None,
-            ):
-
-        callbacks_list = self.create_callbacks(
-            model_checkpoint_file_name,
-            tensorboard_log_dir,
-            test_data,
-        )
-
-        history = self.model.fit(
-            *train_data,
-            epochs=self.epochs_count,
-            batch_size=self.batch_size,
-            validation_data=val_data,
-            callbacks=callbacks_list,
-            verbose=1,
-        )
-
-        self.save_training_history(history, loss_history_file_name)
-
-        return self
 
     def add_early_stopping(self, callbacks_list, use_early_stopping):
         if use_early_stopping:
@@ -210,15 +220,29 @@ class BaseModel(BaseEstimator):
 
         return y_preds
 
-    def score(self, X, y, metrics, mode='train'):
+    @abstractmethod
+    def score(self, test_generator, metrics):
         if metrics is str:
             metrics = [metrics]
 
-        y_preds = self.model.predict(X)
+        y_preds = []
+        ys = []
+        for batch_X, batch_y in test_generator:
+            batch_predicts = self.model.predict_on_batch(batch_X)
+            y_preds.append(batch_predicts)
+
+            ys.append(batch_y)
+
+        if len(y_preds) > 1:
+            y_preds = np.concatenate(y_preds, axis=0)
+            ys = np.concatenate(ys, axis=0)
+        else:
+            y_preds = np.array(y_preds[0])
+            ys = np.array(ys[0])
 
         scores = dict()
         for metric_name in metrics:
-            scores[metric_name] = make_sklearn_metric(metric_name)(y, y_preds)
+            scores[metric_name] = make_sklearn_metric(metric_name)(ys, y_preds)
 
         return scores
 

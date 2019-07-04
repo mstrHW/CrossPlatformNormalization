@@ -5,7 +5,8 @@ from imp import reload
 import argparse
 import sys
 sys.path.append("../")
-
+import keras
+import math
 
 from module.models.dae import DenoisingAutoencoder
 from module.data_processing.data_processing import get_train_test
@@ -13,6 +14,45 @@ from module.models.utils.cross_validation import choose_cross_validation
 from module.models.utils.grid_search import search_parameters
 from module.data_processing.processing_conveyor import ProcessingConveyor
 from definitions import *
+
+from module.data_processing.distance_noise_generation import DistanceNoiseGenerator
+
+
+class DataGenerator(keras.utils.Sequence):
+    def __init__(self, ref_data, data, best_genes, mode, noise_probability, batch_size=128):
+        if mode == 'train':
+            self.data = ref_data
+        else:
+            self.data = data
+
+        self.data_count = self.data.shape[0]
+        self.best_genes = best_genes
+        self.batch_size = batch_size
+        self.noise_generator = DistanceNoiseGenerator(
+            ref_data,
+            data,
+            best_genes,
+            mode,
+            noise_probability,
+        )
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(math.ceil(self.data_count / self.batch_size))
+
+    def __getitem__(self, index):
+        start_index = index * self.batch_size
+        end_index = (index + 1) * self.batch_size
+
+        batch = self.data.iloc[start_index: end_index].copy()
+        batch.loc[:, self.best_genes] = self.noise_generator.data_generation(batch[self.best_genes].values)
+        X = self.data.iloc[start_index: end_index][self.best_genes].values
+        y = batch[self.best_genes].values
+
+        return X, y
+
+    def on_epoch_end(self):
+        pass
 
 
 def search_model_parameters(args):
@@ -48,6 +88,14 @@ def search_model_parameters(args):
     data_wrapper = ProcessingConveyor(processing_sequence)
     train_data, test_data = get_train_test(data_wrapper.processed_data)
 
+    ref_batch_name = train_data['GEO'].value_counts().keys()[0]
+    ref_mask = train_data['GEO'] == ref_batch_name
+
+    best_genes = data_wrapper.best_genes
+
+    ref_data = train_data[ref_mask]
+    train_data = train_data[~ref_mask]
+
     cross_validation_method_name = 'default'
     cross_validation_parameters = dict(
         n_splits=5,
@@ -57,9 +105,24 @@ def search_model_parameters(args):
 
     cross_validation_method = choose_cross_validation(cross_validation_method_name)
 
-    columns = data_wrapper.best_genes.tolist()
-    columns.append('GEO')
-    get_x_y_method = lambda x: (x[columns], x[data_wrapper.best_genes])
+    # columns = data_wrapper.best_genes.tolist()
+    # columns.append('GEO')
+
+    create_train_generator = lambda data: DataGenerator(
+        ref_data,
+        data,
+        best_genes,
+        'train',
+        0.5,
+    )
+
+    create_test_generator = lambda data: DataGenerator(
+        ref_data,
+        data,
+        best_genes,
+        'test',
+        0.5,
+    )
 
     experiment_meta_params_file = os.path.join(experiment_dir, 'experiment_meta_parameters.json')
     with open(experiment_meta_params_file, 'w') as file:
@@ -115,14 +178,14 @@ def search_model_parameters(args):
     search_parameters(
         lambda **params: DenoisingAutoencoder(
             data_wrapper.processing_sequence['load_data']['features_count'],
-            0.25,
             **params,
         ),
         train_data,
         test_data,
         cross_validation_method,
         cross_validation_parameters,
-        get_x_y_method,
+        create_train_generator,
+        create_test_generator,
         ['r2'],
         model_parameters_space,
         experiment_dir,

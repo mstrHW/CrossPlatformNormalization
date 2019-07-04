@@ -5,12 +5,40 @@ import os
 from sklearn.metrics import mean_absolute_error, r2_score
 import json
 import argparse
+import keras
+import math
 
 from definitions import *
 from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from module.models.mlp import MLP
 from main_scripts.utils import load_best_model
+
+
+class DataGenerator(keras.utils.Sequence):
+    def __init__(self, data, best_genes, batch_size=128):
+        self.data = data
+        self.data_count = data.shape[0]
+        self.best_genes = best_genes
+        self.batch_size = batch_size
+
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(math.ceil(self.data_count / self.batch_size))
+
+    def __getitem__(self, index):
+        start_index = index * self.batch_size
+        end_index = (index + 1) * self.batch_size
+
+        batch = self.data.iloc[start_index: end_index]
+        X = batch[self.best_genes].values
+        y = batch['Age'].values
+
+        return X, y
+
+    def on_epoch_end(self):
+        pass
 
 
 def main(args):
@@ -60,8 +88,8 @@ def main(args):
     target_column = 'Age'
 
     best_mlp_model.fit(
-        (train_data[best_genes], train_data[target_column]),
-        (test_data[best_genes], test_data[target_column]),
+        DataGenerator(train_data, best_genes),
+        DataGenerator(test_data, best_genes),
         **learning_params
     )
 

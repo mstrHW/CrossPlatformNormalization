@@ -5,6 +5,8 @@ import os
 import argparse
 import sys
 sys.path.append('../')
+import keras
+import math
 
 from module.models.mlp import MLP
 from module.models.utils.grid_search import search_parameters
@@ -12,6 +14,32 @@ from module.models.utils.cross_validation import choose_cross_validation
 from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from definitions import *
+
+
+class DataGenerator(keras.utils.Sequence):
+    def __init__(self, data, best_genes, batch_size=128):
+        self.data = data
+        self.data_count = data.shape[0]
+        self.best_genes = best_genes
+        self.batch_size = batch_size
+
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(math.ceil(self.data_count / self.batch_size))
+
+    def __getitem__(self, index):
+        start_index = index * self.batch_size
+        end_index = (index + 1) * self.batch_size
+
+        batch = self.data.iloc[start_index: end_index]
+        X = batch[self.best_genes].values
+        y = batch['Age'].values
+
+        return X, y
+
+    def on_epoch_end(self):
+        pass
 
 
 def search_model_parameters(args):
@@ -63,7 +91,7 @@ def search_model_parameters(args):
     activation = ['elu', 'lrelu', 'prelu']
     dropout_rate = [0.25, 0.5, 0.75]
     regularization_param = [10 ** -i for i in range(3, 7)]
-    epochs_count = 600,
+    epochs_count = 5,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
 
@@ -104,7 +132,8 @@ def search_model_parameters(args):
         logging.info('experiment meta parameters was saved at file {}'.format(data_parameters_file))
 
     cross_validation_method = choose_cross_validation(cross_validation_method_name)
-    get_x_y_method = lambda x: (x[data_wrapper.best_genes], x['Age'])
+
+    create_generator = lambda data: DataGenerator(data, data_wrapper.best_genes)
 
     search_parameters(
         lambda **params: MLP(data_wrapper.processing_sequence['load_data']['features_count'], **params),
@@ -112,7 +141,8 @@ def search_model_parameters(args):
         test_data,
         cross_validation_method,
         cross_validation_parameters,
-        get_x_y_method,
+        create_generator,
+        create_generator,
         ['mae'],
         model_parameters_space,
         experiment_dir,

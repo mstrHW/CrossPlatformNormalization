@@ -6,6 +6,8 @@ from sklearn.metrics import mean_absolute_error, r2_score
 import json
 import argparse
 from imp import reload
+import keras
+import math
 
 from definitions import *
 from module.models.dae import DenoisingAutoencoder
@@ -15,6 +17,32 @@ from module.models.mlp import MLP
 from main_scripts.utils import load_best_model
 
 
+class DataGenerator(keras.utils.Sequence):
+    def __init__(self, data, best_genes, batch_size=128):
+        self.data = data
+        self.data_count = data.shape[0]
+        self.best_genes = best_genes
+        self.batch_size = batch_size
+
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(math.ceil(self.data_count / self.batch_size))
+
+    def __getitem__(self, index):
+        start_index = index * self.batch_size
+        end_index = (index + 1) * self.batch_size
+
+        batch = self.data.iloc[start_index: end_index]
+        X = batch[self.best_genes].values
+        y = batch['Age'].values
+
+        return X, y
+
+    def on_epoch_end(self):
+        pass
+
+
 def main(args):
     reload(logging)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_device_number
@@ -22,6 +50,7 @@ def main(args):
     np.random.seed(np_seed)
     tf.set_random_seed(np_seed)
 
+    make_dirs(args.experiment_dir)
     log_file = path_join(args.experiment_dir, 'log.log')
     logging.basicConfig(level=logging.DEBUG, filename=log_file)
     logging.debug('Read data')
@@ -63,13 +92,13 @@ def main(args):
 
     target_column = 'Age'
 
-    (train_X, train_y) = train_data[best_genes], train_data[target_column]
-    (test_X, test_y) = test_data[best_genes], test_data[target_column]
-    train_X_ = best_dae_model.predict(train_X)
-    test_X_ = best_dae_model.predict(test_X)
+    # (train_X, train_y) = train_data[best_genes], train_data[target_column]
+    # (test_X, test_y) = test_data[best_genes], test_data[target_column]
+    _train_data = train_data.copy()
+    _test_data = test_data.copy()
 
-    train_data_ = (train_X, train_y)
-    test_data_ = (test_X_, test_y)
+    _train_data.loc[:, best_genes] = best_dae_model.predict(_train_data[best_genes])
+    _test_data.loc[:, best_genes] = best_dae_model.predict(_test_data[best_genes])
 
     models_dir = args.mlp_models_dir
     best_mlp_model = load_best_model(
@@ -79,8 +108,8 @@ def main(args):
     )
 
     best_mlp_model.fit(
-        train_data_,
-        test_data_,
+        DataGenerator(_train_data, best_genes),
+        DataGenerator(_test_data, best_genes),
         **learning_params,
     )
 

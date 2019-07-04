@@ -17,7 +17,8 @@ def search_parameters(model_class,
                       test_data,
                       cross_validation_method,
                       cross_validation_parameters,
-                      get_generator,
+                      create_train_generator,
+                      create_test_generator,
                       using_metrics,
                       model_parameters_space,
                       experiment_dir,
@@ -68,7 +69,8 @@ def search_parameters(model_class,
                 cv_train_data,
                 cv_val_data,
                 test_data,
-                get_generator,
+                create_train_generator,
+                create_test_generator,
                 using_metrics,
             )
             cv_scores[i] = [train_score[using_metrics[0]], val_score[using_metrics[0]], test_score[using_metrics[0]]]
@@ -121,10 +123,10 @@ def __create_model_directory(models_dir) -> str:
     return model_dir
 
 
-def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, get_x_y_method, using_metrics):
-    train_X, train_y = get_x_y_method(cv_train_data)
-    val_X, val_y = get_x_y_method(cv_val_data)
-    test_X, test_y = get_x_y_method(test_data)
+def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, create_train_generator, create_test_generator, using_metrics):
+    train_generator = create_train_generator(cv_train_data)
+    val_generator = create_test_generator(cv_val_data)
+    test_generator = create_test_generator(test_data)
 
     loss_history_file = os.path.join(cv_model_path, 'loss_history')
     model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
@@ -132,9 +134,9 @@ def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, 
 
     __reset_weights(model)
     model.fit(
-        (train_X, train_y),
-        val_data=(val_X, val_y),
-        test_data=(test_X, test_y),
+        train_generator,
+        val_generator=val_generator,
+        test_generator=test_generator,
         loss_history_file_name=loss_history_file,
         model_checkpoint_file_name=model_checkpoint_file,
         tensorboard_log_dir=cv_tensorboard_dir,
@@ -144,9 +146,9 @@ def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, 
     model.save_model(model_file)
     logging.info('model was saved at {}'.format(model_file))
 
-    train_score = model.score(train_X, train_y, using_metrics)
-    val_score = model.score(val_X, val_y, using_metrics)
-    test_score = model.score(test_X, test_y, using_metrics)
+    train_score = model.score(train_generator, using_metrics)
+    val_score = model.score(val_generator, using_metrics)
+    test_score = model.score(test_generator, using_metrics)
 
     return train_score, val_score, test_score
 
