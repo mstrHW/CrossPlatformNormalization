@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="41a7acb0-5ec5-48d1-af30-b285a208b7d7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/main_scripts/notebooks/.ipynb_checkpoints/collect_results-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_scripts/notebooks/collect_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/notebooks/collect_results.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/notebooks/.ipynb_checkpoints/genes_norm_daep-checkpoint.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/notebooks/__analyze_data.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/notebooks/analyze_data.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,7 +14,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
@@ -21,18 +22,6 @@
                 <caret line="314" column="105" selection-start-line="314" selection-start-column="105" selection-end-line="314" selection-end-column="105" />
               </first_editor>
               <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/data_processing/processing_conveyor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="37" column="34" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -87,7 +76,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
@@ -95,6 +84,18 @@
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
                 <element signature="e#1700#2334#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -188,17 +189,6 @@
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="main_scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="main_scripts" type="462c0819:PsiDirectoryNode" />
-              <item name="notebooks" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -388,20 +378,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="645" y="20" width="1111" height="959" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17520969" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17520969" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.36619717" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46246973" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.46246973" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Debug" order="5" weight="0.39869988" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32808718" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32808718" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" order="12" visible="true" weight="0.2948164" />
@@ -612,16 +603,6 @@
     <entry file="file://$PROJECT_DIR$/module/plot_graphs/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main_scripts/utils.py" />
     <entry file="file://$PROJECT_DIR$/module/models/utils/optimizers.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -801,16 +782,6 @@
     <entry file="file://$PROJECT_DIR$/gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="63">
-            <caret line="314" column="105" selection-start-line="314" selection-start-column="105" selection-end-line="314" selection-end-column="105" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -819,6 +790,26 @@
             <element signature="e#0#14#0" expanded="true" />
             <element signature="e#1700#2334#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="63">
+            <caret line="314" column="105" selection-start-line="314" selection-start-column="105" selection-end-line="314" selection-end-column="105" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
