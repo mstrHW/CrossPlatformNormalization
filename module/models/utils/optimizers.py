@@ -1,5 +1,5 @@
 from keras.optimizers import SGD, Adagrad, Adadelta, RMSprop, Adam, Adamax, Nadam
-from Eve.Eve import Eve
+# from Eve.Eve import Eve
 
 
 __name_to_optimizer = {
@@ -10,7 +10,7 @@ __name_to_optimizer = {
     'adadelta': Adadelta,
     'adamax': Adamax,
     'nadam': Nadam,
-    'eve': Eve,
+    # 'eve': Eve,
 }
 
 

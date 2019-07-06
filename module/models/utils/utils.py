@@ -68,7 +68,7 @@ def all_models_predict(model_class,
             model = model_class(**parameters)
             model.load_model(model_files['model_file'])
 
-            train_y_pred = model.predict(cv_train_data[0])
+            train_y_pred = model.score(cv_train_data[0])
             val_y_pred = model.predict(cv_val_data[0])
             test_y_pred = model.predict(test_data[0])
 

@@ -14,11 +14,12 @@ from module.models.dae import DenoisingAutoencoder
 from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test, get_batches
 from module.models.mlp import MLP
-from main_scripts.utils import load_best_model
+from module.models.utils.utils import load_best_model_parameters
 
 
 class DataGenerator(keras.utils.Sequence):
     def __init__(self, data, best_genes, batch_size=128):
+        np.random.seed(np_seed)
         self.data = data
         self.data_count = data.shape[0]
         self.best_genes = best_genes
@@ -74,12 +75,13 @@ def main(args):
     best_genes = data_wrapper.best_genes
 
     models_dir = args.dae_models_dir
-    best_dae_model = load_best_model(
-        DenoisingAutoencoder,
+    best_parameters, best_scores, best_model_path, best_fold_path = load_best_model_parameters(
         models_dir,
         'cv_results.json',
         condition='max',
     )
+
+    best_dae_model = DenoisingAutoencoder(**best_parameters)
 
     model_path = args.experiment_dir
     make_dirs(model_path)
@@ -101,11 +103,13 @@ def main(args):
     _test_data.loc[:, best_genes] = best_dae_model.predict(_test_data[best_genes])
 
     models_dir = args.mlp_models_dir
-    best_mlp_model = load_best_model(
-        MLP,
+
+    best_parameters, best_scores, best_model_path, best_fold_path = load_best_model_parameters(
         models_dir,
         'cv_results.json',
     )
+
+    best_mlp_model = MLP(**best_parameters)
 
     best_mlp_model.fit(
         DataGenerator(_train_data, best_genes),
@@ -145,33 +149,33 @@ if __name__ == '__main__':
     parser.add_argument(
         "--experiment_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory for current experiment trained models and results",
     )
 
     parser.add_argument(
         "--dae_models_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory of genes normalization with dae experiment",
     )
 
     parser.add_argument(
         "--mlp_models_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory of predicting age with mlp experiment",
     )
 
     parser.add_argument(
         "--results_file_name",
         type=str,
         default='results.json',
-        help="increase output verbosity",
+        help="name of file with score results",
     )
 
     parser.add_argument(
         "--cuda_device_number",
         type=str,
         default='0',
-        help="increase output verbosity",
+        help="number of gpu for execute tensorflow",
     )
     args = parser.parse_args()
     main(args)

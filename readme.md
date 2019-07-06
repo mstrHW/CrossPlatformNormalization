@@ -171,7 +171,7 @@ for batch in get_batches(ref_batch, batch_size):
 
 ## Experiments
 
-### Predict age with mlp
+### Predict age with mlp (code_file: main_scripts/predict_age.py)
 ```python
 processing_sequence = {
     'load_data': dict(
@@ -220,7 +220,7 @@ script_parameters:
 | n_iters | int | 100 | number of search iterations for random search |
 | cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
-### Genes normalization with dae
+### Genes normalization with dae (code_file: main_scripts/genes_normalization.py)
 Data preprocessing parameters:
 ```python
 processing_sequence = {
@@ -264,7 +264,7 @@ optimizer = ['adam', 'rmsprop']
 ```
 
 * *Experiment directory*: /genes_normalization/dae/
-* *Best model*: ---
+* *Best model*: trained_models/cv_56
 * *Main script*: main_scripts/genes_normalization.py
     
 script_parameters:
@@ -277,7 +277,7 @@ script_parameters:
 | n_iters | int | 100 | number of search iterations for random search |
 | cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
-### Predict age with mlp (+ logarithm on data)
+### Predict age with mlp (+ logarithm on data) (code_file: main_scripts/predict_age_log_data.py)
 Data preprocessing parameters:
 
 ```python
@@ -312,7 +312,7 @@ script_parameters:
 | results_file_name | str | results.json| name of file with score results |
 | cuda_device_number | str | 0 | number of gpu for execute tensorflow |
 
-### Genes normalization and predict age using dae with predictor
+### Genes normalization and predict age using dae with predictor  (code_file: main_scripts/using_daep.py)
 #### Description:
 Genes normalization and predict age using dae with predictor on latent layer. Data was preprocessed using following parameters:
 ```python

@@ -103,10 +103,10 @@ class BaseModel(BaseEstimator):
         callbacks_list = self.add_reduce_on_plato(callbacks_list, self.use_early_stopping)
         callbacks_list = self.add_model_checkpoint(callbacks_list, model_checkpoint_file_name)
 
-        if isinstance(test_data, keras.utils.Sequence):
-            callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data, steps_count)
-        else:
-            callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
+        # if isinstance(test_data, keras.utils.Sequence):
+        #     callbacks_list = self.add_test_score_generator(callbacks_list, tensorboard_log_dir, test_data, steps_count)
+        # else:
+        #     callbacks_list = self.add_test_score(callbacks_list, tensorboard_log_dir, test_data)
 
         callbacks_list = self.add_tensorboard(callbacks_list, tensorboard_log_dir)
 

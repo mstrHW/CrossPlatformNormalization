@@ -20,6 +20,7 @@ from module.data_processing.distance_noise_generation import DistanceNoiseGenera
 
 class DataGenerator(keras.utils.Sequence):
     def __init__(self, ref_data, data, best_genes, mode, noise_probability, batch_size=128):
+        np.random.seed(np_seed)
         if mode == 'train':
             self.data = ref_data
         else:
@@ -162,7 +163,7 @@ def search_model_parameters(args):
 
     activation = ['elu', 'lrelu', 'prelu']
     regularization_param = [10 ** -i for i in range(3, 7)]
-    epochs_count = 1,
+    epochs_count = 2000,
     loss = 'mae',
     optimizer = ['adam', 'rmsprop'] #, 'eve's
 
@@ -172,6 +173,7 @@ def search_model_parameters(args):
         regularizer_param=regularization_param,
         epochs_count=epochs_count,
         loss=loss,
+        learning_rate=(0.0001,),
         optimizer_name=optimizer,
     )
 
@@ -200,34 +202,34 @@ if __name__ == '__main__':
     parser.add_argument(
         "--experiment_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory for current experiment trained models and results",
     )
 
     parser.add_argument(
         "--cv_results_file_name",
         type=str,
         default='cv_results.json',
-        help="increase output verbosity")
+        help="file name of search parameters results")
 
     parser.add_argument(
         "--search_method",
         type=str,
         default='random',
-        help="increase output verbosity",
+        help="choose 'random' or 'grid' search",
 
     )
     parser.add_argument(
         "--n_iters",
         type=int,
         default=100,
-        help="increase output verbosity",
+        help="number of search iterations for random search",
     )
 
     parser.add_argument(
         "--cuda_device_number",
         type=str,
         default='0',
-        help="increase output verbosity",
+        help="number of gpu for execute tensorflow",
     )
     args = parser.parse_args()
     search_model_parameters(args)

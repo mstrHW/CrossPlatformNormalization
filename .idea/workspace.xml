@@ -3,47 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="41a7acb0-5ec5-48d1-af30-b285a208b7d7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/Eve.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/eval.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/figures/cifar100_results_accs.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/figures/cifar100_results_losses.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/figures/cifar10_results_accs.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/figures/cifar10_results_losses.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/log/cifar10_CNN_Adam.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/log/cifar10_CNN_Eve.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/log/cifar10_CNN_SGD.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Eve/train.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Age.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Age_group.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Disease.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/GEO.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Sex.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/Training.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/tsne.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/1000_(100,)_elu_0.0_0.0_glorot_uniform/history" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/1000_(100,)_elu_0.0_0.0_glorot_uniform/log.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/aae.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/dann.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/gan.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/mSDA.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/module/models/utils/flipGradientTF.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/genes_normalization.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/genes_normalization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/notebooks/collect_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/notebooks/collect_results.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/predict_age.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/using_daep.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_scripts/using_daep.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_scripts/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/module/models/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/base_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module/models/utils/grid_search.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/utils/grid_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module/models/utils/optimizers.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/utils/optimizers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/module/models/utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/module/models/utils/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/collect_results (2)-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/.ipynb_checkpoints/collect_results (2)-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/collect_results (2).ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/collect_results (2).ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/.ipynb_checkpoints/__dae-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/.ipynb_checkpoints/collect_results-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/notebooks/.ipynb_checkpoints/collect_results-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/.ipynb_checkpoints/data_processing-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/.ipynb_checkpoints/train_results-checkpoint.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/__analyze_data.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/notebooks/__analyze_data.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/__dae.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/data_processing.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/notebooks/train_results.ipynb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,31 +25,52 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/readme.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="238">
-                <caret line="15" column="121" selection-start-line="15" selection-start-column="121" selection-end-line="15" selection-end-column="121" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
-            <state>
-              <selected id="0" />
+        <entry file="file://$PROJECT_DIR$/main_scripts/mlp_after_dae.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="744">
+              <caret line="108" column="26" selection-start-line="108" selection-start-column="26" selection-end-line="108" selection-end-column="26" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/models/utils/utils.py">
+        <entry file="file://$PROJECT_DIR$/module/models/mlp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="518">
-              <caret line="88" column="70" selection-start-line="88" selection-start-column="70" selection-end-line="88" selection-end-column="70" />
+            <state relative-caret-position="68">
+              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="608">
+              <caret line="231" column="50" selection-start-line="231" selection-start-column="50" selection-end-line="231" selection-end-column="50" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="169">
+              <caret line="189" column="8" selection-start-line="189" selection-start-column="8" selection-end-line="189" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#30#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="166">
+              <caret line="149" column="5" lean-forward="true" selection-start-line="149" selection-start-column="5" selection-end-line="149" selection-end-column="5" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -88,48 +79,45 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/notebooks/notebooks/__analyze_data.ipynb">
-          <provider selected="true" editor-type-id="ipnb-editor">
+        <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1870">
+              <caret line="152" selection-start-line="152" selection-end-line="152" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tmp/data.txt">
+          <provider selected="true" editor-type-id="text-editor">
             <state>
-              <selected id="0" />
+              <caret column="27" selection-start-column="27" selection-end-column="27" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/plot_graphs/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/ds">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="28" />
+              <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="28" />
+              <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="28" />
+              <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="28" />
+              <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="28" />
+              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="28" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
+        <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-23">
-              <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
+            <state relative-caret-position="787">
+              <caret line="179" column="59" selection-start-line="179" selection-start-column="59" selection-end-line="179" selection-end-column="59" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#0#14#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="28" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/data_processing/noising_methods.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="18" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -137,22 +125,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2987">
-              <caret line="284" column="25" selection-start-line="284" selection-start-column="11" selection-end-line="284" selection-end-column="25" />
+            <state relative-caret-position="-681">
+              <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
-                <element signature="e#434#1523#0" />
                 <element signature="e#1700#2334#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="53" selection-start-line="53" selection-end-line="68" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -201,25 +179,27 @@
         <option value="$PROJECT_DIR$/module/data_processing/distance_noise_generation.py" />
         <option value="$PROJECT_DIR$/module/data_processing/processing_conveyor.py" />
         <option value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
-        <option value="$PROJECT_DIR$/module/models/utils/grid_search.py" />
         <option value="$PROJECT_DIR$/module/models/dae.py" />
-        <option value="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" />
+        <option value="$PROJECT_DIR$/module/models/dae_with_predictor.py" />
+        <option value="$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb" />
+        <option value="$PROJECT_DIR$/module/models/utils/optimizers.py" />
+        <option value="$PROJECT_DIR$/readme.md" />
+        <option value="$PROJECT_DIR$/module/models/base_model.py" />
+        <option value="$PROJECT_DIR$/module/models/utils/utils.py" />
+        <option value="$PROJECT_DIR$/main_scripts/genes_normalization.py" />
         <option value="$PROJECT_DIR$/main_scripts/predict_age.py" />
         <option value="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" />
-        <option value="$PROJECT_DIR$/main_scripts/genes_normalization.py" />
-        <option value="$PROJECT_DIR$/module/models/base_model.py" />
-        <option value="$PROJECT_DIR$/module/models/dae_with_predictor.py" />
+        <option value="$PROJECT_DIR$/ds" />
         <option value="$PROJECT_DIR$/main_scripts/using_daep.py" />
-        <option value="$PROJECT_DIR$/readme.md" />
-        <option value="$PROJECT_DIR$/module/models/utils/utils.py" />
-        <option value="$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb" />
+        <option value="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" />
+        <option value="$PROJECT_DIR$/module/models/utils/grid_search.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="245" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="791" />
     <option name="y" value="45" />
-    <option name="width" value="1657" />
+    <option name="width" value="1111" />
     <option name="height" value="959" />
   </component>
   <component name="ProjectView">
@@ -227,7 +207,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -238,29 +217,36 @@
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="notebooks" type="462c0819:PsiDirectoryNode" />
+              <item name="main_scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="notebooks" type="462c0819:PsiDirectoryNode" />
-              <item name="notebooks" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
               <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
-              <item name="data_processing" type="462c0819:PsiDirectoryNode" />
+              <item name="module" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CrossPlatformNormalization" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CrossPlatformNormalization" type="462c0819:PsiDirectoryNode" />
+              <item name="tmp" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -276,6 +262,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\HWer\Documents\GitHub\CrossPlatformNormalization\CrossPlatformNormalization\main_scripts" />
       <recent name="C:\Users\HWer\Documents\GitHub\CrossPlatformNormalization\CrossPlatformNormalization" />
     </key>
   </component>
@@ -292,7 +279,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.using_daep">
-    <configuration name="data_processing" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="grid_search" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CrossPlatformNormalization" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -300,34 +287,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/module/data_processing" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/module/models/utils" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/module/data_processing/data_processing.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/module/models/utils/grid_search.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="genes_normalization" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="CrossPlatformNormalization" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main_scripts" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_scripts/genes_normalization.py" />
-      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp --n_iters=2" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -348,7 +313,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_scripts/mlp_after_dae.py" />
-      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp_after_dae --mlp_models_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp --dae_models_dir=D:/Datasets/InsilicoMedicine/models/generator/genes_normalization/dae" />
+      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp_after_dae2 --mlp_models_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp2 --dae_models_dir=D:/Datasets/InsilicoMedicine/models/generator/genes_normalization/dae2" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -356,7 +321,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="processing_conveyor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="predict_age" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CrossPlatformNormalization" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -364,12 +329,33 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/module/data_processing" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main_scripts" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/module/data_processing/processing_conveyor.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_scripts/predict_age.py" />
+      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp2 --n_iters=600" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="predict_age_log_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CrossPlatformNormalization" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main_scripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_scripts/predict_age_log_data.py" />
+      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age_log_data/mlp --mlp_models_dir=D:/Datasets/InsilicoMedicine/models/generator/predict_age/mlp2" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -390,7 +376,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_scripts/using_daep.py" />
-      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/genes_normalization/daep" />
+      <option name="PARAMETERS" value="--experiment_dir=D:/Datasets/InsilicoMedicine/models/generator/genes_normalization/daep4" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -399,19 +385,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.genes_normalization" />
-      <item itemvalue="Python.processing_conveyor" />
-      <item itemvalue="Python.data_processing" />
       <item itemvalue="Python.mlp_after_dae" />
+      <item itemvalue="Python.grid_search" />
+      <item itemvalue="Python.predict_age" />
+      <item itemvalue="Python.predict_age_log_data" />
       <item itemvalue="Python.using_daep" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.using_daep" />
-        <item itemvalue="Python.genes_normalization" />
+        <item itemvalue="Python.predict_age_log_data" />
         <item itemvalue="Python.mlp_after_dae" />
-        <item itemvalue="Python.processing_conveyor" />
-        <item itemvalue="Python.data_processing" />
+        <item itemvalue="Python.predict_age" />
+        <item itemvalue="Python.grid_search" />
       </list>
     </recent_temporary>
   </component>
@@ -443,22 +429,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="791" y="45" width="1111" height="959" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19546892" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34575954" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.36619717" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32827735" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.46246973" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Debug" order="5" weight="0.39869988" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32827735" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32808718" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" order="12" visible="true" weight="0.2948164" />
@@ -513,18 +499,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main_scripts/genes_normalization.py</url>
-          <line>63</line>
+          <line>64</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/module/models/utils/utils.py</url>
           <line>42</line>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main_scripts/utils.py</url>
-          <line>46</line>
-          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/module/models/base_model.py</url>
@@ -543,34 +524,6 @@
     <SUITE FILE_PATH="coverage/CrossPlatformNormalization$genes_normalization.coverage" NAME="genes_normalization Coverage Results" MODIFIED="1561983516205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main_scripts" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/module/models/mSDA.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/utils/activations.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/utils/metrics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/utils/optimizers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#81#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/models/utils/regularizers.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -598,26 +551,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/log.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/.ipynb_checkpoints/predict_age_with_mlp-checkpoint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/data_processing/test_data_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="128" column="19" selection-start-line="128" selection-start-column="19" selection-end-line="128" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/log.log" />
+    <entry file="file://$PROJECT_DIR$/main_scripts/.ipynb_checkpoints/predict_age_with_mlp-checkpoint.py" />
+    <entry file="file://$PROJECT_DIR$/tests/data_processing/test_data_generator.py" />
     <entry file="file://$PROJECT_DIR$/module/data_processing/read_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -739,16 +675,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/dae.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/core/fromnumeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -766,43 +692,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/gan.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="64" column="22" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="46" selection-start-line="46" selection-end-line="46" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/mlp_after_dae.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="106" column="4" lean-forward="true" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="148" selection-start-line="148" selection-end-line="148" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/module/models/gan.py" />
     <entry file="file://$PROJECT_DIR$/module/models/dae_with_predictor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="419">
@@ -813,58 +703,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
+    <entry file="file://$PROJECT_DIR$/module/models/main.py" />
+    <entry file="file://$PROJECT_DIR$/notebooks/notebooks/__analyze_data.ipynb" />
+    <entry file="file://$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb" />
+    <entry file="file://$PROJECT_DIR$/module/plot_graphs/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="225" column="31" lean-forward="true" selection-start-line="225" selection-start-column="31" selection-end-line="225" selection-end-column="31" />
+        <state relative-caret-position="595">
+          <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
           <folding>
-            <element signature="e#0#30#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/mlp.py">
+    <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="49" selection-start-line="49" selection-end-line="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="63" selection-start-line="63" selection-end-line="75" selection-end-column="5" />
+        <state relative-caret-position="51">
+          <caret line="7" column="28" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="28" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="147" selection-start-line="147" selection-end-line="166" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="53" selection-start-line="53" selection-end-line="68" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2987">
-          <caret line="284" column="25" selection-start-line="284" selection-start-column="11" selection-end-line="284" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <element signature="e#434#1523#0" />
-            <element signature="e#1700#2334#0" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -876,69 +736,140 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/data_processing/distance_noise_generation.py">
+    <entry file="file://$PROJECT_DIR$/main_scripts/utils.py" />
+    <entry file="file://$PROJECT_DIR$/module/models/utils/optimizers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="28" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/plot_graphs/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/plot_graphs/data_analysis_graphs.py">
+    <entry file="file://$PROJECT_DIR$/module/models/dae.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-23">
-          <caret line="43" column="9" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="9" />
+        <state relative-caret-position="215">
+          <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="238">
-            <caret line="15" column="121" selection-start-line="15" selection-start-column="121" selection-end-line="15" selection-end-column="121" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/models/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/module/models/utils/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="88" column="70" selection-start-line="88" selection-start-column="70" selection-end-line="88" selection-end-column="70" />
+        <state relative-caret-position="-276">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/notebooks/__analyze_data.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
+    <entry file="file://$PROJECT_DIR$/main_scripts/cv_results_dae.json" />
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="5338">
+            <caret line="314" column="97" selection-start-line="314" selection-start-column="97" selection-end-line="314" selection-end-column="97" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/notebooks/notebooks/collect_results.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
+    <entry file="file://$PROJECT_DIR$/module/models/mlp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/genes_normalization.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="231" column="50" selection-start-line="231" selection-start-column="50" selection-end-line="231" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Roaming/jupyter/runtime/nbserver-11420-open.html">
+      <provider selected="true" editor-type-id="text-editor">
         <state>
-          <selected id="0" />
+          <caret selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/data.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="27" selection-start-column="27" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ds">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="28" />
+          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="28" />
+          <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="28" />
+          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="28" />
+          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="28" />
+          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/models/base_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="189" column="8" selection-start-line="189" selection-start-column="8" selection-end-line="189" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age_log_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1870">
+          <caret line="152" selection-start-line="152" selection-end-line="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/predict_age.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="787">
+          <caret line="179" column="59" selection-start-line="179" selection-start-column="59" selection-end-line="179" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/mlp_after_dae.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="744">
+          <caret line="108" column="26" selection-start-line="108" selection-start-column="26" selection-end-line="108" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_scripts/using_daep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-681">
+          <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#1700#2334#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/models/utils/grid_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="149" column="5" lean-forward="true" selection-start-line="149" selection-start-column="5" selection-end-line="149" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

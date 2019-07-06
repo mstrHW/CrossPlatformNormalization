@@ -50,30 +50,37 @@ def search_parameters(model_class,
         print(params)
         logging.info('current parameters : {}'.format(params))
 
-        model_dir = __create_model_directory(trained_models_dir)
+        model_dir, folder_name = __create_model_directory(trained_models_dir)
         logging.info('model directory : {}'.format(model_dir))
 
         cv_scores = np.zeros((cv_splits_count, 3))
         model = model_class(**params)
 
+        __params = model.get_params()
+
+        print(__params)
+
         for i, (cv_train_data, cv_val_data) in enumerate(cross_validation_method(train_data, cross_validation_parameters)):
-            cv_model_dir_name = '{}_fold'.format(i)
-            cv_model_path = os.path.join(model_dir, cv_model_dir_name)
-            definitions.make_dirs(cv_model_path)
 
-            logging.info(cv_model_path)
+            # if __params == {'features_count': 1000, 'layers': [[1000, 512, 256, 64], [256, 512, 1000]], 'activation': 'lrelu', 'output_activation': 'linear', 'drop_rate': 0.0, 'regularizer_name': 'l1_l2', 'regularizer_param': 1e-05, 'initializer': 'glorot_normal', 'optimizer_name': 'adam', 'epochs_count': 2000, 'learning_rate_decay_method': 'on_plato', 'learning_rate': 0.001, 'loss': 'mae', 'batch_size': 128, 'patience': 200}:
+            if __params == {'features_count': 1000, 'layers': (512, 256, 128, 1), 'activation': 'lrelu', 'output_activation': 'linear', 'drop_rate': 0.75, 'regularizer_name': 'l1_l2', 'regularizer_param': 0.0001, 'initializer': 'glorot_normal', 'optimizer_name': 'rmsprop', 'epochs_count': 2000, 'learning_rate_decay_method': 'on_plato', 'learning_rate': 0.0001, 'loss': 'mae', 'batch_size': 128, 'patience': 200}:
+                cv_model_dir_name = '{}_fold'.format(i)
+                cv_model_path = os.path.join(model_dir, cv_model_dir_name)
+                definitions.make_dirs(cv_model_path)
 
-            train_score, val_score, test_score = __cv_iteration(
-                model,
-                cv_model_path,
-                cv_train_data,
-                cv_val_data,
-                test_data,
-                create_train_generator,
-                create_test_generator,
-                using_metrics,
-            )
-            cv_scores[i] = [train_score[using_metrics[0]], val_score[using_metrics[0]], test_score[using_metrics[0]]]
+                logging.info(cv_model_path)
+
+                train_score, val_score, test_score = __cv_iteration(
+                    model,
+                    cv_model_path,
+                    cv_train_data,
+                    cv_val_data,
+                    test_data,
+                    create_train_generator,
+                    create_test_generator,
+                    using_metrics,
+                )
+                cv_scores[i] = [train_score[using_metrics[0]], val_score[using_metrics[0]], test_score[using_metrics[0]]]
 
         model_parameters = model.get_params()
         mean_cv_scores = cv_scores.mean(axis=0)
@@ -120,7 +127,7 @@ def __create_model_directory(models_dir) -> str:
     model_dir = os.path.join(models_dir, folder_name)
     definitions.make_dirs(model_dir)
 
-    return model_dir
+    return model_dir, folder_name
 
 
 def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, create_train_generator, create_test_generator, using_metrics):
@@ -132,7 +139,7 @@ def __cv_iteration(model, cv_model_path, cv_train_data, cv_val_data, test_data, 
     model_checkpoint_file = os.path.join(cv_model_path, 'model.checkpoint')
     cv_tensorboard_dir = os.path.join(cv_model_path, 'tensorboard_log')
 
-    __reset_weights(model)
+    model = __reset_weights(model)
     model.fit(
         train_generator,
         val_generator=val_generator,
@@ -159,6 +166,7 @@ def __reset_weights(model):
     for layer in model.layers:
         if hasattr(layer, 'kernel_initializer'):
             layer.kernel.initializer.run(session=session)
+    return model
 
 
 def __save_cross_validation_scores(cv_scores, cv_splits_count, model_path):

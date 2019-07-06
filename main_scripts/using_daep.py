@@ -130,7 +130,7 @@ def search_model_parameters(args):
         activation='elu',
         regularizer_name='l1_l2',
         regularizer_param=1e-3,
-        epochs_count=1,
+        epochs_count=2000,
         learning_rate=0.0001,
         loss='mae',
         patience=200,
@@ -216,7 +216,7 @@ def search_model_parameters(args):
         drop_rate=0.5,
         regularizer_name='l1_l2',
         regularizer_param=1e-3,
-        epochs_count=1,
+        epochs_count=2000,
         loss='mae',
         patience=200,
         optimizer_name='adam',
@@ -297,7 +297,7 @@ if __name__ == '__main__':
         "--cuda_device_number",
         type=str,
         default='0',
-        help="increase output verbosity",
+        help="number of gpu for execute tensorflow",
     )
     args = parser.parse_args()
     search_model_parameters(args)

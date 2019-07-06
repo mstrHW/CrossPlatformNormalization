@@ -12,7 +12,7 @@ from definitions import *
 from module.data_processing.processing_conveyor import ProcessingConveyor
 from module.data_processing.data_processing import get_train_test
 from module.models.mlp import MLP
-from main_scripts.utils import load_best_model
+from module.models.utils.utils import load_best_model_parameters
 
 
 class DataGenerator(keras.utils.Sequence):
@@ -73,11 +73,12 @@ def main(args):
     best_genes = data_wrapper.best_genes
 
     models_dir = args.mlp_models_dir
-    best_mlp_model = load_best_model(
-        MLP,
+    best_parameters, best_scores, best_model_path, best_fold_path = load_best_model_parameters(
         models_dir,
         'cv_results.json',
     )
+
+    best_mlp_model = MLP(**best_parameters)
 
     learning_params = dict(
         loss_history_file_name=os.path.join(experiment_dir, 'loss_history'),
@@ -125,27 +126,27 @@ if __name__ == '__main__':
     parser.add_argument(
         "--experiment_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory for current experiment trained models and results",
     )
 
     parser.add_argument(
         "--mlp_models_dir",
         type=str,
-        help="increase output verbosity",
+        help="path to directory of predicting age with mlp experiment",
     )
 
     parser.add_argument(
         "--results_file_name",
         type=str,
         default='results.json',
-        help="increase output verbosity",
+        help="name of file with score results",
     )
 
     parser.add_argument(
         "--cuda_device_number",
         type=str,
         default='0',
-        help="increase output verbosity",
+        help="number of gpu for execute tensorflow",
     )
     args = parser.parse_args()
     main(args)
